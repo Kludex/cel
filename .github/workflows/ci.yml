@@ -53,14 +53,15 @@ jobs:
           path: dist/
 
   fuzz:
-    runs-on: ubuntu-latest
+    # Zig 0.16.0's fuzz mode fails to rebuild any test on x86_64 Linux ("one or more unit tests failed to be
+    # rebuilt in fuzz mode"; on hosted runners it surfaces as "corrupted coverage file: pcs_len was zero").
+    # A one-test project reproduces it, so fuzzing runs on the arm64 runner where the fuzzer works.
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
       - uses: mlugg/setup-zig@v2
         with:
           version: 0.16.0
-      # The unfiltered fuzz run intermittently reports "corrupted coverage file: pcs_len was zero" on
-      # GitHub-hosted runners with Zig 0.16.0; each filtered test below still runs 100,000 executions.
       - run: zig build test --fuzz=100000 -Dtest-filter='untrusted source'
       - run: zig build test --fuzz=100000 -Dtest-filter='dynamic RE2'
       - run: zig build test --fuzz=100000 -Dtest-filter='checked source'
