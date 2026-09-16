@@ -3228,6 +3228,7 @@ test "fast plans describe only the plain-data subset" {
         "x.y.z == true || q.contains('t') || q.endsWith('u')",
         "a == 9007199254740991",
         "a.`b`.c == 1",
+        "a ? 'x' : b['k'] == 'y' ? 'z' : 'w'",
     }) |source| {
         var program = try Program.compile(std.testing.allocator, source, .{});
         defer program.deinit();
@@ -3250,7 +3251,9 @@ test "fast plans describe only the plain-data subset" {
         "size(a) == 1",
         "a.b.matches('x')",
         "a.startsWith('x', 'y')",
-        "a ? b : c",
+        "a[0] == 1",
+        "a[b] == 1",
+        "a[?'k'] == 1",
         "timestamp('2024-01-01T00:00:00Z') == a",
         "a == b'x'",
         "a == null",

@@ -655,7 +655,7 @@ function snapshotMap(input: object, entryBudget: number): [unknown, unknown][] |
 const bailSignal: unique symbol = Symbol("cel.plainDataBail");
 type PlanNode = readonly [string, ...unknown[]];
 type PlainType = "bool" | "string" | "int" | "object";
-type FastFunction = (bindings: object) => boolean;
+type FastFunction = (bindings: object) => boolean | string;
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (
@@ -692,10 +692,19 @@ class PlainCompiler {
       this.roots.add(name);
       return this.guard(`b[${JSON.stringify(name)}]`, expected);
     }
-    if (kind === "select") {
+    if (kind === "select" || kind === "index") {
       const target = this.emit(node[1] as PlanNode, "object");
       if (target === null) return null;
       return this.guard(`(${target})[${JSON.stringify(node[2])}]`, expected);
+    }
+    if (kind === "?:") {
+      if (expected === "object") return null;
+      const condition = this.emit(node[1] as PlanNode, "bool");
+      const yes = this.emit(node[2] as PlanNode, expected);
+      const no = this.emit(node[3] as PlanNode, expected);
+      return condition === null || yes === null || no === null
+        ? null
+        : `(${condition} ? ${yes} : ${no})`;
     }
     if (kind === "&&" || kind === "||") {
       if (expected !== "bool") return null;
@@ -776,14 +785,28 @@ function wellFormed(text: string): boolean {
 /// Compile a plan JSON string; exported for tests that feed hand-built plans. Returns undefined when refused.
 export function compilePlainDataPlan(
   plan: string | null,
-): ((bindings: object) => boolean) | undefined {
+): ((bindings: object) => boolean | string) | undefined {
   return compileFastPath(plan);
+}
+
+/// The result type of a plan is the type of its root; conditionals take the type of their branches.
+function planResultType(node: PlanNode): PlainType | null {
+  const [kind] = node;
+  if (kind === "bool" || kind === "string") return kind;
+  if (kind === "?:")
+    return planResultType(node[2] as PlanNode) ?? planResultType(node[3] as PlanNode);
+  if (kind === "ident" || kind === "select" || kind === "index" || kind === "int") return null;
+  return "bool";
 }
 
 function compileFastPath(plan: string | null): FastFunction | undefined {
   if (plan === null) return undefined;
+  const root = JSON.parse(plan) as PlanNode;
+  // CEL results of other types stay on the engine path; a bare read has no static type and is left there too.
+  const resultType = planResultType(root);
+  if (resultType !== "bool" && resultType !== "string") return undefined;
   const compiler = new PlainCompiler();
-  const body = compiler.emit(JSON.parse(plan) as PlanNode, "bool");
+  const body = compiler.emit(root, resultType);
   if (body === null) return undefined;
   let declarations = "";
   for (let index = 1; index <= compiler["counter"]; index += 1)

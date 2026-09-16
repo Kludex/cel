@@ -16,19 +16,23 @@ node benchmarks/typescript.mjs --engine candidate-plain --workload request_autho
 | Authorization | 1 | 955 ns (1.1%) | 138 ns (3.3%) | 6.92x |
 | Authorization | 2 | 959 ns (1.4%) | 137 ns (3.6%) | 7.00x |
 | Authorization | 3 | 950 ns (1.5%) | 135 ns (3.9%) | 7.05x |
-| 64-decision mix | 1 | 1,382 ns (1.1%) | 1,320 ns (0.8%) | 1.04x |
+| Routing | 1 | 629 ns (1.2%) | 92 ns (1.8%) | 6.86x |
+| Routing | 2 | 625 ns (0.9%) | 93 ns (2.2%) | 6.74x |
+| 64-decision mix | 1 | 1,377 ns (0.4%) | 1,280 ns (0.8%) | 1.08x |
 
-Only the authorization policy is inside the compiled subset; the other eleven workloads fall back to the engine, which is why the mix moves 4%. These runs include the lone-surrogate guard added after review; before it the fast path measured about 107 ns (8.7-8.9x).
+Authorization and routing are inside the compiled subset (the second after adding string conditionals and string-literal indexing); the other ten workloads fall back to the engine, which is why the mix moves 8%. The authorization runs include the lone-surrogate guard added after review; before it the fast path measured about 107 ns (8.7-8.9x).
 
-## Against `@marcbachmann/cel-js@8.0.0` on authorization
+## Against `@marcbachmann/cel-js@8.0.0`
 
-| Engine | Cold | Warm |
-| --- | ---: | ---: |
-| This SDK, default (`node-default-authorization.json`) | 2,677 ns (2.6%) | 966 ns (1.0%) |
-| This SDK, `plainData: true` (`node-plain-authorization.json`) | 9,415 ns (1.4%) | 141 ns (3.0%) |
-| `cel-js` (`cel-js-authorization.json`) | 3,198 ns (1.7%) | 304 ns (1.8%) |
+| Workload | Engine | Cold | Warm |
+| --- | --- | ---: | ---: |
+| Authorization | This SDK, default | 2,677 ns (2.6%) | 966 ns (1.0%) |
+| Authorization | This SDK, `plainData: true` | 9,415 ns (1.4%) | 141 ns (3.0%) |
+| Authorization | `cel-js` | 3,198 ns (1.7%) | 304 ns (1.8%) |
+| Routing | This SDK, `plainData: true` | 7,616 ns (1.5%) | 100 ns (1.9%) |
+| Routing | `cel-js` | 3,254 ns (2.0%) | 254 ns (1.5%) |
 
-Warm plain-data authorization is about 2.2x faster than `cel-js`; this is the first workload where the Node binding leads that competitor. Cold plain-data time is higher because the benchmark compiles a fresh program per iteration and the fast path adds a `new Function` compilation (about 6 us) on first plain-data use; programs that never opt in pay nothing (default cold is unchanged at about 2.7 us).
+Warm plain-data authorization is about 2.2x faster than `cel-js` and routing about 2.5x; these are the first workloads where the Node binding leads that competitor. Cold plain-data time is higher because the benchmark compiles a fresh program per iteration and the fast path adds a `new Function` compilation (about 6 us) on first plain-data use; programs that never opt in pay nothing (default cold is unchanged at about 2.7 us).
 
 ## Honesty
 

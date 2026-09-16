@@ -28,9 +28,10 @@ test("plain-data mode agrees with the native engine on every workload decision",
       assert.equal(program.evaluate(item.bindings), item.expected);
     }
   }
-  // Only the authorization policy is inside the subset today; the others use macros, arithmetic,
-  // conditionals, or extension functions.
-  assert.equal(fast, 1);
+  // Authorization and routing are inside the subset; the others use macros, arithmetic, `size()`,
+  // ordering, or extension functions.
+  assert.equal(fast, 2);
+  assert.equal(new Program(workloads[3]!.expression).hasFastPath, true, workloads[3]!.name);
   assert.equal(new Program(workloads[0]!.expression).hasFastPath, true);
 });
 
@@ -192,7 +193,41 @@ test("hand-built plans outside the compiler's vocabulary are refused", () => {
     ),
     undefined,
   );
-  assert.equal(compilePlainDataPlan(JSON.stringify(["string", "x"])), undefined);
+  assert.equal(compilePlainDataPlan(JSON.stringify(["int", 1])), undefined);
+  assert.equal(compilePlainDataPlan(JSON.stringify(["ident", "a"])), undefined);
+  assert.equal(
+    compilePlainDataPlan(JSON.stringify(["?:", ["ident", "f"], ["ident", "a"], ["ident", "b"]])),
+    undefined,
+  );
+  assert.equal(
+    compilePlainDataPlan(JSON.stringify(["?:", ["ident", "f"], ["int", 1], ["int", 2]])),
+    undefined,
+  );
+  assert.equal(
+    compilePlainDataPlan(
+      JSON.stringify(["select", ["?:", ["ident", "f"], ["ident", "a"], ["ident", "b"]], "c"]),
+    ),
+    undefined,
+  );
+  assert.equal(
+    compilePlainDataPlan(
+      JSON.stringify([
+        "==",
+        ["select", ["?:", ["ident", "f"], ["ident", "a"], ["ident", "b"]], "c"],
+        ["string", "x"],
+      ]),
+    ),
+    undefined,
+  );
+  assert.equal(
+    compilePlainDataPlan(
+      JSON.stringify(["==", ["select", ["size", ["ident", "a"]], "c"], ["string", "x"]]),
+    ),
+    undefined,
+  );
+  const literal = compilePlainDataPlan(JSON.stringify(["string", "x"]));
+  assert.ok(literal);
+  assert.equal(literal({}), "x");
   // Boolean-producing nodes in a string position: `'x' == (a == b)` style plans the engine never emits.
   assert.equal(
     compilePlainDataPlan(
@@ -256,4 +291,56 @@ test("plain-data mode rejects lone surrogates like the engine and documents its 
   };
   assert.equal(same.evaluate(counter), true);
   assert.equal(same.evaluate(counter, { plainData: true }), false);
+});
+
+test("plain-data mode compiles string conditionals and string-keyed indexing", () => {
+  const route = new Program(
+    'request.path.startsWith("/admin") ? "admin" : request.path.startsWith("/api") && request.headers["x-canary"] == "1" ? "canary" : "default"',
+  );
+  assert.equal(route.hasFastPath, true);
+  assert.equal(
+    route.evaluate({ request: { path: "/admin/x", headers: {} } }, { plainData: true }),
+    "admin",
+  );
+  assert.equal(
+    route.evaluate(
+      { request: { path: "/api/x", headers: { "x-canary": "1" } } },
+      { plainData: true },
+    ),
+    "canary",
+  );
+  assert.equal(
+    route.evaluate(
+      { request: { path: "/api/x", headers: { "x-canary": "0" } } },
+      { plainData: true },
+    ),
+    "default",
+  );
+  // A missing header is a NoSuchKey error in the engine; the fast path must bail into that error.
+  assert.throws(
+    () => route.evaluate({ request: { path: "/api/x", headers: {} } }, { plainData: true }),
+    /NoSuchKey/,
+  );
+  assert.equal(
+    route.evaluate({ request: { path: "/other", headers: new Map() } }, { plainData: true }),
+    "default",
+  );
+  const label = new Program("flag ? name : 'none'");
+  assert.equal(label.evaluate({ flag: true, name: "n" }, { plainData: true }), "n");
+  assert.equal(label.evaluate({ flag: false, name: 5 }, { plainData: true }), "none");
+  // The engine happily returns an int from the other branch; the fast path bails and yields the same value.
+  assert.equal(label.evaluate({ flag: true, name: 5 }, { plainData: true }), 5n);
+  assert.equal(
+    new Program("m['k'] == 1 ? 'one' : 'other'").evaluate({ m: { k: 1 } }, { plainData: true }),
+    "one",
+  );
+  for (const source of [
+    "m[key] == 1",
+    "m[0] == 1",
+    "xs[0] == 'a'",
+    "flag ? 1 : 'x'",
+    "flag ? true : 'x'",
+  ]) {
+    assert.equal(new Program(source).hasFastPath, false, source);
+  }
 });

@@ -1,6 +1,7 @@
 //! Emit the plain-data subset of a compiled program as JSON so a host wrapper can compile it to native code.
-//! The subset covers bool/int/string literals, identifiers, unquoted field selection, `==`/`!=`, `&&`/`||`,
-//! `!`, and the `startsWith`/`endsWith`/`contains` string predicates. Anything else yields no plan.
+//! The subset covers bool/int/string literals, identifiers, unquoted field selection, string-literal indexing,
+//! `==`/`!=`, `&&`/`||`, `!`, `?:`, and the `startsWith`/`endsWith`/`contains` string predicates. Anything else
+//! yields no plan.
 
 const std = @import("std");
 const syntax = @import("syntax.zig");
@@ -65,6 +66,23 @@ fn write(json: *std.json.Stringify, node: *const Node, depth: usize) (std.json.S
             try json.write(op);
             try write(json, b.left, depth + 1);
             try write(json, b.right, depth + 1);
+            try json.endArray();
+        },
+        .conditional => |c| {
+            try json.beginArray();
+            try json.write("?:");
+            try write(json, c.condition, depth + 1);
+            try write(json, c.yes, depth + 1);
+            try write(json, c.no, depth + 1);
+            try json.endArray();
+        },
+        .index => |i| {
+            // Only string-literal keys keep object-property semantics; list indexes and dynamic keys do not.
+            if (i.optional or i.key.* != .literal or i.key.literal != .string) return error.Unsupported;
+            try json.beginArray();
+            try json.write("index");
+            try write(json, i.target, depth + 1);
+            try json.write(i.key.literal.string);
             try json.endArray();
         },
         .unary => |u| {

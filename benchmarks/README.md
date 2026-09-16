@@ -92,7 +92,7 @@ uv run --no-project --python 3.14 --with python-cel==0.1.1 \
 
 ## Plain-data fast path checkpoint
 
-[Plain-data measurements](results/2026-09-16-plain-fast-path/) compare the default engine path with `evaluate(bindings, { plainData: true })` on the same build. Authorization drops from about 955 ns to 137 ns per warm decision (7x) and is about 2.2x faster than `cel-js` on that workload, the first workload where the Node binding leads that competitor. Only authorization is inside the compiled subset, so the 64-decision mix moves 4%. `--engine candidate-plain` runs the full harness in this mode.
+[Plain-data measurements](results/2026-09-16-plain-fast-path/) compare the default engine path with `evaluate(bindings, { plainData: true })` on the same build. Authorization drops from about 955 ns to 137 ns per warm decision (7x) and routing from 627 ns to 93 ns (6.8x); both are 2.2-2.5x faster than `cel-js`, the first workloads where the Node binding leads that competitor. Two of twelve workloads are inside the compiled subset, so the 64-decision mix moves 8%. `--engine candidate-plain` runs the full harness in this mode.
 
 ## Numeric comparison checkpoint
 
