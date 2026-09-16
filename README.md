@@ -24,7 +24,7 @@ CEL is the Common Expression Language. You compile a policy once, then evaluate 
 | TypeScript | Node.js 22 or newer, npm, Node headers |
 | Conformance import only | Go 1.24.9 or newer |
 
-Native builds currently target macOS and Linux. Core tests have run on macOS arm64, Linux arm64, and emulated Linux x86-64. Windows, browser bindings, and published package artifacts remain work in progress. You do not need Python or Node to build or test the Zig engine. Zig also compiles pinned RE2, protobuf, and Abseil sources; the first build needs network access unless those packages are already cached. Normal builds do not require CMake or system RE2 libraries.
+Native builds currently target macOS and Linux. The full SDK test suites run in CI on macOS arm64 and Linux x86-64, and locally on Linux arm64 down to glibc 2.28. Windows, browser bindings, and published package artifacts remain work in progress. You do not need Python or Node to build or test the Zig engine. Zig also compiles pinned RE2, protobuf, and Abseil sources; the first build needs network access unless those packages are already cached. Normal builds do not require CMake or system RE2 libraries.
 
 ## Linux build baseline
 

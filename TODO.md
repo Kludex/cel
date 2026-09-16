@@ -31,12 +31,12 @@ Open work toward the original objective: the most performant CEL SDK, shared Zig
 
 ## Distribution and platforms
 
-- [ ] Current x86-64 Linux binding packages have never been executed; only the core test binary ran under emulation.
+- [x] x86-64 Linux packages now build and run on GitHub-hosted x86-64 runners: the `sdk (ubuntu-latest, 3.10)` job builds `cp310-abi3-manylinux_2_28_x86_64`, passes strict `abi3audit`, and runs all 134 Python tests from the installed wheel plus the Node suite. The x86-64 npm archive is built there too. Not yet: an exact glibc 2.28 runtime check on x86-64 (the hosted runner is newer).
 - [ ] Windows and browser (WASM) are unsupported.
 - [ ] macOS wheels are tagged `macosx_26_0_arm64`; older macOS and Intel are untested.
 - [ ] npm distribution is a single platform-specific archive with a checked-in `cel.node`; platform-aware packaging is missing.
 - [ ] Packages are unpublished; versions are `0.1.0a21` / `0.1.0-alpha.21`.
-- [ ] Remote CI ran for the first time on the initial push; the first run exposed a Python 3.10 header incompatibility (`Py_IS_TYPE` macro), audit jobs that treated the three retained network disagreements as failures, and Zig 0.16.0 fuzz mode failing to rebuild any test on x86_64 Linux (reproduced with a one-test project under emulation). The first two are fixed and verified by the second run; fuzzing moved to the arm64 hosted runner. Fuzzing on x86_64 waits on an upstream Zig fix. The exact-glibc-floor runtime job and the Linux artifact matrix that has only run locally in Docker are still missing from CI.
+- [x] Remote CI is green (11 jobs: 4 SDK matrix cells on macOS/Ubuntu x Python 3.10/3.14, 6 audits compared to committed baselines, arm64 fuzzing). Remote CI ran for the first time on the initial push; the first run exposed a Python 3.10 header incompatibility (`Py_IS_TYPE` macro), audit jobs that treated the three retained network disagreements as failures, and Zig 0.16.0 fuzz mode failing to rebuild any test on x86_64 Linux (reproduced with a one-test project under emulation). The first two are fixed and verified by the second run; fuzzing moved to the arm64 hosted runner. Fuzzing on x86_64 waits on an upstream Zig fix. Still missing from CI: the exact-glibc-2.28 runtime job and the Docker Linux artifact matrix that only runs locally. The exact-glibc-floor runtime job and the Linux artifact matrix that has only run locally in Docker are still missing from CI.
 - [ ] Host must supply complete tzdata including legacy aliases; no tzdata is bundled.
 
 ## Housekeeping

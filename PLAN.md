@@ -37,6 +37,11 @@ Objective: a high-performance CEL engine in Zig, with Python and TypeScript SDKs
 - [ ] Verify current x86-64 binding packages, Windows, other supported runtime/platform combinations, portable distributions, browser support, examples, and every CI gate. Remote CI has not run.
 - [ ] Audit the original objective against current artifacts. Do not mark it complete while any required semantics, coverage, portability, or comparative-performance evidence remains missing.
 
+## Latest remote CI iteration
+
+- [x] The repository now lives at github.com/Kludex/cel. The first remote run exposed three problems: `Py_IS_TYPE` does not translate on Python 3.10 headers (replaced with a stable `ob_type` comparison), the audit jobs treated the three retained network disagreements as failures (they now compare against the committed baseline reports with `conformance/compare_reports.py`, pinned by a CLI test), and Zig 0.16.0 fuzz mode cannot rebuild tests on x86_64 Linux (reproduced with a one-test project; the fuzz job runs on the arm64 hosted runner).
+- [x] Third run green on all 11 jobs. It produced and tested the first native x86-64 Linux wheel (`cp310-abi3-manylinux_2_28_x86_64`, strict abi3audit, 134 tests) and x86-64 npm archive, closing the long-standing "x86-64 bindings never executed" gap.
+
 ## Rejected experiment
 
 - [x] A same-tag scalar fast path in `Context.equal` measured 1.00-1.02x in five paired runs and was reverted (`benchmarks/results/2026-09-16-equal-fastpath/`).
