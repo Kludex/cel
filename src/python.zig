@@ -838,7 +838,22 @@ fn normalizeNetwork(_: ?*c.PyObject, args: ?*c.PyObject) callconv(.c) ?*c.PyObje
     return c.PyUnicode_DecodeUTF8(normalized.ptr, @intCast(normalized.len), "strict");
 }
 
+/// Return the program's plain-data subset as JSON, or None when it has none.
+fn fastPlan(_: ?*c.PyObject, handle: ?*c.PyObject) callconv(.c) ?*c.PyObject {
+    const ptr = c.PyCapsule_GetPointer(handle, capsule_name) orelse return null;
+    const program: *const cel.Program = @ptrCast(@alignCast(ptr));
+    const plan = program.fastPlan(gpa) catch return c.PyErr_NoMemory();
+    const bytes = plan orelse {
+        const none = c.Py_None();
+        c.Py_IncRef(none);
+        return none;
+    };
+    defer gpa.free(bytes);
+    return c.PyUnicode_DecodeUTF8(bytes.ptr, @intCast(bytes.len), "strict");
+}
+
 var methods = [_]c.PyMethodDef{
+    .{ .ml_name = "fast_plan", .ml_meth = fastPlan, .ml_flags = c.METH_O, .ml_doc = "Describe the plain-data subset of a program." },
     .{ .ml_name = "normalize_network", .ml_meth = normalizeNetwork, .ml_flags = c.METH_VARARGS, .ml_doc = "Normalize a network value." },
     .{ .ml_name = "environment", .ml_meth = environment, .ml_flags = c.METH_VARARGS, .ml_doc = "Create an environment." },
     .{ .ml_name = "compile_in", .ml_meth = compileIn, .ml_flags = c.METH_VARARGS, .ml_doc = "Compile in an environment." },

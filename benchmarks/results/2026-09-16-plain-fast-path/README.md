@@ -37,3 +37,14 @@ Warm plain-data authorization is about 2.2x faster than `cel-js` and routing abo
 ## Honesty
 
 This is one workload, one competitor, and an opt-in mode with documented behavioral differences from the default path (unused getters are not read, repeated reads are not snapshotted, non-enumerable properties are visible). The default path remains 3.2x behind `cel-js` on this workload. It is evidence of a viable route to leadership on plain-data policies, not leadership across the suite.
+
+## Python counterpart
+
+`evaluate(bindings, plain_data=True)` compiles the same plan to a Python function (`cel/plain.py`, `exec`-generated straight-line code with `type(...) is` guards, root reads hoisted, object reads cached per block, dotted-key shadowing checked with one `frozenset.isdisjoint`). Alternating runs on CPython 3.14.6; two runs taken while a concurrent command was aborted have IQR over 10% and are kept as `-unstable`.
+
+| Workload | Default warm | `plain_data=True` warm | Speedup |
+| --- | ---: | ---: | ---: |
+| Authorization | 825 ns (3.2%) | 546 / 548 ns (0.7-2.8%) | 1.5x |
+| Routing | 632 / 622 ns (1.3-1.7%) | 415 ns (1.4%) | 1.5x |
+
+Cold plain-data time is about 165 us for authorization because `compile()` of the generated source runs on first plain-data use; programs that never opt in pay nothing. The Python interpreter itself bounds this mode: an unguarded hand-written Python expression for the same policy measures about 170 ns, so a guarded generated function cannot approach the Node fast path's 137 ns.

@@ -37,6 +37,11 @@ Objective: a high-performance CEL engine in Zig, with Python and TypeScript SDKs
 - [ ] Verify current x86-64 binding packages, Windows, other supported runtime/platform combinations, portable distributions, browser support, examples, and every CI gate. Remote CI has not run.
 - [ ] Audit the original objective against current artifacts. Do not mark it complete while any required semantics, coverage, portability, or comparative-performance evidence remains missing.
 
+## Latest Python fast-path iteration
+
+- [x] `_native.fast_plan` exposes `Program.fastPlan`; `cel/plain.py` compiles the plan to straight-line Python with `type(...) is` guards, hoisted root reads, per-block object caching, and a `frozenset.isdisjoint` dotted-key check. `evaluate(bindings, plain_data=True)` falls back on any surprise; bool-where-int, int outside int64, lone surrogates, non-dict roots, and missing keys are all pinned.
+- [x] 139 Python tests, 100% coverage. Authorization 825 -> 547 ns, routing 627 -> 415 ns (1.5x). The interpreter bounds this mode (an unguarded Python expression is about 170 ns), so it will not match the Node fast path.
+
 ## Latest Node fast-path iteration
 
 - [x] `Program.fastPlan` (Zig, `src/fast_plan.zig`) emits the plain-data subset as JSON or null; quoted fields are excluded by the identifier check that the reverted attempt lacked, plus optional selects, absolute names, unsafe integers, and any environment with a container, constants, functions, or descriptors. Public tests pin the authorization plan byte-for-byte and 19 rejections; allocation failures are exercised.

@@ -1,13 +1,23 @@
 from __future__ import annotations
 
+from typing import cast
+
 from cel import _native
 from cel.enums import EnumValue
 from cel.functions import Function as Function
 from cel.maps import CELMap
 from cel.network import CIDR, IPAddress
 from cel.optional import OptionalValue
+from cel.plain import BAIL, FastFunction, compile_plain
 from cel.temporal import Duration, Timestamp
 from cel.values import CELType as CELType, MapKey as MapKey, Message as Message, UInt as UInt, Value as Value
+
+
+class _Unset:
+    """Marker for a fast path that has not been compiled yet."""
+
+
+_UNSET = _Unset()
 
 
 class CompileError(ValueError):
@@ -19,12 +29,13 @@ class EvaluationError(RuntimeError):
 
 
 class Program:
-    __slots__ = ("_environment", "_handle")
+    __slots__ = ("_environment", "_fast", "_handle")
 
     def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
         if type(check) is not bool:
             raise TypeError("check must be a bool")
         self._environment = environment
+        self._fast: FastFunction | None | _Unset = _UNSET
         try:
             if environment is None and not check:
                 self._handle = _native.compile(source)
@@ -33,7 +44,33 @@ class Program:
         except ValueError as exc:
             raise CompileError(str(exc)) from None
 
-    def evaluate(self, bindings: dict[str, Value]) -> Value:
+    @property
+    def has_fast_path(self) -> bool:
+        """Whether `evaluate(bindings, plain_data=True)` can bypass the engine for this program."""
+        return self._fast_path() is not None
+
+    def _fast_path(self) -> FastFunction | None:
+        if isinstance(self._fast, _Unset):
+            self._fast = compile_plain(_native.fast_plan(self._handle))
+        return self._fast
+
+    def evaluate(self, bindings: dict[str, Value], *, plain_data: bool = False) -> Value:
+        """Evaluate with `bindings`.
+
+        `plain_data=True` runs a Python function compiled from the program when it uses only string,
+        boolean, and integer literals, unquoted field selection, string-keyed indexing, `==`, `!=`, `&&`,
+        `||`, `!`, `?:`, and the `startsWith`/`endsWith`/`contains` predicates. Bindings must be dictionaries
+        of dictionaries, `str`, `bool`, and int64 `int` values; any other value sends the call to the engine
+        so the result is unchanged. Unused keys are never read in this mode.
+        """
+        if type(plain_data) is not bool:
+            raise TypeError("plain_data must be a bool")
+        if plain_data:
+            fast = self._fast if not isinstance(self._fast, _Unset) else self._fast_path()
+            if fast is not None:
+                result = fast(bindings)
+                if result is not BAIL:
+                    return cast(Value, result)
         environment = self._environment
         return _native.evaluate(
             self._handle,

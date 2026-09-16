@@ -21,7 +21,14 @@ def load_workloads() -> list[dict[str, Any]]:
 
 
 def load_engine(engine: str) -> tuple[Callable[[str], Any], Callable[[Any, dict[str, Any]], Any], str]:
-    if engine in ("candidate", "candidate-checked", "candidate-protobuf", "candidate-maps", "candidate-functions"):
+    if engine in (
+        "candidate",
+        "candidate-checked",
+        "candidate-protobuf",
+        "candidate-maps",
+        "candidate-functions",
+        "candidate-plain",
+    ):
         try:
             cel = importlib.import_module("cel")
         except ModuleNotFoundError as error:
@@ -72,6 +79,8 @@ def load_engine(engine: str) -> tuple[Callable[[str], Any], Callable[[Any, dict[
                     )
                     for name, value in bindings.items()
                 }
+            if engine == "candidate-plain":
+                return program.evaluate(bindings, plain_data=True)
             return program.evaluate(bindings)
 
         try:
@@ -207,6 +216,7 @@ def main() -> None:
             "candidate-protobuf",
             "candidate-maps",
             "candidate-functions",
+            "candidate-plain",
             "cel-python",
             "python-cel",
             "cel-rust",

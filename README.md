@@ -526,6 +526,25 @@ CIDR values retain host bits: `cidr('10.24.0.17/16')` differs from `cidr('10.24.
 
 Other IP methods are `.family()`, `.isUnspecified()`, `.isLoopback()`, `.isLinkLocalMulticast()`, and `.isLinkLocalUnicast()`. The Zig equivalent is `zig build example-network -Dexamples=true`; you pass `Value.ip` and `Value.cidr` with borrowed fixed-size `IP` and `CIDR` metadata. [Reference notes](conformance/reference/README.md#network-extension) retain corpus and checker-phase disagreements.
 
+## Plain-data fast path
+
+```sh
+uv run --project bindings/python python - <<'PY'
+from cel import Program
+
+policy = Program('request.method == "GET" && principal.authenticated && (principal.role == "admin" || resource.owner == principal.id)')
+request = {
+    "request": {"method": "GET"},
+    "principal": {"authenticated": True, "role": "member", "id": "user-42"},
+    "resource": {"owner": "user-42"},
+}
+assert policy.has_fast_path
+assert policy.evaluate(request, plain_data=True) is True
+PY
+```
+
+`plain_data=True` runs a Python function compiled from the program when it uses only string, boolean, and integer literals, unquoted field selection, string-keyed indexing, `==`, `!=`, `&&`, `||`, `!`, `?:`, and the `startsWith`, `endsWith`, and `contains` predicates. Bindings must be dictionaries of dictionaries, `str`, `bool`, and int64 `int` values; anything else sends the call to the engine so the result is unchanged. Unused keys are never read in this mode. It is about 1.5x faster than the default path on the authorization and routing benchmarks; the TypeScript binding has the same option as `{ plainData: true }`.
+
 ## Regular expressions
 
 ```sh
