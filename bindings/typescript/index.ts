@@ -793,7 +793,9 @@ class PlainCompiler {
       const needle = this.emit(node[1] as PlanNode, "string");
       if (needle === null) return null;
       const members = listNode.slice(1) as string[];
-      return `(${members.map((member) => `${needle} === ${JSON.stringify(member)}`).join(" || ") || "false"})`;
+      // The needle is evaluated even for an empty list so a missing key still reaches the engine's error.
+      if (members.length === 0) return `(${needle}, false)`;
+      return `(${members.map((member) => `${needle} === ${JSON.stringify(member)}`).join(" || ")})`;
     }
     if (kind === "all" || kind === "exists") {
       if (expected !== "bool") return null;
@@ -804,7 +806,7 @@ class PlainCompiler {
       const predicate = this.emit(node[3] as PlanNode, "bool");
       this.scopes.pop();
       if (predicate === null) return null;
-      return `${list}.${kind === "all" ? "every" : "some"}((${local}) => ${predicate})`;
+      return `${kind === "all" ? "everyItem" : "someItem"}(${list}, (${local}) => ${predicate})`;
     }
     if (kind === "startsWith" || kind === "endsWith" || kind === "contains") {
       if (expected !== "bool") return null;
@@ -882,6 +884,17 @@ function stringSize(text: string): number {
 function sizeOf(value: unknown): number {
   if (typeof value === "string") return wellFormed(value) ? stringSize(value) : bail();
   return isPlainList(value) ? value.length : bail();
+}
+
+const arrayEvery = Array.prototype.every;
+const arraySome = Array.prototype.some;
+
+// Own `every`/`some` properties on a plain array must not replace the intrinsics.
+function everyItem(list: unknown[], predicate: (item: unknown) => boolean): boolean {
+  return reflectApply(arrayEvery, list, [predicate]) as boolean;
+}
+function someItem(list: unknown[], predicate: (item: unknown) => boolean): boolean {
+  return reflectApply(arraySome, list, [predicate]) as boolean;
 }
 
 function checkedInt(value: number): number {
@@ -972,6 +985,8 @@ function compileFastPath(plan: string | null): FastFunction | undefined {
     wellFormed,
     ownEntry,
     listEntry,
+    everyItem,
+    someItem,
     addInt,
     subInt,
     mulInt,

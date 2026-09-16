@@ -41,7 +41,8 @@ Objective: a high-performance CEL engine in Zig, with Python and TypeScript SDKs
 
 - [x] `fast_plan.zig` now emits ordering, arithmetic, unary minus, `size()`, dynamic indexing, `in` against a string-literal list, and single-variable `all`/`exists`; the Zig test pins accept and reject lists. Both wrappers compile the new kinds with typed guards: integer-only ordering (string order differs in UTF-16), overflow- and zero-checked arithmetic helpers, own-key-only dynamic lookup, code-point `size()`, comprehension variables as scoped locals.
 - [x] Node paired: data validation 1,062 -> 161 ns (6.5x), cart 1,489 -> 297 ns (5.0x); both lead `cel-js` (590 and 1,296 ns). Four of twelve workloads compile; the mix is 1.22x. Python: data validation 1.6x, cart 1.07x (interpreter-bound).
-- [x] 140 Zig, 140 Python, 111 Node tests; 100% wrapper coverage on both; six audits unchanged.
+- [x] A read-only review found three defects, all reproduced and fixed: Python object reads cached inside a loop or branch body escaped into later code (`UnboundLocalError` when the body did not run; the cache is now restored after every conditional block), JavaScript `x in []` compiled to a constant and skipped reading `x` (a missing key no longer reached the engine's error), and JavaScript comprehensions called `.every`/`.some` on the array so an own property of that name replaced iteration (now `Reflect.apply` of the intrinsics). `ownEntry` using `Object.hasOwn` rather than an enumerability check was noted as the already documented non-enumerable difference.
+- [x] 140 Zig, 141 Python, 112 Node tests; 100% wrapper coverage on both; six audits unchanged.
 
 ## Latest Python fast-path iteration
 

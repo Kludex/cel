@@ -203,7 +203,9 @@ class _Compiler:
             result = self.fresh()
             self.lines.append(f"{indent}{result} = {left}")
             self.lines.append(f"{indent}if {'' if kind == '&&' else 'not '}{result}:")
+            before = dict(self.objects)
             right = self.emit(node[2], "bool", indent + "    ")
+            self.objects = before
             if right is None:
                 return None
             self.lines.append(f"{indent}    {result} = {right}")
@@ -274,7 +276,10 @@ class _Compiler:
             self.lines.append(f"{indent}{result} = {kind == 'all'}")
             self.lines.append(f"{indent}for {element} in {items}:")
             self.scopes.append({node[2]: element})
+            # A loop body may not run, so nothing read inside it is in scope afterwards.
+            before = dict(self.objects)
             predicate = self.emit(node[3], "bool", indent + "    ")
+            self.objects = before
             self.scopes.pop()
             if predicate is None:
                 return None
@@ -290,12 +295,15 @@ class _Compiler:
                 return None
             result = self.fresh()
             self.lines.append(f"{indent}if {condition}:")
+            before = dict(self.objects)
             yes = self.emit(node[2], expected, indent + "    ")
+            self.objects = before
             if yes is None:
                 return None
             self.lines.append(f"{indent}    {result} = {yes}")
             self.lines.append(f"{indent}else:")
             no = self.emit(node[3], expected, indent + "    ")
+            self.objects = before
             if no is None:
                 return None
             self.lines.append(f"{indent}    {result} = {no}")

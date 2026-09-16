@@ -548,3 +548,24 @@ test("hand-built plans place every new node kind in an impossible position and a
   assert.equal(sizeRead({ a: "\u{1F600}\u{1F600}" }), true);
   assert.equal(sizeRead({ a: [1, 2] }), true);
 });
+
+test("review findings: empty membership still reads its operand and arrays cannot replace iteration", () => {
+  assert.throws(
+    () => new Program("m[k] in []").evaluate({ m: {}, k: "absent" }, { plainData: true }),
+    /NoSuchKey/,
+  );
+  const poisoned = Object.assign([0], { every: 0, some: 0 }) as unknown as number[];
+  assert.equal(
+    new Program("xs.all(x, x > 0)").evaluate({ xs: poisoned }, { plainData: true }),
+    false,
+  );
+  assert.equal(
+    new Program("xs.exists(x, x == 0)").evaluate({ xs: poisoned }, { plainData: true }),
+    true,
+  );
+  const skipped = new Program("xs.all(x, m.child.s == 'yes') && ys.all(y, m.child.s == 'yes')");
+  assert.equal(
+    skipped.evaluate({ xs: [], ys: [0], m: { child: { s: "yes" } } }, { plainData: true }),
+    true,
+  );
+});

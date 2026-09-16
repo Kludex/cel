@@ -223,3 +223,18 @@ def test_plain_data_mode_compiles_ordering_arithmetic_size_membership_and_compre
     assert Program("s.size() == 1").evaluate({"s": {"k": 1}}, plain_data=True) is True
     for source in ["xs.exists_one(x, x > 0)", "xs.map(x, x)", "a < 'b'", "a < 1.5", "xs.all(x, y, x > 0)"]:
         assert not Program(source).has_fast_path, source
+
+
+def test_reads_inside_a_skipped_loop_or_branch_are_not_reused_afterwards() -> None:
+    program = Program("xs.all(x, m.child.s == 'yes') && ys.all(y, m.child.s == 'yes')")
+    bindings: dict[str, Value] = {"xs": [], "ys": [0], "m": {"child": {"s": "yes"}}}
+    assert program.has_fast_path
+    assert program.evaluate(bindings, plain_data=True) is True
+    assert program.evaluate(bindings) is True
+    branch = Program("(f ? m.child.s : 'no') == 'yes' && m.child.s == 'yes'")
+    assert branch.evaluate({"f": False, "m": {"child": {"s": "yes"}}}, plain_data=True) is False
+    assert branch.evaluate({"f": True, "m": {"child": {"s": "yes"}}}, plain_data=True) is True
+    short = Program("(a && m.child.s == 'yes') || m.child.s == 'yes'")
+    assert short.evaluate({"a": False, "m": {"child": {"s": "yes"}}}, plain_data=True) is True
+    with pytest.raises(EvaluationError, match="NoSuchKey"):
+        Program("m[k] in []").evaluate({"m": {}, "k": "absent"}, plain_data=True)
