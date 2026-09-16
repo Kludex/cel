@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+zig fmt src examples conformance benchmarks/zig.zig build build/native_sources.zon build.zig build.zig.zon
+uv run --project bindings/python ruff check --fix --config bindings/python/pyproject.toml bindings/python benchmarks/python.py conformance build
+uv run --project bindings/python ruff format --config bindings/python/pyproject.toml bindings/python benchmarks/python.py conformance build
+uvx --from clang-format==21.1.0 clang-format -i src/*.cc src/*.h
+npm --prefix bindings/typescript run format
+bindings/typescript/node_modules/.bin/oxfmt --config bindings/typescript/.oxfmtrc.json conformance/*.mjs benchmarks/*.mjs benchmarks/profiling/*.mjs

@@ -1,0 +1,22 @@
+python full
+total: total=2508 passed=1820 failed=4 unsupported=684
+core: total=1905 passed=1820 failed=4 unsupported=81
+extension: total=603 passed=0 failed=0 unsupported=603
+audit exit: 1
+python evaluation
+total: total=2508 passed=1806 failed=4 unsupported=698
+core: total=1905 passed=1806 failed=4 unsupported=95
+extension: total=603 passed=0 failed=0 unsupported=603
+audit exit: 1
+node full
+total: total=2508 passed=1820 failed=4 unsupported=684
+core: total=1905 passed=1820 failed=4 unsupported=81
+extension: total=603 passed=0 failed=0 unsupported=603
+audit exit: 1
+node evaluation
+total: total=2508 passed=1806 failed=4 unsupported=698
+core: total=1905 passed=1806 failed=4 unsupported=95
+extension: total=603 passed=0 failed=0 unsupported=603
+audit exit: 1
+......                                                                   [100%]
+6 passed in 4.42s

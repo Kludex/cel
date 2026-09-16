@@ -1,0 +1,11 @@
+v24.14.1
+ldd (Debian GLIBC 2.36-9+deb12u13) 2.36
+> @pydantic/cel@0.1.0-alpha.20 build
+> npm run build:native && tsc -p tsconfig.json
+
+
+> @pydantic/cel@0.1.0-alpha.20 build:native
+> node build.mjs
+
+sh: 1: tsc: not found
+ 177   E   L   F

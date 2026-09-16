@@ -1,0 +1,11 @@
+✔ network values preserve canonical addresses, host bits and nominal types (1.881083ms)
+✔ network parsing rejects zones and all mapped IPv6 representations (0.341833ms)
+✔ network constants callbacks and nested results survive collection (1.780542ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 442.83425

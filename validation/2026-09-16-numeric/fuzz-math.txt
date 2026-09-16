@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.math shifts and extrema stay bounded for untrusted runtime values" (49f3549fa1a2ca44)
+Runs: 0 -> 100036
+Unique runs: 0 -> 14
+Coverage: 0/17263 -> 598/17263 (3.46%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

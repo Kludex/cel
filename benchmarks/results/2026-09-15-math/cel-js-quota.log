@@ -1,0 +1,20 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87
+  return new EvaluationError({code, message, node})
+         ^
+
+EvaluationError: found no matching overload for 'dyn.bitAnd(dyn, int)'
+
+>    1 | math.bitAnd(account.permissions, 4) == 4 && request.units > 0 && math.isFinite(request.cpu) && math.ceil(request.cpu) <= limits.cpu && math.greatest(request.units, account.used + request.units) <= limits.units && math.abs(request.delta) <= limits.max_delta
+         ^
+    at TypeChecker.evaluationError [as createError] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87:10)
+    at Object.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:590:19)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at Object.checkBinary [as check] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:244:20)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at Object.checkLogicalOp [as check] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:187:24)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+
+Node.js v24.14.1

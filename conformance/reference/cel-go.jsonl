@@ -1,0 +1,12 @@
+{"error":"no such attribute(s): x","expression":"[].map(x)","phase":"evaluate"}
+{"error":"no such overload: all","expression":"[].all()","phase":"evaluate"}
+{"error":"ERROR: \u003cinput\u003e:1:11: duplicate variable name: x\n | [].all(x, x, true)\n | ..........^","expression":"[].all(x, x, true)","phase":"parse"}
+{"error":"no such attribute(s): x","expression":"[].existsOne(x, true)","phase":"evaluate"}
+{"error":"ERROR: \u003cinput\u003e:1:5: invalid argument to has() macro\n | has(1)\n | ....^","expression":"has(1)","phase":"parse"}
+{"error":"no such overload: has","expression":".has({'x':1}.x)","phase":"evaluate"}
+{"expression":"has(a.b.c)","type":"int","value":3}
+{"expression":"a.b.c","type":"int","value":3}
+{"expression":"[{'b': {'c': 4}}].all(a, a.b.c == 4 \u0026\u0026 .a.b.c == 3)","type":"bool","value":true}
+{"expression":"dyn(9223372036854775807) \u003c 9223372036854775808.0","type":"bool","value":false}
+{"expression":"9007199254740993 == 9007199254740992.0","type":"bool","value":true}
+{"error":"integer overflow","expression":"int(-9223372036854775808.0)","phase":"evaluate"}

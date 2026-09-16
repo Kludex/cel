@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/marcelotryle/dev/pydantic/cel/conformance/run.py", line 197, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/marcelotryle/dev/pydantic/cel/conformance/run.py", line 186, in main
+    report = run(args.corpus, args.engine, args.mode)
+  File "/Users/marcelotryle/dev/pydantic/cel/conformance/run.py", line 118, in run
+    manifest, cases = load_cases(corpus, policy, mode)
+                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/dev/pydantic/cel/conformance/suite.py", line 26, in load_cases
+    manifest = load_json(corpus / "manifest.json")
+  File "/Users/marcelotryle/dev/pydantic/cel/conformance/suite.py", line 22, in load_json
+    return cast(dict[str, Any], json.loads(path.read_text(encoding="utf-8")))
+                                           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.local/share/uv/python/cpython-3.14.6-macos-aarch64-none/lib/python3.14/pathlib/__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.local/share/uv/python/cpython-3.14.6-macos-aarch64-none/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NotADirectoryError: [Errno 20] Not a directory: 'conformance/testdata/network_ext.json/manifest.json'

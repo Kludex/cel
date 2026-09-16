@@ -1,0 +1,8 @@
+
+> @pydantic/cel@0.1.0-alpha.15 build
+> npm run build:native && tsc -p tsconfig.json
+
+
+> @pydantic/cel@0.1.0-alpha.15 build:native
+> node build.mjs
+

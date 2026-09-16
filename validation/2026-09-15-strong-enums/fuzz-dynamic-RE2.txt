@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.dynamic RE2 inputs never trap or leak evaluation storage" (161656b6438778b2)
+Runs: 0 -> 100092
+Unique runs: 0 -> 64
+Coverage: 0/13116 -> 601/13116 (4.58%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

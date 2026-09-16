@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.network text parsing stays consistent through public Programs" (b44e20e01d03c307)
+Runs: 0 -> 104164
+Unique runs: 0 -> 131
+Coverage: 0/17176 -> 696/17176 (4.05%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

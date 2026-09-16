@@ -1,0 +1,29 @@
+........................................................................ [ 83%]
+..............                                                           [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.20-final-0 _______________
+
+Name                                            Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------------
+/work/bindings/python/tests/__init__.py             1      0      0      0   100%
+/work/bindings/python/tests/test_enums.py          99      0     18      0   100%
+/work/bindings/python/tests/test_functions.py     124      0      0      0   100%
+/work/bindings/python/tests/test_maps.py           75      0     16      0   100%
+/work/bindings/python/tests/test_math.py           38      0      4      0   100%
+/work/bindings/python/tests/test_optional.py       87      0      4      0   100%
+/work/bindings/python/tests/test_program.py       137      0      4      0   100%
+/work/bindings/python/tests/test_protobuf.py       38      0      0      0   100%
+/work/bindings/python/tests/test_storage.py        17      0      2      0   100%
+/work/bindings/python/tests/test_temporal.py       33      0      2      0   100%
+site/cel/__init__.py                                6      0      0      0   100%
+site/cel/enums.py                                  22      0      8      0   100%
+site/cel/functions.py                              28      0     14      0   100%
+site/cel/maps.py                                   25      0     12      0   100%
+site/cel/optional.py                               18      0      4      0   100%
+site/cel/program.py                                45      0      8      0   100%
+site/cel/temporal.py                               19      0      8      0   100%
+site/cel/values.py                                 48      0     18      0   100%
+-------------------------------------------------------------------------------------------
+TOTAL                                             860      0    122      0   100%
+Required test coverage of 100.0% reached. Total coverage: 100.00%
+86 passed in 0.63s

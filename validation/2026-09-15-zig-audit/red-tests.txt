@@ -1,0 +1,298 @@
+FFFF                                                                                                                                                   [100%]
+========================================================================== FAILURES ==========================================================================
+_______________________________________________ test_full_mode_runs_checking_and_validates_deduced_types[zig] ________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-879/test_full_mode_runs_checking_a0')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_full_mode_runs_checking_and_validates_deduced_types(tmp_path: Path, engine: str) -> None:
+        tests = [
+            {
+                "name": "required",
+                "expr": "x + 1",
+                "value": {"int64Value": "3"},
+                "typeEnv": [{"name": "x", "ident": {"type": {"primitive": "INT64"}}}],
+                "bindings": {"x": {"value": {"int64Value": "2"}}},
+            },
+            {"name": "invalid_dead_branch", "expr": "false && 1", "value": {"boolValue": False}},
+            {
+                "name": "check_only",
+                "expr": "1 + 1",
+                "checkOnly": True,
+                "typedResult": {"deducedType": {"primitive": "INT64"}},
+            },
+            {
+                "name": "wrong_deduced_type",
+                "expr": "[]",
+                "checkOnly": True,
+                "typedResult": {"deducedType": {"primitive": "BOOL"}},
+            },
+        ]
+        data = json.dumps({"section": [{"name": "checking", "test": tests}]}).encode()
+        (tmp_path / "checking.json").write_bytes(data)
+        (tmp_path / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "source": {},
+                    "summary": {"tests": 4},
+                    "files": [
+                        {
+                            "name": "checking",
+                            "kind": "core",
+                            "output": "checking.json",
+                            "outputSha256": hashlib.sha256(data).hexdigest(),
+                            "tests": 4,
+                        }
+                    ],
+                }
+            )
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "run.py"),
+                    "--corpus",
+                    str(tmp_path),
+                    "--engine",
+                    engine,
+                    "--mode",
+                    mode,
+                    "--report",
+                    str(output),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+>           assert process.returncode == (1 if mode == "full" else 0), process.stderr
+E           AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {python,node}] [--mode {full,evaluation}] [--report REPORT]
+E             run.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')
+E             
+E           assert 2 == 1
+E            +  where 2 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...luation}] [--report REPORT]\nrun.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')\n").returncode
+
+conformance/test_checker.py:76: AssertionError
+___________________________________________ test_audit_selects_strong_enum_mode_without_changing_legacy_cases[zig] ___________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-879/test_audit_selects_strong_enum0')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_audit_selects_strong_enum_mode_without_changing_legacy_cases(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "enums")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry]})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "run.py"),
+                    "--corpus",
+                    str(tmp_path),
+                    "--engine",
+                    engine,
+                    "--mode",
+                    mode,
+                    "--report",
+                    str(output),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {python,node}] [--mode {full,evaluation}] [--report REPORT]
+E             run.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')
+E             
+E           assert 2 == 0
+E            +  where 2 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...luation}] [--report REPORT]\nrun.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')\n").returncode
+
+conformance/test_enums.py:40: AssertionError
+_______________________________________________ test_audit_preserves_mixed_map_keys_in_inputs_and_outputs[zig] _______________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-879/test_audit_preserves_mixed_map0')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_audit_preserves_mixed_map_keys_in_inputs_and_outputs(tmp_path: Path, engine: str) -> None:
+        value = {
+            "mapValue": {
+                "entries": [
+                    {"key": {"boolValue": True}, "value": {"stringValue": "boolean"}},
+                    {"key": {"int64Value": "1"}, "value": {"stringValue": "integer"}},
+                    {"key": {"uint64Value": "18446744073709551615"}, "value": {"stringValue": "maximum"}},
+                    {"key": {"int64Value": "-1"}, "value": {"stringValue": "negative"}},
+                ]
+            }
+        }
+        declaration = {
+            "name": "m",
+            "ident": {
+                "type": {
+                    "mapType": {
+                        "keyType": {"dyn": {}},
+                        "valueType": {"dyn": {}},
+                    }
+                }
+            },
+        }
+        tests = [
+            {
+                "name": "round_trip",
+                "expr": "m",
+                "bindings": {"m": {"value": value}},
+                "typeEnv": [declaration],
+                "value": value,
+            },
+            {
+                "name": "read_typed_keys",
+                "expr": "m[true] == 'boolean' && m[1u] == 'integer' && m[-1] == 'negative'",
+                "bindings": {"m": {"value": value}},
+                "typeEnv": [declaration],
+                "value": {"boolValue": True},
+            },
+            {
+                "name": "literal",
+                "expr": "{true:'boolean', 1:'integer', 18446744073709551615u:'maximum', -1:'negative'}",
+                "value": value,
+            },
+        ]
+        data = json.dumps({"section": [{"name": "maps", "test": tests}]}).encode()
+        (tmp_path / "maps.json").write_bytes(data)
+        (tmp_path / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "source": {},
+                    "summary": {"tests": len(tests)},
+                    "files": [
+                        {
+                            "name": "typed_maps",
+                            "kind": "core",
+                            "output": "maps.json",
+                            "tests": len(tests),
+                            "outputSha256": hashlib.sha256(data).hexdigest(),
+                        }
+                    ],
+                }
+            )
+        )
+        for mode in ("full", "evaluation"):
+            report_path = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "run.py"),
+                    "--corpus",
+                    str(tmp_path),
+                    "--engine",
+                    engine,
+                    "--mode",
+                    mode,
+                    "--report",
+                    str(report_path),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {python,node}] [--mode {full,evaluation}] [--report REPORT]
+E             run.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')
+E             
+E           assert 2 == 0
+E            +  where 2 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...luation}] [--report REPORT]\nrun.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')\n").returncode
+
+conformance/test_maps.py:96: AssertionError
+______________________________________________ test_audit_preserves_types_phases_and_map_key_distinctions[zig] _______________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-879/test_audit_preserves_types_pha0')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_audit_preserves_types_phases_and_map_key_distinctions(tmp_path: Path, engine: str) -> None:
+        tests: list[dict[str, Any]] = [
+            {"name": "uint", "expr": "1u", "value": {"uint64Value": "1"}},
+            {"name": "null", "expr": "null", "value": {"nullValue": "NULL_VALUE"}},
+            {"name": "nan", "expr": "0.0 / 0.0", "value": {"doubleValue": "NaN"}},
+            {"name": "type", "expr": "type(1)", "value": {"typeValue": "int"}},
+            {
+                "name": "null_input",
+                "expr": "x",
+                "bindings": {"x": {"value": {"nullValue": "NULL_VALUE"}}},
+                "value": {"nullValue": "NULL_VALUE"},
+            },
+            {
+                "name": "syntax_before_input",
+                "expr": "1 +",
+                "evalError": {},
+                "bindings": {
+                    "x": {"value": {"mapValue": {"entries": [{"key": {"int64Value": "1"}, "value": {"boolValue": True}}]}}}
+                },
+            },
+            {"name": "eval_error", "expr": "1 / 0", "evalError": {}},
+            {"name": "compile_error", "expr": "1 +", "evalError": {}},
+            {"name": "wrong_type", "expr": "true", "value": {"int64Value": "1"}},
+            {
+                "name": "distinct_keys",
+                "expr": "{true: 'same'}",
+                "value": {
+                    "mapValue": {
+                        "entries": [
+                            {"key": {"boolValue": True}, "value": {"stringValue": "same"}},
+                            {"key": {"int64Value": "1"}, "value": {"stringValue": "same"}},
+                        ]
+                    }
+                },
+            },
+        ]
+        for case in tests:
+            case["disableCheck"] = True
+        corpus = json.dumps({"name": "audit", "section": [{"name": "checks", "test": tests}]}).encode()
+        (tmp_path / "audit.json").write_bytes(corpus)
+        manifest = {
+            "source": {"purpose": "audit self-test"},
+            "summary": {"tests": len(tests)},
+            "files": [
+                {
+                    "name": "audit",
+                    "kind": "core",
+                    "output": "audit.json",
+                    "outputSha256": hashlib.sha256(corpus).hexdigest(),
+                    "tests": len(tests),
+                }
+            ],
+        }
+        (tmp_path / "manifest.json").write_text(json.dumps(manifest))
+        report_path = tmp_path / "report.json"
+        command = [
+            sys.executable,
+            str(ROOT / "run.py"),
+            "--corpus",
+            str(tmp_path),
+            "--engine",
+            engine,
+            "--report",
+            str(report_path),
+        ]
+        process = subprocess.run(command, capture_output=True, text=True, timeout=30)
+>       assert process.returncode == 1, process.stderr
+E       AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {python,node}] [--mode {full,evaluation}] [--report REPORT]
+E         run.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')
+E         
+E       assert 2 == 1
+E        +  where 2 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...luation}] [--report REPORT]\nrun.py: error: argument --engine: invalid choice: 'zig' (choose from 'python', 'node')\n").returncode
+
+conformance/test_runner.py:82: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_full_mode_runs_checking_and_validates_deduced_types[zig] - AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {pyt...
+FAILED bindings/python::test_audit_selects_strong_enum_mode_without_changing_legacy_cases[zig] - AssertionError: usage: run.py [-h] [--corpus CORPUS] [--en...
+FAILED bindings/python::test_audit_preserves_mixed_map_keys_in_inputs_and_outputs[zig] - AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {py...
+FAILED bindings/python::test_audit_preserves_types_phases_and_map_key_distinctions[zig] - AssertionError: usage: run.py [-h] [--corpus CORPUS] [--engine {p...
+4 failed, 8 deselected in 0.32s

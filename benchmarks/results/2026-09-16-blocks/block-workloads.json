@@ -1,0 +1,882 @@
+[
+  {
+    "name": "request_authorization",
+    "expression": "request.method == \"GET\" && request.path.startsWith(\"/v1/\") && principal.authenticated && (principal.role == \"admin\" || resource.owner == principal.id)",
+    "cases": [
+      {
+        "name": "owner_reads_resource",
+        "bindings": {
+          "request": {
+            "method": "GET",
+            "path": "/v1/documents/42"
+          },
+          "principal": {
+            "authenticated": true,
+            "role": "member",
+            "id": "user-42"
+          },
+          "resource": {
+            "owner": "user-42"
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "admin_reads_resource",
+        "bindings": {
+          "request": {
+            "method": "GET",
+            "path": "/v1/documents/42"
+          },
+          "principal": {
+            "authenticated": true,
+            "role": "admin",
+            "id": "admin-1"
+          },
+          "resource": {
+            "owner": "user-42"
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "other_user_is_denied",
+        "bindings": {
+          "request": {
+            "method": "GET",
+            "path": "/v1/documents/42"
+          },
+          "principal": {
+            "authenticated": true,
+            "role": "member",
+            "id": "user-7"
+          },
+          "resource": {
+            "owner": "user-42"
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "write_is_denied",
+        "bindings": {
+          "request": {
+            "method": "POST",
+            "path": "/v1/documents/42"
+          },
+          "principal": {
+            "authenticated": true,
+            "role": "admin",
+            "id": "admin-1"
+          },
+          "resource": {
+            "owner": "admin-1"
+          }
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "request_data_validation",
+    "expression": "payload.name.size() >= 3 && payload.tags.size() > 0 && payload.tags.size() <= 5 && payload.tags[0] != \"\" && payload.email.endsWith(\"@example.com\") && payload.region.contains(\"us-\") && payload.metadata[\"source\"] == \"api\"",
+    "cases": [
+      {
+        "name": "valid_signup",
+        "bindings": {
+          "payload": {
+            "name": "Alice",
+            "tags": [
+              "trial",
+              "newsletter"
+            ],
+            "email": "alice@example.com",
+            "region": "us-east-1",
+            "metadata": {
+              "source": "api"
+            }
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "short_name",
+        "bindings": {
+          "payload": {
+            "name": "Al",
+            "tags": [
+              "trial"
+            ],
+            "email": "alice@example.com",
+            "region": "us-east-1",
+            "metadata": {
+              "source": "api"
+            }
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "empty_tags_short_circuits_index",
+        "bindings": {
+          "payload": {
+            "name": "Alice",
+            "tags": [],
+            "email": "alice@example.com",
+            "region": "us-east-1",
+            "metadata": {
+              "source": "api"
+            }
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "external_email",
+        "bindings": {
+          "payload": {
+            "name": "Alice",
+            "tags": [
+              "trial"
+            ],
+            "email": "alice@invalid.test",
+            "region": "us-east-1",
+            "metadata": {
+              "source": "api"
+            }
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "untrusted_source",
+        "bindings": {
+          "payload": {
+            "name": "Alice",
+            "tags": [
+              "trial"
+            ],
+            "email": "alice@example.com",
+            "region": "us-east-1",
+            "metadata": {
+              "source": "import"
+            }
+          }
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "cart_validation",
+    "expression": "cart.items.size() > 0 && cart.items.size() <= 50 && cart.items.all(item, item.quantity > 0 && item.quantity <= stock[item.sku] && item.price > 0 && item.price * item.quantity <= 100000) && cart.coupons.all(code, code in ['WELCOME', 'LOYALTY'])",
+    "cases": [
+      {
+        "name": "valid_multi_item_cart",
+        "bindings": {
+          "cart": {
+            "items": [
+              {
+                "sku": "book",
+                "quantity": 2,
+                "price": 1500
+              },
+              {
+                "sku": "pen",
+                "quantity": 5,
+                "price": 250
+              },
+              {
+                "sku": "bag",
+                "quantity": 1,
+                "price": 4000
+              }
+            ],
+            "coupons": [
+              "WELCOME"
+            ]
+          },
+          "stock": {
+            "book": 20,
+            "pen": 100,
+            "bag": 4
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "later_item_out_of_stock",
+        "bindings": {
+          "cart": {
+            "items": [
+              {
+                "sku": "book",
+                "quantity": 2,
+                "price": 1500
+              },
+              {
+                "sku": "bag",
+                "quantity": 5,
+                "price": 4000
+              }
+            ],
+            "coupons": []
+          },
+          "stock": {
+            "book": 20,
+            "bag": 4
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "unrecognized_coupon",
+        "bindings": {
+          "cart": {
+            "items": [
+              {
+                "sku": "book",
+                "quantity": 1,
+                "price": 1500
+              }
+            ],
+            "coupons": [
+              "WELCOME",
+              "FRAUD"
+            ]
+          },
+          "stock": {
+            "book": 20
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "empty_cart",
+        "bindings": {
+          "cart": {
+            "items": [],
+            "coupons": []
+          },
+          "stock": {}
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "request_routing",
+    "expression": "request.path.startsWith(\"/admin\") ? \"admin\" : request.path.startsWith(\"/api\") && request.headers[\"x-canary\"] == \"1\" ? \"canary\" : \"default\"",
+    "cases": [
+      {
+        "name": "admin_route",
+        "bindings": {
+          "request": {
+            "path": "/admin/users",
+            "headers": {
+              "x-canary": "0"
+            }
+          }
+        },
+        "expected": "admin"
+      },
+      {
+        "name": "canary_api_route",
+        "bindings": {
+          "request": {
+            "path": "/api/orders",
+            "headers": {
+              "x-canary": "1"
+            }
+          }
+        },
+        "expected": "canary"
+      },
+      {
+        "name": "stable_api_route",
+        "bindings": {
+          "request": {
+            "path": "/api/orders",
+            "headers": {
+              "x-canary": "0"
+            }
+          }
+        },
+        "expected": "default"
+      },
+      {
+        "name": "health_route",
+        "bindings": {
+          "request": {
+            "path": "/health",
+            "headers": {
+              "x-canary": "1"
+            }
+          }
+        },
+        "expected": "default"
+      }
+    ]
+  },
+  {
+    "name": "customer_format_validation",
+    "expression": "payload.id.matches('^[A-Z]{3}-[0-9]{6}$') && payload.email.matches(r'^[a-z][a-z0-9._+-]*@[a-z0-9.-]+\\.[a-z]{2,}$') && payload.tags.all(t, t.matches('^[a-z][a-z0-9_-]{0,15}$'))",
+    "cases": [
+      {
+        "name": "valid_customer",
+        "bindings": {
+          "payload": {
+            "id": "CUS-123456",
+            "email": "alice@example.com",
+            "tags": [
+              "trial",
+              "newsletter"
+            ]
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "invalid_customer_id",
+        "bindings": {
+          "payload": {
+            "id": "CUS-12345x",
+            "email": "alice@example.com",
+            "tags": [
+              "trial"
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "invalid_email",
+        "bindings": {
+          "payload": {
+            "id": "CUS-123456",
+            "email": "alice@invalid",
+            "tags": [
+              "trial"
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "invalid_later_tag",
+        "bindings": {
+          "payload": {
+            "id": "CUS-123456",
+            "email": "alice@example.com",
+            "tags": [
+              "trial",
+              "NOT VALID"
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "valid_empty_tags",
+        "bindings": {
+          "payload": {
+            "id": "CUS-000001",
+            "email": "bob+ops@example.org",
+            "tags": []
+          }
+        },
+        "expected": true
+      }
+    ]
+  },
+  {
+    "name": "temporal_authorization",
+    "expression": "timestamp(request.now) >= timestamp(grant.starts) && timestamp(request.now) < timestamp(grant.expires) && timestamp(request.now).getDayOfWeek('America/New_York') in [1,2,3,4,5] && timestamp(request.now).getHours('America/New_York') >= 9 && timestamp(request.now).getHours('America/New_York') < 17 && duration(job.elapsed) <= duration('30s')",
+    "cases": [
+      {
+        "name": "valid_business_hours",
+        "bindings": {
+          "request": {
+            "now": "2024-07-08T14:30:00Z"
+          },
+          "grant": {
+            "starts": "2024-07-08T13:00:00Z",
+            "expires": "2024-07-08T22:00:00Z"
+          },
+          "job": {
+            "elapsed": "25.5s"
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "expired_grant",
+        "bindings": {
+          "request": {
+            "now": "2024-07-08T23:00:00Z"
+          },
+          "grant": {
+            "starts": "2024-07-08T13:00:00Z",
+            "expires": "2024-07-08T22:00:00Z"
+          },
+          "job": {
+            "elapsed": "25.5s"
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "before_grant",
+        "bindings": {
+          "request": {
+            "now": "2024-07-08T12:30:00Z"
+          },
+          "grant": {
+            "starts": "2024-07-08T13:00:00Z",
+            "expires": "2024-07-08T22:00:00Z"
+          },
+          "job": {
+            "elapsed": "25.5s"
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "deadline_exceeded_by_nanosecond",
+        "bindings": {
+          "request": {
+            "now": "2024-07-08T14:30:00Z"
+          },
+          "grant": {
+            "starts": "2024-07-08T13:00:00Z",
+            "expires": "2024-07-08T22:00:00Z"
+          },
+          "job": {
+            "elapsed": "30.000000001s"
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "weekend_denied",
+        "bindings": {
+          "request": {
+            "now": "2024-07-13T14:30:00Z"
+          },
+          "grant": {
+            "starts": "2024-07-12T00:00:00Z",
+            "expires": "2024-07-15T00:00:00Z"
+          },
+          "job": {
+            "elapsed": "25.5s"
+          }
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "optional_authorization",
+    "expression": "optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?active.orValue(false) && p.?roles.orValue([]).exists(r, r == 'admin')).orValue(false) && !resource.?deleted.orValue(false)",
+    "cases": [
+      {
+        "name": "active_admin_with_default_resource",
+        "bindings": {
+          "request": {
+            "principal": {
+              "active": true,
+              "roles": [
+                "admin"
+              ]
+            }
+          },
+          "resource": {}
+        },
+        "expected": true
+      },
+      {
+        "name": "missing_principal",
+        "bindings": {
+          "request": {},
+          "resource": {}
+        },
+        "expected": false
+      },
+      {
+        "name": "null_principal",
+        "bindings": {
+          "request": {
+            "principal": null
+          },
+          "resource": {}
+        },
+        "expected": false
+      },
+      {
+        "name": "inactive_admin",
+        "bindings": {
+          "request": {
+            "principal": {
+              "active": false,
+              "roles": [
+                "admin"
+              ]
+            }
+          },
+          "resource": {}
+        },
+        "expected": false
+      },
+      {
+        "name": "missing_roles",
+        "bindings": {
+          "request": {
+            "principal": {
+              "active": true
+            }
+          },
+          "resource": {}
+        },
+        "expected": false
+      },
+      {
+        "name": "deleted_resource",
+        "bindings": {
+          "request": {
+            "principal": {
+              "active": true,
+              "roles": [
+                "admin"
+              ]
+            }
+          },
+          "resource": {
+            "deleted": true
+          }
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "quota_and_permissions",
+    "expression": "math.bitAnd(account.permissions, 4) == 4 && request.units > 0 && math.isFinite(request.cpu) && math.ceil(request.cpu) <= limits.cpu && math.greatest(request.units, account.used + request.units) <= limits.units && math.abs(request.delta) <= limits.max_delta",
+    "cases": [
+      {
+        "name": "quota_boundary_is_allowed",
+        "bindings": {
+          "account": {
+            "permissions": 7,
+            "used": 8
+          },
+          "request": {
+            "units": 2,
+            "cpu": 1.2,
+            "delta": -2
+          },
+          "limits": {
+            "cpu": 2,
+            "units": 10,
+            "max_delta": 3
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "missing_permission",
+        "bindings": {
+          "account": {
+            "permissions": 3,
+            "used": 8
+          },
+          "request": {
+            "units": 2,
+            "cpu": 1.2,
+            "delta": -2
+          },
+          "limits": {
+            "cpu": 2,
+            "units": 10,
+            "max_delta": 3
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "quota_exceeded",
+        "bindings": {
+          "account": {
+            "permissions": 7,
+            "used": 8
+          },
+          "request": {
+            "units": 3,
+            "cpu": 1.2,
+            "delta": -2
+          },
+          "limits": {
+            "cpu": 2,
+            "units": 10,
+            "max_delta": 3
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "rounded_cpu_exceeds_limit",
+        "bindings": {
+          "account": {
+            "permissions": 7,
+            "used": 8
+          },
+          "request": {
+            "units": 2,
+            "cpu": 2.1,
+            "delta": -2
+          },
+          "limits": {
+            "cpu": 2,
+            "units": 10,
+            "max_delta": 3
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "absolute_delta_exceeds_limit",
+        "bindings": {
+          "account": {
+            "permissions": 7,
+            "used": 8
+          },
+          "request": {
+            "units": 2,
+            "cpu": 1.2,
+            "delta": -4
+          },
+          "limits": {
+            "cpu": 2,
+            "units": 10,
+            "max_delta": 3
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "zero_units_denied",
+        "bindings": {
+          "account": {
+            "permissions": 7,
+            "used": 8
+          },
+          "request": {
+            "units": 0,
+            "cpu": 1.2,
+            "delta": -2
+          },
+          "limits": {
+            "cpu": 2,
+            "units": 10,
+            "max_delta": 3
+          }
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "batch_dispatch",
+    "expression": "cel.block([request.batches.flatten(), cel.index(0).map(j, j.id).distinct().size(), cel.index(0).sortBy(j, j.priority).slice(0, request.slots)], request.enabled && request.slots > 0 && cel.index(0).size() >= request.slots && cel.index(1) == cel.index(0).size() && cel.index(2).all(j, j.ready && j.cost <= request.max_cost) && request.nodes.size() >= request.slots && lists.range(request.slots).all(i, request.nodes[i].free))",
+    "cases": [
+      {
+        "name": "highest_priority_ready_jobs_fit_available_nodes",
+        "bindings": {
+          "request": {
+            "enabled": true,
+            "slots": 2,
+            "max_cost": 5,
+            "batches": [
+              [
+                {
+                  "id": "a",
+                  "priority": 2,
+                  "ready": true,
+                  "cost": 2
+                },
+                {
+                  "id": "b",
+                  "priority": 1,
+                  "ready": true,
+                  "cost": 5
+                }
+              ],
+              [
+                {
+                  "id": "c",
+                  "priority": 3,
+                  "ready": false,
+                  "cost": 9
+                }
+              ]
+            ],
+            "nodes": [
+              {
+                "free": true
+              },
+              {
+                "free": true
+              }
+            ]
+          }
+        },
+        "expected": true
+      },
+      {
+        "name": "duplicate_job_ids_are_denied",
+        "bindings": {
+          "request": {
+            "enabled": true,
+            "slots": 2,
+            "max_cost": 5,
+            "batches": [
+              [
+                {
+                  "id": "a",
+                  "priority": 2,
+                  "ready": true,
+                  "cost": 2
+                }
+              ],
+              [
+                {
+                  "id": "a",
+                  "priority": 1,
+                  "ready": true,
+                  "cost": 5
+                }
+              ]
+            ],
+            "nodes": [
+              {
+                "free": true
+              },
+              {
+                "free": true
+              }
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "blocked_priority_job_is_denied",
+        "bindings": {
+          "request": {
+            "enabled": true,
+            "slots": 1,
+            "max_cost": 5,
+            "batches": [
+              [
+                {
+                  "id": "a",
+                  "priority": 2,
+                  "ready": true,
+                  "cost": 2
+                }
+              ],
+              [
+                {
+                  "id": "b",
+                  "priority": 1,
+                  "ready": false,
+                  "cost": 5
+                }
+              ]
+            ],
+            "nodes": [
+              {
+                "free": true
+              }
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "unavailable_node_is_denied",
+        "bindings": {
+          "request": {
+            "enabled": true,
+            "slots": 2,
+            "max_cost": 5,
+            "batches": [
+              [
+                {
+                  "id": "a",
+                  "priority": 2,
+                  "ready": true,
+                  "cost": 2
+                }
+              ],
+              [
+                {
+                  "id": "b",
+                  "priority": 1,
+                  "ready": true,
+                  "cost": 5
+                }
+              ]
+            ],
+            "nodes": [
+              {
+                "free": true
+              },
+              {
+                "free": false
+              }
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "insufficient_jobs_are_denied",
+        "bindings": {
+          "request": {
+            "enabled": true,
+            "slots": 2,
+            "max_cost": 5,
+            "batches": [
+              [
+                {
+                  "id": "a",
+                  "priority": 2,
+                  "ready": true,
+                  "cost": 2
+                }
+              ]
+            ],
+            "nodes": [
+              {
+                "free": true
+              },
+              {
+                "free": true
+              }
+            ]
+          }
+        },
+        "expected": false
+      },
+      {
+        "name": "disabled_queue_short_circuits_missing_fields",
+        "bindings": {
+          "request": {
+            "enabled": false
+          }
+        },
+        "expected": false
+      }
+    ]
+  }
+]

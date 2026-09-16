@@ -1,0 +1,58 @@
+✖ indexed blocks preserve heterogeneous slot types and lazy memoization (0.825959ms)
+✖ block scope and iterator handles cannot be redirected by use-site bindings (0.117708ms)
+✖ invalid block dependencies fail before evaluation and host errors stay fatal (0.290083ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.318125
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/blocks.test.js:4:1
+✖ indexed blocks preserve heterogeneous slot types and lazy memoization (0.825959ms)
+  Error [CompileError]: UndeclaredReference
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/blocks.test.js:6:67)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    code: 'UndeclaredReference'
+  }
+
+test at bindings/typescript/dist/test/blocks.test.js:20:1
+✖ block scope and iterator handles cannot be redirected by use-site bindings (0.117708ms)
+  Error [CompileError]: UndeclaredReference
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/blocks.test.js:22:34)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    code: 'UndeclaredReference'
+  }
+
+test at bindings/typescript/dist/test/blocks.test.js:27:1
+✖ invalid block dependencies fail before evaluation and host errors stay fatal (0.290083ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (CompileError).
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/blocks.test.js:29:16)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

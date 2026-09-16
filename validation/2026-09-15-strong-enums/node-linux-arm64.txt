@@ -1,0 +1,43 @@
+v24.14.1
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (10.952625ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (5.433625ms)
+✔ legacy enums remain integers by default (2.766584ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.604667ms)
+✔ EnumValue validates wrapper and spoofed native inputs (1.233917ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.28225ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.661166ms)
+✔ Program compiles once and evaluates native bindings (0.94975ms)
+✔ values cross the native boundary without JSON conversion (1.1875ms)
+✔ type values round trip and macros preserve native data (0.40475ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.636208ms)
+✔ environments own declarations and check complete policies (4.577958ms)
+✔ byte inputs are captured before later getters run (0.209167ms)
+✔ negative zero remains a double and wrappers validate inputs (0.144125ms)
+✔ compile and evaluation failures have distinct typed codes (0.412916ms)
+✔ invalid JavaScript inputs are rejected (3.79325ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.26125ms)
+✔ binding names and maps use own enumerable string properties (0.090042ms)
+✔ native programs can be reclaimed by garbage collection (3.150709ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (3.942792ms)
+✔ protobuf boundary errors preserve failure phases (0.47575ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (3.049708ms)
+✔ temporal values preserve nanoseconds and static types (4.4765ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.42125ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 335.954209
+ℹ start of coverage report
+ℹ ----------------------------------------------------------
+ℹ file      | line % | branch % | funcs % | uncovered lines
+ℹ ----------------------------------------------------------
+ℹ dist      |        |          |         | 
+ℹ  index.js | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ all files | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ end of coverage report

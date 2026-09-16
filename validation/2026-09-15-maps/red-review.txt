@@ -1,0 +1,41 @@
+✖ proxies cannot disguise map brands or wrapper keys (0.933208ms)
+✖ map snapshot descriptors ignore inherited accessors (0.157958ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 467.796667
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/map.test.js:124:1
+✖ proxies cannot disguise map brands or wrapper keys (0.933208ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (TypeError).
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:128:16)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at bindings/typescript/dist/test/map.test.js:136:1
+✖ map snapshot descriptors ignore inherited accessors (0.157958ms)
+  TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute, #<Object>
+      at defineProperty (<anonymous>)
+      at file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:133:13
+      at Map.forEach (<anonymous>)
+      at Map.snapshotMap (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:128:5)
+      at Program.evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:199:27)
+      at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:6:38)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:143:22)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)

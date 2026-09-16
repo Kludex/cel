@@ -1,0 +1,71 @@
+Collecting ziglang==0.16.0
+  Downloading ziglang-0.16.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl.metadata (3.2 kB)
+Collecting build==1.3.0
+  Downloading build-1.3.0-py3-none-any.whl.metadata (5.6 kB)
+Collecting hatchling==1.29.0
+  Downloading hatchling-1.29.0-py3-none-any.whl.metadata (3.8 kB)
+Collecting pytest==9.0.2
+  Downloading pytest-9.0.2-py3-none-any.whl.metadata (7.6 kB)
+Collecting pytest-cov==7.0.0
+  Downloading pytest_cov-7.0.0-py3-none-any.whl.metadata (31 kB)
+Collecting protobuf==6.33.0
+  Downloading protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl.metadata (593 bytes)
+Collecting typing-extensions==4.15.0
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting auditwheel==6.5.0
+  Downloading auditwheel-6.5.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting packaging>=19.1 (from build==1.3.0)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pyproject_hooks (from build==1.3.0)
+  Downloading pyproject_hooks-1.3.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting pathspec>=0.10.1 (from hatchling==1.29.0)
+  Downloading pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Collecting pluggy>=1.0.0 (from hatchling==1.29.0)
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting trove-classifiers (from hatchling==1.29.0)
+  Downloading trove_classifiers-2026.6.1.19-py3-none-any.whl.metadata (2.3 kB)
+Collecting iniconfig>=1.0.1 (from pytest==9.0.2)
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting pygments>=2.7.2 (from pytest==9.0.2)
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting coverage>=7.10.6 (from coverage[toml]>=7.10.6->pytest-cov==7.0.0)
+  Downloading coverage-7.16.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (8.2 kB)
+Collecting pyelftools>=0.24 (from auditwheel==6.5.0)
+  Downloading pyelftools-0.33-py3-none-any.whl.metadata (1.0 kB)
+Downloading ziglang-0.16.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl (95.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 95.0/95.0 MB 6.5 MB/s  0:00:14
+Downloading build-1.3.0-py3-none-any.whl (23 kB)
+Downloading hatchling-1.29.0-py3-none-any.whl (76 kB)
+Downloading pytest-9.0.2-py3-none-any.whl (374 kB)
+Downloading pytest_cov-7.0.0-py3-none-any.whl (22 kB)
+Downloading protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl (324 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading auditwheel-6.5.0-py3-none-any.whl (57 kB)
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading coverage-7.16.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (258 kB)
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+Downloading pyelftools-0.33-py3-none-any.whl (201 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 6.4 MB/s  0:00:00
+Downloading pyproject_hooks-1.3.0-py3-none-any.whl (10 kB)
+Downloading trove_classifiers-2026.6.1.19-py3-none-any.whl (14 kB)
+Saved ./wheels/ziglang-0.16.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl
+Saved ./wheels/build-1.3.0-py3-none-any.whl
+Saved ./wheels/hatchling-1.29.0-py3-none-any.whl
+Saved ./wheels/pytest-9.0.2-py3-none-any.whl
+Saved ./wheels/pytest_cov-7.0.0-py3-none-any.whl
+Saved ./wheels/protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl
+Saved ./wheels/typing_extensions-4.15.0-py3-none-any.whl
+Saved ./wheels/auditwheel-6.5.0-py3-none-any.whl
+Saved ./wheels/pluggy-1.6.0-py3-none-any.whl
+Saved ./wheels/coverage-7.16.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl
+Saved ./wheels/iniconfig-2.3.0-py3-none-any.whl
+Saved ./wheels/packaging-26.3-py3-none-any.whl
+Saved ./wheels/pathspec-1.1.1-py3-none-any.whl
+Saved ./wheels/pyelftools-0.33-py3-none-any.whl
+Saved ./wheels/pygments-2.21.0-py3-none-any.whl
+Saved ./wheels/pyproject_hooks-1.3.0-py3-none-any.whl
+Saved ./wheels/trove_classifiers-2026.6.1.19-py3-none-any.whl
+Successfully downloaded ziglang build hatchling pytest pytest-cov protobuf typing-extensions auditwheel pluggy coverage iniconfig packaging pathspec pyelftools pygments pyproject_hooks trove-classifiers

@@ -1,0 +1,406 @@
+{
+  "python-evaluation": {
+    "summary": {
+      "core": {
+        "failed": 6,
+        "passed": 1804,
+        "total": 1905,
+        "unsupported": 95
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 0,
+        "total": 603,
+        "unsupported": 603
+      },
+      "total": {
+        "failed": 6,
+        "passed": 1804,
+        "total": 2508,
+        "unsupported": 698
+      }
+    },
+    "failures": [
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/lt_literal/not_lt_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/gt_literal/not_gt_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/lte_literal/lte_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/gte_literal/gte_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfMonth_name_pos",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfYear",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      }
+    ]
+  },
+  "node-evaluation": {
+    "summary": {
+      "core": {
+        "failed": 6,
+        "passed": 1804,
+        "total": 1905,
+        "unsupported": 95
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 0,
+        "total": 603,
+        "unsupported": 603
+      },
+      "total": {
+        "failed": 6,
+        "passed": 1804,
+        "total": 2508,
+        "unsupported": 698
+      }
+    },
+    "failures": [
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/lt_literal/not_lt_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/gt_literal/not_gt_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/lte_literal/lte_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/gte_literal/gte_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfMonth_name_pos",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfYear",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      }
+    ]
+  },
+  "node-full": {
+    "summary": {
+      "core": {
+        "failed": 6,
+        "passed": 1818,
+        "total": 1905,
+        "unsupported": 81
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 0,
+        "total": 603,
+        "unsupported": 603
+      },
+      "total": {
+        "failed": 6,
+        "passed": 1818,
+        "total": 2508,
+        "unsupported": 684
+      }
+    },
+    "failures": [
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/lt_literal/not_lt_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/gt_literal/not_gt_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/lte_literal/lte_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/gte_literal/gte_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "checkedType": {
+          "primitive": "INT64"
+        },
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfMonth_name_pos",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "checkedType": {
+          "primitive": "INT64"
+        },
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfYear",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      }
+    ]
+  },
+  "python-full": {
+    "summary": {
+      "core": {
+        "failed": 6,
+        "passed": 1818,
+        "total": 1905,
+        "unsupported": 81
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 0,
+        "total": 603,
+        "unsupported": 603
+      },
+      "total": {
+        "failed": 6,
+        "passed": 1818,
+        "total": 2508,
+        "unsupported": 684
+      }
+    },
+    "failures": [
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/lt_literal/not_lt_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": true
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": false
+        },
+        "id": "comparisons/gt_literal/not_gt_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/lte_literal/lte_dyn_big_double_int",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "actual": {
+          "boolValue": false
+        },
+        "checkedType": {
+          "primitive": "BOOL"
+        },
+        "expected": {
+          "boolValue": true
+        },
+        "id": "comparisons/gte_literal/gte_dyn_int_big_lossy_double",
+        "kind": "core",
+        "phase": "compare",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "checkedType": {
+          "primitive": "INT64"
+        },
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfMonth_name_pos",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      },
+      {
+        "checkedType": {
+          "primitive": "INT64"
+        },
+        "error": "InvalidArgument",
+        "id": "timestamps/timestamp_selectors_tz/getDayOfYear",
+        "kind": "core",
+        "phase": "evaluate",
+        "status": "failed",
+        "strongEnums": false
+      }
+    ]
+  }
+}

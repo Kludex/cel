@@ -1,0 +1,5 @@
+All checks passed!
+54 files already formatted
+bindings/python/tests/test_network.py:91: error: Dict entry 0 has incompatible type "str": "list[str]"; expected "str": "int | float | str | bytes | UInt | <11 more items> | None"  [dict-item]
+bindings/python/tests/test_network.py:93: error: Dict entry 0 has incompatible type "str": "list[str]"; expected "str": "int | float | str | bytes | UInt | <11 more items> | None"  [dict-item]
+Found 2 errors in 1 file (checked 48 source files)

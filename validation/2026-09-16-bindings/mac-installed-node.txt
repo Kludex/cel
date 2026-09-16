@@ -1,0 +1,113 @@
+✔ nested evaluations keep outer input and result storage independent (10.197333ms)
+✔ local bindings evaluate complete policies and preserve lexical scope (3.02175ms)
+✔ local initializer values and CEL errors are cached only for one evaluation (0.2315ms)
+✔ cached empty values and absolute names preserve their meaning (0.261292ms)
+✔ bind expansion uses the exact namespace before custom function lookup (0.210042ms)
+✔ local initialization preserves host errors and reentrant result storage (4.132709ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (8.967792ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (6.646875ms)
+✔ legacy enums remain integers by default (3.155833ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (3.098083ms)
+✔ EnumValue validates wrapper and spoofed native inputs (1.236583ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.269834ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (3.383334ms)
+✔ custom functions support global, receiver, and scalar overloads (3.072333ms)
+✔ generic custom functions preserve type metadata (0.25625ms)
+✔ custom function failures preserve CEL and JavaScript errors (0.558875ms)
+✔ checked generic return contracts reject mismatched callback values (0.113209ms)
+✔ host exception identity is preserved even with native-looking error codes (0.198375ms)
+✔ environment errors preserve host identity with compile-looking codes (0.086625ms)
+✔ function declarations accept precisely typed host callbacks (0.084583ms)
+✔ callbacks are reentrant and environment snapshots cannot be retargeted (6.463833ms)
+✔ callbacks own converted message and enum values for the duration of the call (0.778084ms)
+✔ callback results obey conversion limits (4.441167ms)
+✔ function and type constructors reject invalid declarations (0.260583ms)
+✔ function declaration limits are enforced (69.812708ms)
+✔ list extensions evaluate a complete collection policy (2.677542ms)
+✔ sortBy scopes its variable and evaluates receiver and keys once (0.334625ms)
+✔ list extensions preserve nested equality and reject invalid boundaries (0.460958ms)
+✔ typed map outputs are valid inputs without assertions or casts (0.790834ms)
+✔ native maps preserve CEL key types and nested maps (1.1255ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.11525ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.550958ms)
+✔ native map conversion uses captured intrinsics (0.159958ms)
+✔ map brands and limits do not depend on mutable prototypes (52.419625ms)
+✔ proxies cannot disguise map brands or wrapper keys (0.702667ms)
+✔ proxy rejection does not execute wrapper prototype traps (0.493875ms)
+✔ map snapshot descriptors ignore inherited accessors (0.311041ms)
+✔ map snapshots do not invoke inherited array setters (0.156083ms)
+✔ native maps snapshot entries before converting values (0.131125ms)
+✔ native map results and environment constants own their data (0.227375ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.119875ms)
+✔ nested native map evaluations keep results independent (0.113625ms)
+✔ object and native maps charge the same key-value budget (47.833958ms)
+✔ native maps preserve collection, depth, and byte limits (24.66825ms)
+✔ math policies preserve numeric result types and permission decisions (2.677917ms)
+✔ math rounding, predicates and errors retain CEL behavior (0.510584ms)
+✔ math namespaces remain independent of variables and respect function overrides (0.218709ms)
+✔ OptionalValue constructors preserve presence (1.672625ms)
+✔ optional operations and static types cross the native boundary (1.585375ms)
+✔ nested optionals and present null remain distinct (0.1015ms)
+✔ optional constants own recursive payloads (0.10175ms)
+✔ callbacks accept and return optional values (0.22525ms)
+✔ native conversion validates spoofed OptionalValue metadata (0.117167ms)
+✔ optional conversion enforces cycles, depth, bytes, and value budgets (19.634084ms)
+✔ optional payloads support enum, proto, temporal, and type values (0.941875ms)
+✔ optional wrappers reject unsupported payloads (0.117541ms)
+✔ Program compiles once and evaluates native bindings (0.765791ms)
+✔ values cross the native boundary without JSON conversion (1.185875ms)
+✔ type values round trip and macros preserve native data (0.384833ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.467417ms)
+✔ environments own declarations and check complete policies (7.314875ms)
+✔ byte inputs are captured before later getters run (0.17475ms)
+✔ negative zero remains a double and wrappers validate inputs (0.151125ms)
+✔ compile and evaluation failures have distinct typed codes (0.292167ms)
+✔ invalid JavaScript inputs are rejected (4.780375ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.193625ms)
+✔ binding names and maps use own enumerable string properties (0.088583ms)
+✔ native programs can be reclaimed by garbage collection (4.996125ms)
+✔ plain objects and native maps bypass mutable optional instance checks (1.5815ms)
+✔ optional subclasses and reentrant getters preserve value conversion order (0.202625ms)
+✔ enumerable key snapshots retain order and ignore later additions (0.119459ms)
+✔ enumerable symbol errors follow earlier string-keyed getter effects (0.30925ms)
+✔ symbol key snapshots do not invoke inherited array setters (0.134958ms)
+✔ property enumeration uses captured intrinsics for values and environments (1.200167ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (3.848166ms)
+✔ protobuf boundary errors preserve failure phases (0.447917ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (4.227125ms)
+✔ strings and keys preserve code points across inline and allocated conversion (3.918ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.684791ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (36.775083ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (5.46825ms)
+✔ temporal values preserve nanoseconds and static types (4.72025ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.684041ms)
+ℹ tests 83
+ℹ suites 0
+ℹ pass 83
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 580.467542
+ℹ start of coverage report
+ℹ --------------------------------------------------------------------------
+ℹ file                      | line % | branch % | funcs % | uncovered lines
+ℹ --------------------------------------------------------------------------
+ℹ ..                        |        |          |         | 
+ℹ  ..                       |        |          |         | 
+ℹ   ..                      |        |          |         | 
+ℹ    ..                     |        |          |         | 
+ℹ     ..                    |        |          |         | 
+ℹ      private              |        |          |         | 
+ℹ       tmp                 |        |          |         | 
+ℹ        cel-bindings       |        |          |         | 
+ℹ         mac-install       |        |          |         | 
+ℹ          node_modules     |        |          |         | 
+ℹ           @pydantic       |        |          |         | 
+ℹ            cel            |        |          |         | 
+ℹ             dist          |        |          |         | 
+ℹ              index.js     | 100.00 |   100.00 |  100.00 | 
+ℹ --------------------------------------------------------------------------
+ℹ all files                 | 100.00 |   100.00 |  100.00 | 
+ℹ --------------------------------------------------------------------------
+ℹ end of coverage report

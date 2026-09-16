@@ -1,0 +1,183 @@
+glibc 2.28
+1/87 root.test_0...OK
+2/87 program.test.math extension policies preserve numeric types and bitwise permission decisions...OK
+3/87 program.test.math extrema infer dynamic results when a dynamic argument may win...OK
+4/87 program.test.math bit shifts use fixed width logical semantics without undefined behavior...OK
+5/87 program.test.math extrema and rounding retain NaN and signed zero rules...OK
+6/87 program.test.math evaluation obeys work and collection limits before scanning inputs...OK
+7/87 program.test.math variadic allocation failures clean up...OK
+8/87 program.test.math shifts and extrema stay bounded for untrusted runtime values...OK
+9/87 program.test.optional policies distinguish absent null and present values...OK
+10/87 program.test.optional access and entries preserve presence and laziness...OK
+11/87 program.test.optional zero values and list helpers follow the value domain...OK
+12/87 program.test.optional checking rejects invalid initializers and checks unreachable defaults...OK
+13/87 program.test.optional indexes do not turn invalid keys into absence...OK
+14/87 program.test.optional constants and callbacks own their data and obey limits...OK
+15/87 program.test.optional allocation failures release compile and evaluation storage...OK
+16/87 program.test.optional macros evaluate their receiver once and obey lexical scope...OK
+17/87 program.test.optional callback signatures preserve types and reject nullable overlaps...OK
+18/87 program.test.custom functions evaluate complete checked and unchecked policies...OK
+19/87 program.test.custom generic functions instantiate fresh parameters and abstract result types...OK
+20/87 program.test.custom overloads resolve members and validate runtime signatures...OK
+21/87 program.test.checked generic callbacks cannot return a different inferred type...OK
+22/87 program.test.custom overload backtracking restores empty collection constraints...OK
+23/87 program.test.custom callbacks receive public message values and support more than four arguments...OK
+24/87 program.test.function declarations and costs reject invalid or excessive work...OK
+25/87 program.test.function signatures and callback allocations clean up on every failure...OK
+26/87 program.test.alpha equivalent and erased generic overloads are rejected...OK
+27/87 program.test.dynamic arguments erase generic runtime constraints...OK
+28/87 program.test.custom callback collections obey configured size limits...OK
+29/87 program.test.optional source and activations stay bounded...OK
+30/87 program.test.custom function source and runtime values stay bounded...OK
+31/87 program.test.strong enums preserve identity in checked and unchecked programs...OK
+32/87 program.test.strong enum constructors enforce input types and signed 32 bit bounds...OK
+33/87 program.test.enum constants cannot impersonate primitive message or unregistered types...OK
+34/87 program.test.strong enum declarations collections and namespace resolution retain their types...OK
+35/87 program.test.protobuf construction retains message types field defaults and presence...OK
+36/87 program.test.protobuf messages are not maps and reject unknown or mistyped fields...OK
+37/87 program.test.registered proto3 messages preserve maps lists oneofs and optional presence...OK
+38/87 program.test.descriptor and protobuf limits reject malformed external data...OK
+39/87 program.test.protobuf well-known values follow CEL unboxing and null semantics...OK
+40/87 program.test.temporal policies preserve nanoseconds arithmetic and canonical types...OK
+41/87 program.test.timestamp selectors use explicit zones and reject filesystem paths...OK
+42/87 program.test.temporal boundaries report errors instead of overflowing...OK
+43/87 program.test.protobuf temporal fields box values and prune null collection entries...OK
+44/87 program.test.checked environments infer types and reject unreachable type errors...OK
+45/87 program.test.checked type values compare independently of their described types...OK
+46/87 program.test.checked collection inference unifies empty and nested lists...OK
+47/87 program.test.flat aggregate inference does not turn type variable links into nesting...OK
+48/87 program.test.failed aggregate joins do not retain speculative variable constraints...OK
+49/87 program.test.environment validation and inference budgets fail through the public API...OK
+50/87 program.test.environments resolve namespace prefixes and own constants...OK
+51/87 program.test.checked selection cannot be redirected by undeclared qualified bindings...OK
+52/87 program.test.evaluate request authorization with nested inputs and a reusable program...OK
+53/87 program.test.evaluate scalar arithmetic precedence and CEL numeric types...OK
+54/87 program.test.boolean ordering and exact numeric comparisons follow CEL...OK
+55/87 program.test.evaluate collections and string operations...OK
+56/87 program.test.quoted field selection supports punctuation without admitting quoted calls or identifiers...OK
+57/87 program.test.upstream string escapes conversions and numeric indexing...OK
+58/87 program.test.logical operators suppress errors only when the result is determined...OK
+59/87 program.test.evaluate collection macros with lexical scope...OK
+60/87 program.test.two variable comprehensions preserve keys scope and error semantics...OK
+61/87 program.test.RE2 matching supports Unicode flags classes anchors and embedded nul...OK
+62/87 program.test.regex errors remain evaluation errors and obey CEL logical suppression...OK
+63/87 program.test.reusable regex policies evaluate independent requests and dynamic patterns...OK
+64/87 program.test.regex caches and work obey explicit resource limits...OK
+65/87 program.test.regex programs support concurrent request evaluations...OK
+66/87 program.test.qualified names prefer the longest binding and respect local and absolute scope...OK
+67/87 program.test.type values preserve CEL types without becoming strings...OK
+68/87 program.test.invalid expressions and runtime faults return public errors...OK
+69/87 program.test.resource limits reject excessive work without trapping...OK
+70/87 program.test.collection equality obeys depth and cost budgets...OK
+71/87 program.test.comprehensions enforce collection and work limits even in logical branches...OK
+72/87 program.test.untrusted source never traps or leaks...OK
+73/87 program.test.dynamic RE2 inputs never trap or leak evaluation storage...OK
+74/87 program.test.checking and environment ownership clean up every Zig allocation failure...OK
+75/87 program.test.protobuf ownership cleans up after every Zig allocation failure...OK
+76/87 program.test.strong enum protobuf wire values retain identity across independent programs...OK
+77/87 program.test.strong enum policies share immutable descriptors across concurrent requests...OK
+78/87 program.test.strong enum ownership cleans up after every Zig allocation failure...OK
+79/87 program.test.strong enum conversion never traps on untrusted values and wire bytes...OK
+80/87 program.test.protobuf wire input never traps or escapes native evaluation storage...OK
+81/87 program.test.temporal parsing never traps on untrusted string values...OK
+82/87 program.test.checked source never traps or leaks...OK
+83/87 program.test.map constants reject duplicate CEL keys including signed and unsigned aliases...OK
+84/87 program.test.map key validation cleans up on every allocation failure...OK
+85/87 program.test.typed map key validation agrees with public CEL equality...OK
+86/87 program.test.large typed map constants retain distinct boolean and integer keys within linear budgets...OK
+87/87 program.test.all allocation failures clean up through the public API...OK
+All 87 tests passed.
+10 fuzz tests found.
+v24.14.1
+{"node":"v24.14.1","glibc":"2.28","decisions":78}
+✔ nested evaluations keep outer input and result storage independent (7.865833ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (7.642625ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (4.944416ms)
+✔ legacy enums remain integers by default (2.471834ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.600584ms)
+✔ EnumValue validates wrapper and spoofed native inputs (1.140459ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.259167ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.399291ms)
+✔ custom functions support global, receiver, and scalar overloads (2.381584ms)
+✔ generic custom functions preserve type metadata (0.228667ms)
+✔ custom function failures preserve CEL and JavaScript errors (0.528958ms)
+✔ checked generic return contracts reject mismatched callback values (0.113584ms)
+✔ host exception identity is preserved even with native-looking error codes (0.172542ms)
+✔ environment errors preserve host identity with compile-looking codes (0.076458ms)
+✔ function declarations accept precisely typed host callbacks (0.088292ms)
+✔ callbacks are reentrant and environment snapshots cannot be retargeted (2.53675ms)
+✔ callbacks own converted message and enum values for the duration of the call (0.684541ms)
+✔ callback results obey conversion limits (3.818708ms)
+✔ function and type constructors reject invalid declarations (0.280125ms)
+✔ function declaration limits are enforced (52.829542ms)
+✔ typed map outputs are valid inputs without assertions or casts (0.662833ms)
+✔ native maps preserve CEL key types and nested maps (1.056291ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.154292ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.5105ms)
+✔ native map conversion uses captured intrinsics (0.154ms)
+✔ map brands and limits do not depend on mutable prototypes (26.041625ms)
+✔ proxies cannot disguise map brands or wrapper keys (0.4405ms)
+✔ map snapshot descriptors ignore inherited accessors (0.179084ms)
+✔ map snapshots do not invoke inherited array setters (0.141042ms)
+✔ native maps snapshot entries before converting values (0.102042ms)
+✔ native map results and environment constants own their data (0.166833ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.116458ms)
+✔ nested native map evaluations keep results independent (0.10825ms)
+✔ object and native maps charge the same key-value budget (42.4205ms)
+✔ native maps preserve collection, depth, and byte limits (25.1545ms)
+✔ math policies preserve numeric result types and permission decisions (2.348667ms)
+✔ math rounding, predicates and errors retain CEL behavior (0.476417ms)
+✔ math namespaces remain independent of variables and respect function overrides (0.220833ms)
+✔ OptionalValue constructors preserve presence (1.39825ms)
+✔ optional operations and static types cross the native boundary (1.227625ms)
+✔ nested optionals and present null remain distinct (0.113583ms)
+✔ optional constants own recursive payloads (0.116875ms)
+✔ callbacks accept and return optional values (0.222584ms)
+✔ native conversion validates spoofed OptionalValue metadata (0.116ms)
+✔ optional conversion enforces cycles, depth, bytes, and value budgets (12.467292ms)
+✔ optional payloads support enum, proto, temporal, and type values (1.2625ms)
+✔ optional wrappers reject unsupported payloads (0.364208ms)
+✔ Program compiles once and evaluates native bindings (0.646958ms)
+✔ values cross the native boundary without JSON conversion (0.966417ms)
+✔ type values round trip and macros preserve native data (0.324542ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.337583ms)
+✔ environments own declarations and check complete policies (3.67775ms)
+✔ byte inputs are captured before later getters run (0.173084ms)
+✔ negative zero remains a double and wrappers validate inputs (0.12575ms)
+✔ compile and evaluation failures have distinct typed codes (0.324458ms)
+✔ invalid JavaScript inputs are rejected (4.609875ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.307208ms)
+✔ binding names and maps use own enumerable string properties (0.094959ms)
+✔ native programs can be reclaimed by garbage collection (3.417ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (2.724333ms)
+✔ protobuf boundary errors preserve failure phases (0.413125ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (2.58325ms)
+✔ strings and keys preserve code points across inline and allocated conversion (2.731083ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.500666ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (28.599084ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (5.124334ms)
+✔ temporal values preserve nanoseconds and static types (2.795042ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.436625ms)
+ℹ tests 68
+ℹ suites 0
+ℹ pass 68
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1112.472501
+ℹ start of coverage report
+ℹ -------------------------------------------------------------------
+ℹ file               | line % | branch % | funcs % | uncovered lines
+ℹ -------------------------------------------------------------------
+ℹ tmp                |        |          |         | 
+ℹ  installed         |        |          |         | 
+ℹ   node_modules     |        |          |         | 
+ℹ    @pydantic       |        |          |         | 
+ℹ     cel            |        |          |         | 
+ℹ      dist          |        |          |         | 
+ℹ       index.js     | 100.00 |   100.00 |  100.00 | 
+ℹ -------------------------------------------------------------------
+ℹ all files          | 100.00 |   100.00 |  100.00 | 
+ℹ -------------------------------------------------------------------
+ℹ end of coverage report

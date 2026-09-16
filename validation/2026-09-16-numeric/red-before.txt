@@ -1,0 +1,15 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.mixed numeric comparison follows the reference clamp-then-double algorithm' failed without output
+failed command: ./.zig-cache/o/6d1be44a4f8f3db9faa0430489d6e867/test --cache-dir=./.zig-cache --seed=0x54aae95 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+   +- compile test ReleaseSafe native-native success 6s MaxRSS:479M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe native-native cached 60ms MaxRSS:35M
+      +- compile lib cel_native ReleaseSafe native-native (reused)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/72cbd71a676a1389795a0dfa1eddf57c/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x54aae95 -Zf9b1ab164bb54e7f test -Dtest-filter=mixed numeric comparison follows -Doptimize=ReleaseSafe -j4 --summary all

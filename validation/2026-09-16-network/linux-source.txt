@@ -1,0 +1,12 @@
+snapshot_utc=2026-09-16T06:39:40Z
+host_arch=arm64
+docker=28.1.1/28.1.1
+zig=0.16.0
+python_version=version = "0.1.0a20"
+node_version=  "version": "0.1.0-alpha.20",
+6cb59e3848441686308d61410885882454fea8b1926f557f5c6702ef0fb93d6d  src/network.zig
+6f64768966560e7105564514a5def54e41ae94e33ca9328cafc7d7234e9bbd56  src/network_functions.zig
+632d8e8be98c4c3ce59d7fd672b34eb9e1da56b91551760d8978d31671761bf2  src/program.zig
+2c294b4d89f5793b5bc18ac0c5dd6af92d3c7efd1bf4502a24a2a6cb85047277  bindings/python/tests/test_network.py
+4dcd851886488b6f0700d117762a684bd73a836102daada09e94d912634e5f59  bindings/typescript/test/network.test.ts
+7ef8712e5037d4e7c269e9985c61516e1883641dfb365daf54f9b9e10df97770  conformance/test_network.py

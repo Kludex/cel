@@ -1,0 +1,326 @@
+{
+  "name":  "lists_ext",
+  "description":  "Tests for the lists extension library.",
+  "section":  [
+    {
+      "name":  "slice",
+      "description":  "slice: since version 0",
+      "test":  [
+        {
+          "name":  "sublist",
+          "expr":  "[1, 2, 3, 4].slice(1, 3) == [2, 3]"
+        },
+        {
+          "name":  "full",
+          "expr":  "[1, 2, 3, 4].slice(0, 4) == [1, 2, 3, 4]"
+        },
+        {
+          "name":  "empty_start",
+          "expr":  "[1, 2, 3, 4].slice(0, 0) == []"
+        },
+        {
+          "name":  "empty_middle",
+          "expr":  "[1, 2, 3, 4].slice(2, 2) == []"
+        },
+        {
+          "name":  "empty_end",
+          "expr":  "[1, 2, 3, 4].slice(4, 4) == []"
+        },
+        {
+          "name":  "start_greater_than_end",
+          "expr":  "[1, 2, 3, 4].slice(3, 1)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        },
+        {
+          "name":  "end_greater_than_length",
+          "expr":  "[1, 2, 3, 4].slice(1, 5)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        },
+        {
+          "name":  "negative_start_index",
+          "expr":  "[1, 2, 3, 4].slice(-1, 2)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        },
+        {
+          "name":  "negative_end_index",
+          "expr":  "[1, 2, 3, 4].slice(1, -1)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name":  "flatten",
+      "description":  "flatten: since version 1",
+      "test":  [
+        {
+          "name":  "default_depth",
+          "expr":  "[1, [2, 3], [4]].flatten() == [1, 2, 3, 4]"
+        },
+        {
+          "name":  "default_depth_nested",
+          "expr":  "[1, [2, [3, 4]]].flatten() == [1, 2, [3, 4]]"
+        },
+        {
+          "name":  "empty_sublists",
+          "expr":  "[1, 2, [], [], [3, 4]].flatten() == [1, 2, 3, 4]"
+        },
+        {
+          "name":  "depth_two",
+          "expr":  "[1, [2, [3, [4]]]].flatten(2) == [1, 2, 3, [4]]"
+        },
+        {
+          "name":  "depth_zero",
+          "expr":  "[1, [2, 3]].flatten(0) == [1, [2, 3]]"
+        },
+        {
+          "name":  "empty_list",
+          "expr":  "dyn([]).flatten() == []"
+        },
+        {
+          "name":  "already_flat",
+          "expr":  "dyn([1, 2, 3]).flatten() == [1, 2, 3]"
+        },
+        {
+          "name":  "negative_depth",
+          "expr":  "[1, [2, 3]].flatten(-1)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name":  "distinct",
+      "description":  "distinct: since version 2",
+      "test":  [
+        {
+          "name":  "ints",
+          "expr":  "[1, 2, 2, 3, 3, 3].distinct() == [1, 2, 3]"
+        },
+        {
+          "name":  "strings",
+          "expr":  "[\"b\", \"b\", \"c\", \"a\", \"c\"].distinct() == [\"b\", \"c\", \"a\"]"
+        },
+        {
+          "name":  "heterogeneous",
+          "expr":  "[1, \"b\", 2, \"b\"].distinct() == [1, \"b\", 2]"
+        },
+        {
+          "name":  "empty",
+          "expr":  "[].distinct() == []"
+        },
+        {
+          "name":  "single_element",
+          "expr":  "[1].distinct() == [1]"
+        },
+        {
+          "name":  "uints",
+          "expr":  "[2u, 5u, 100u, 1u, 1u, 5u].distinct() == [2u, 5u, 100u, 1u]"
+        },
+        {
+          "name":  "bools",
+          "expr":  "[false, true, true, false].distinct() == [false, true]"
+        }
+      ]
+    },
+    {
+      "name":  "range",
+      "description":  "lists.range: since version 2",
+      "test":  [
+        {
+          "name":  "positive",
+          "expr":  "lists.range(5) == [0, 1, 2, 3, 4]"
+        },
+        {
+          "name":  "zero",
+          "expr":  "lists.range(0) == []"
+        },
+        {
+          "name":  "single",
+          "expr":  "lists.range(1) == [0]"
+        },
+        {
+          "name":  "negative_error",
+          "expr":  "lists.range(-1)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        },
+        {
+          "name":  "limit_exceeded_error",
+          "expr":  "lists.range(1000001)",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name":  "reverse",
+      "description":  "reverse: since version 2",
+      "test":  [
+        {
+          "name":  "integers",
+          "expr":  "[5, 3, 1, 2].reverse() == [2, 1, 3, 5]"
+        },
+        {
+          "name":  "strings",
+          "expr":  "[\"are\", \"you\", \"as\", \"bored\"].reverse() == [\"bored\", \"as\", \"you\", \"are\"]"
+        },
+        {
+          "name":  "empty",
+          "expr":  "[].reverse() == []"
+        },
+        {
+          "name":  "single",
+          "expr":  "[1].reverse() == [1]"
+        },
+        {
+          "name":  "double_reverse",
+          "expr":  "[false, true, true].reverse().reverse() == [false, true, true]"
+        }
+      ]
+    },
+    {
+      "name":  "sort",
+      "description":  "sort: since version 2",
+      "test":  [
+        {
+          "name":  "integers",
+          "expr":  "[3, 2, 1].sort() == [1, 2, 3]"
+        },
+        {
+          "name":  "uints",
+          "expr":  "[42u, 3u, 1337u].sort() == [3u, 42u, 1337u]"
+        },
+        {
+          "name":  "doubles",
+          "expr":  "[1.0, -1.5, 2.0].sort() == [-1.5, 1.0, 2.0]"
+        },
+        {
+          "name":  "strings",
+          "expr":  "[\"b\", \"c\", \"a\"].sort() == [\"a\", \"b\", \"c\"]"
+        },
+        {
+          "name":  "bytes",
+          "expr":  "[b\"d\", b\"a\", b\"aa\"].sort() == [b\"a\", b\"aa\", b\"d\"]"
+        },
+        {
+          "name":  "bools",
+          "expr":  "[true, false, true].sort() == [false, true, true]"
+        },
+        {
+          "name":  "durations",
+          "expr":  "[duration('1m'), duration('2s'), duration('3h')].sort() == [duration('2s'), duration('1m'), duration('3h')]"
+        },
+        {
+          "name":  "timestamps",
+          "expr":  "[timestamp('2024-01-03T00:00:00Z'), timestamp('2024-01-01T00:00:00Z')].sort() == [timestamp('2024-01-01T00:00:00Z'), timestamp('2024-01-03T00:00:00Z')]"
+        },
+        {
+          "name":  "empty",
+          "expr":  "[].sort() == []"
+        },
+        {
+          "name":  "single",
+          "expr":  "[1].sort() == [1]"
+        },
+        {
+          "name":  "mixed_types_error",
+          "expr":  "[1, \"b\"].sort()",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        },
+        {
+          "name":  "incomparable_type_error",
+          "expr":  "dyn([[1, 2, 3]]).sort()",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name":  "sortBy",
+      "description":  "sortBy: since version 2",
+      "test":  [
+        {
+          "name":  "number_key",
+          "expr":  "[-3, 1, -5, -2, 4].sortBy(e, -(e * e)) == [-5, 4, -3, -2, 1]"
+        },
+        {
+          "name":  "identity_key",
+          "expr":  "[1, 2, 3].sortBy(e, -e) == [3, 2, 1]"
+        },
+        {
+          "name":  "string_key",
+          "expr":  "[\"a\", \"c\", \"b\", \"first\"].sortBy(e, e == \"first\" ? \"\" : e) == [\"first\", \"a\", \"b\", \"c\"]"
+        },
+        {
+          "name":  "empty",
+          "expr":  "[].sortBy(e, e) == []"
+        },
+        {
+          "name":  "single",
+          "expr":  "[\"a\"].sortBy(e, e) == [\"a\"]"
+        },
+        {
+          "name":  "mixed_key_types_error",
+          "expr":  "[[1], [\"a\"]].sortBy(e, e[0])",
+          "evalError":  {
+            "errors":  [
+              {
+                "message":  "invalid_argument"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

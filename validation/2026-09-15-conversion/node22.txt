@@ -1,0 +1,37 @@
+✔ nested evaluations keep outer input and result storage independent (5.40975ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (7.516709ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (4.505333ms)
+✔ legacy enums remain integers by default (2.26575ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.535375ms)
+✔ EnumValue validates wrapper and spoofed native inputs (0.91975ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.210209ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.3435ms)
+✔ Program compiles once and evaluates native bindings (0.989ms)
+✔ values cross the native boundary without JSON conversion (0.842041ms)
+✔ type values round trip and macros preserve native data (0.267292ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.316375ms)
+✔ environments own declarations and check complete policies (2.534334ms)
+✔ byte inputs are captured before later getters run (0.144125ms)
+✔ negative zero remains a double and wrappers validate inputs (0.121291ms)
+✔ compile and evaluation failures have distinct typed codes (0.236792ms)
+✔ invalid JavaScript inputs are rejected (3.391959ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.216958ms)
+✔ binding names and maps use own enumerable string properties (0.082917ms)
+✔ native programs can be reclaimed by garbage collection (1.950458ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (2.11075ms)
+✔ protobuf boundary errors preserve failure phases (0.926292ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (1.700792ms)
+✔ strings and keys preserve code points across inline and allocated conversion (2.279375ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.243375ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (20.26325ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (3.137333ms)
+✔ temporal values preserve nanoseconds and static types (1.847541ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.307417ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 87.94525

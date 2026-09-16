@@ -1,0 +1,27 @@
+optional_slot_present value=optional(1)
+optional_slot_absent value=optional.none()
+source_without_test_macros error=undeclared reference
+ast_alias_as_source error=ERROR: <input>:1:5: Syntax error: token recognition error at: '@' |  | cel.@block([1], @index0) |  | ....^ | ERROR: <input>:1:17: Syntax error: token recognition error at: '@' |  | cel.@block([1], @index0) |  | ................^
+source_expansion cel.@block([1, @index0 + 1], @index1)
+source_variable_expansion [@it:1:2, @ac:3:4]
+source_block value=2
+lazy_success_eval_1 value=2 calls=1
+lazy_success_eval_2 value=2 calls=2
+lazy_error_eval_1 value=false calls=1
+lazy_error_eval_2 value=false calls=2
+lazy_unused value=true calls=0
+forward_index value=6
+self_index error=no such attribute
+out_of_range_index error=no such attribute
+negative_source_index error=ERROR: <input>:1:26: cel.index requires a single non-negative int constant arg |  | cel.block([1], cel.index(-1)) |  | .........................^
+negative_ast_index error=no such attribute
+bad_ast_constructor error=expects a list constructor
+bad_ast_arity error=expects two arguments
+bad_source_constructor error=ERROR: <input>:1:11: cel.block requires the first arg to be a list literal |  | cel.block(1, true) |  | ..........^
+empty_block value=42
+nested_block value=31
+iteration_alias value=[2, 3]
+nested_iteration_alias value=[[11], [12]]
+block_inside_iteration value=[11, 12]
+hoisted_loop_capture_check error=undeclared reference
+hoisted_loop_capture_unchecked error=no such attribute

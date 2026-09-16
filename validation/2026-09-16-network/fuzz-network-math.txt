@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.network IP and CIDR math matches an independent byte-mask oracle" (87f6711af2a82b5d)
+Runs: 0 -> 100053
+Unique runs: 0 -> 53
+Coverage: 0/9089 -> 187/9089 (2.06%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

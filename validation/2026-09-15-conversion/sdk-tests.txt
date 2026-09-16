@@ -1,0 +1,104 @@
+Resolved 20 packages in 4ms
+Checked 17 packages in 0.50ms
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/marcelotryle/dev/pydantic/cel/bindings/python
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0
+collected 46 items
+
+tests/test_enums.py ........                                                                                                                           [ 17%]
+tests/test_program.py ...............................                                                                                                  [ 84%]
+tests/test_protobuf.py ...                                                                                                                             [ 91%]
+tests/test_storage.py .                                                                                                                                [ 93%]
+tests/test_temporal.py ...                                                                                                                             [100%]
+
+======================================================================= tests coverage =======================================================================
+______________________________________________________ coverage: platform darwin, python 3.14.6-final-0 ______________________________________________________
+
+Name                     Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------
+src/cel/__init__.py          4      0      0      0   100%
+src/cel/enums.py            22      0      8      0   100%
+src/cel/program.py          70      0     20      0   100%
+src/cel/temporal.py         19      0      8      0   100%
+tests/__init__.py            1      0      0      0   100%
+tests/test_enums.py         99      0     18      0   100%
+tests/test_program.py      137      0      4      0   100%
+tests/test_protobuf.py      38      0      0      0   100%
+tests/test_storage.py       17      0      2      0   100%
+tests/test_temporal.py      33      0      2      0   100%
+--------------------------------------------------------------------
+TOTAL                      440      0     62      0   100%
+Required test coverage of 100.0% reached. Total coverage: 100.00%
+===================================================================== 46 passed in 0.47s =====================================================================
+
+> @pydantic/cel@0.1.0-alpha.8 test
+> npm run build && node --expose-gc --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 --test dist/test/*.test.js
+
+
+> @pydantic/cel@0.1.0-alpha.8 build
+> npm run build:native && tsc -p tsconfig.json
+
+
+> @pydantic/cel@0.1.0-alpha.8 build:native
+> node build.mjs
+
+✔ nested evaluations keep outer input and result storage independent (6.0395ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (7.233333ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (4.91325ms)
+✔ legacy enums remain integers by default (2.432292ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.396875ms)
+✔ EnumValue validates wrapper and spoofed native inputs (1.092167ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.2465ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.799041ms)
+✔ Program compiles once and evaluates native bindings (0.643334ms)
+✔ values cross the native boundary without JSON conversion (1.007417ms)
+✔ type values round trip and macros preserve native data (0.291667ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.405875ms)
+✔ environments own declarations and check complete policies (3.131292ms)
+✔ byte inputs are captured before later getters run (0.13375ms)
+✔ negative zero remains a double and wrappers validate inputs (0.114958ms)
+✔ compile and evaluation failures have distinct typed codes (0.256541ms)
+✔ invalid JavaScript inputs are rejected (3.484959ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.155708ms)
+✔ binding names and maps use own enumerable string properties (0.070583ms)
+✔ native programs can be reclaimed by garbage collection (2.117167ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (3.054ms)
+✔ protobuf boundary errors preserve failure phases (0.367125ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (1.978ms)
+✔ strings and keys preserve code points across inline and allocated conversion (2.518625ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.279291ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (20.192125ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (3.585709ms)
+✔ temporal values preserve nanoseconds and static types (2.810834ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.424291ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 299.337333
+ℹ start of coverage report
+ℹ ----------------------------------------------------------
+ℹ file      | line % | branch % | funcs % | uncovered lines
+ℹ ----------------------------------------------------------
+ℹ dist      |        |          |         | 
+ℹ  index.js | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ all files | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ end of coverage report
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/marcelotryle/dev/pydantic/cel/bindings/python
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 6 items
+
+bindings/python ......                                                                                                                                 [100%]
+
+===================================================================== 6 passed in 1.41s ======================================================================

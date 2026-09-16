@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.Base64 untrusted text returns decoded bytes or an encoding error" (b4a38447c8425842)
+Runs: 0 -> 122242
+Unique runs: 0 -> 103
+Coverage: 0/16087 -> 606/16087 (3.77%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

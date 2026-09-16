@@ -1,0 +1,5 @@
+Implemented in `src/syntax.zig` and `src/checker.zig`.
+
+`sortBy` now lowers to the requested `sort_by` node, validates its binding, infers keys in lexical scope, and preserves the receiver list type. Added checked list methods and `lists.range`, including absolute/container namespace handling and custom-function precedence; `flatten` returns `list(dyn)`.
+
+Ran `zig fmt` and `zig test src/checker.zig` successfully.

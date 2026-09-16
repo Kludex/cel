@@ -1,0 +1,40 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_________________________________________ test_large_network_allowlists_can_be_deduplicated_with_default_work_budget _________________________________________
+
+    def test_large_network_allowlists_can_be_deduplicated_with_default_work_budget() -> None:
+        addresses = [f"10.0.{index // 256}.{index % 256}" for index in range(3_000)]
+        source = "addresses.map(address, ip(address)).distinct().size() == addresses.size()"
+>       assert Program(source).evaluate({"addresses": addresses}) is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_network.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x107970d30>, bindings = {'addresses': ['10.0.0.0', '10.0.0.1', '10.0.0.2', '10.0.0.3', '10.0.0.4', '10.0.0.5', ...]}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+            IPAddress,
+            CIDR,
+        )
+E       cel.program.EvaluationError: CostLimitExceeded
+
+bindings/python/src/cel/program.py:38: EvaluationError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_network.py::test_large_network_allowlists_can_be_deduplicated_with_default_work_budget - cel.program.EvaluationError: Cos...
+1 failed, 6 deselected in 0.04s

@@ -1,0 +1,6 @@
+All checks passed!
+2 files reformatted, 52 files left unchanged
+
+> @pydantic/cel@0.1.0-alpha.19 format
+> oxfmt index.ts test build.mjs
+

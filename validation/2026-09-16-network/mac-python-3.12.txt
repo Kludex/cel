@@ -1,0 +1,67 @@
+Using Python 3.12.7 environment at: /tmp/cel-linux-current/mac-3.12
+Resolved 7 packages in 46ms
+Prepared 1 package in 60ms
+Installed 2 packages in 2ms
+ + coverage==7.16.1
+ + pytest-cov==7.1.0
+/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/__init__.py
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.12.7, pytest-9.0.2, pluggy-1.6.0
+rootdir: /private/tmp/cel-network-macos/source/bindings/python
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0
+collected 132 items
+
+tests/test_bindings.py ........                                                                                                                        [  6%]
+tests/test_blocks.py ........                                                                                                                          [ 12%]
+tests/test_encoders.py ...                                                                                                                             [ 14%]
+tests/test_enums.py ........                                                                                                                           [ 20%]
+tests/test_functions.py .......................                                                                                                        [ 37%]
+tests/test_lists.py .........                                                                                                                          [ 44%]
+tests/test_maps.py .....                                                                                                                               [ 48%]
+tests/test_math.py ...                                                                                                                                 [ 50%]
+tests/test_network.py .......                                                                                                                          [ 56%]
+tests/test_optional.py .........                                                                                                                       [ 62%]
+tests/test_program.py ...............................                                                                                                  [ 86%]
+tests/test_proto_helpers.py ....                                                                                                                       [ 89%]
+tests/test_protobuf.py ...                                                                                                                             [ 91%]
+tests/test_storage.py .                                                                                                                                [ 92%]
+tests/test_string_extensions.py .......                                                                                                                [ 97%]
+tests/test_temporal.py ...                                                                                                                             [100%]
+
+======================================================================= tests coverage =======================================================================
+______________________________________________________ coverage: platform darwin, python 3.12.7-final-0 ______________________________________________________
+
+Name                                                                                    Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------------------------------------------------------------------
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/__init__.py        7      0      0      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/enums.py          22      0      8      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/functions.py      28      0     14      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/maps.py           25      0     12      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/network.py        21      0      4      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/optional.py       18      0      4      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/program.py        46      0      8      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/temporal.py       19      0      8      0   100%
+/private/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/values.py         49      0     18      0   100%
+tests/__init__.py                                                                           1      0      0      0   100%
+tests/test_bindings.py                                                                     93      0      8      0   100%
+tests/test_blocks.py                                                                       73      0      6      0   100%
+tests/test_encoders.py                                                                     38      0     10      0   100%
+tests/test_enums.py                                                                        99      0     18      0   100%
+tests/test_functions.py                                                                   124      0      0      0   100%
+tests/test_lists.py                                                                        74      0     10      0   100%
+tests/test_maps.py                                                                         75      0     16      0   100%
+tests/test_math.py                                                                         38      0      4      0   100%
+tests/test_network.py                                                                      79      0     12      0   100%
+tests/test_optional.py                                                                     87      0      4      0   100%
+tests/test_program.py                                                                     137      0      4      0   100%
+tests/test_proto_helpers.py                                                                32      0      2      0   100%
+tests/test_protobuf.py                                                                     38      0      0      0   100%
+tests/test_storage.py                                                                      17      0      2      0   100%
+tests/test_string_extensions.py                                                            71      0     14      0   100%
+tests/test_temporal.py                                                                     33      0      2      0   100%
+-----------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                    1344      0    188      0   100%
+Required test coverage of 100.0% reached. Total coverage: 100.00%
+==================================================================== 132 passed in 0.78s =====================================================================

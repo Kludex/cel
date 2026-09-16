@@ -1,0 +1,5 @@
+5d892c638e3cf2d0b6aa115f655e4cc6e8903e622188576aa3d3c098b697c62e  /tmp/cel-lists-before/eval.zig
+ecd4fde5acbfe5b1ca8ac308e62b562c76b82a77334ad8a02097c8fc61a31a44  /tmp/cel-lists-before/node/cel.node
+ca6bb9684a45ce640e7afdc3f8ec487a8937e252eebb051339e429bbd937c2da  bindings/typescript/cel.node
+85591800dc8779453b965dc3c07c535fbe823b86136fc33c9268272dfb737154  benchmarks/results/2026-09-16-lists/large-workloads.json
+7e2b02e89ceddd79f6fad02245063d6da010ae47b5df66704e7480159661b571  benchmarks/results/2026-09-16-lists/restore-linear-distinct.patch

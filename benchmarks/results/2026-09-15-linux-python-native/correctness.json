@@ -1,0 +1,366 @@
+{
+  "api": {
+    "documented_execution_method": "Program.execute(Context)",
+    "program_methods": [
+      "execute"
+    ]
+  },
+  "environment": {
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "platform": "Linux-6.10.14-linuxkit-x86_64-with-glibc2.41",
+    "python": "3.14.7"
+  },
+  "package": {
+    "name": "python-cel",
+    "version": "0.1.1"
+  },
+  "summary": {
+    "cases": 39,
+    "compile_failed_workloads": 1,
+    "compiled_workloads": 7,
+    "evaluation_error_cases": 11,
+    "mismatched_cases": 0,
+    "not_run_compile_error_cases": 6,
+    "passed_cases": 22,
+    "workloads": 8
+  },
+  "workloads": [
+    {
+      "cases": [
+        {
+          "actual": true,
+          "actual_type": "bool",
+          "expected": true,
+          "name": "owner_reads_resource",
+          "outcome": "passed"
+        },
+        {
+          "actual": true,
+          "actual_type": "bool",
+          "expected": true,
+          "name": "admin_reads_resource",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "other_user_is_denied",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "write_is_denied",
+          "outcome": "passed"
+        }
+      ],
+      "expression": "request.method == \"GET\" && request.path.startsWith(\"/v1/\") && principal.authenticated && (principal.role == \"admin\" || resource.owner == principal.id)",
+      "name": "request_authorization"
+    },
+    {
+      "cases": [
+        {
+          "actual": true,
+          "actual_type": "bool",
+          "expected": true,
+          "name": "valid_signup",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "short_name",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "empty_tags_short_circuits_index",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "external_email",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "untrusted_source",
+          "outcome": "passed"
+        }
+      ],
+      "expression": "payload.name.size() >= 3 && payload.tags.size() > 0 && payload.tags.size() <= 5 && payload.tags[0] != \"\" && payload.email.endsWith(\"@example.com\") && payload.region.contains(\"us-\") && payload.metadata[\"source\"] == \"api\"",
+      "name": "request_data_validation"
+    },
+    {
+      "cases": [
+        {
+          "actual": true,
+          "actual_type": "bool",
+          "expected": true,
+          "name": "valid_multi_item_cart",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "later_item_out_of_stock",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "unrecognized_coupon",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "empty_cart",
+          "outcome": "passed"
+        }
+      ],
+      "expression": "cart.items.size() > 0 && cart.items.size() <= 50 && cart.items.all(item, item.quantity > 0 && item.quantity <= stock[item.sku] && item.price > 0 && item.price * item.quantity <= 100000) && cart.coupons.all(code, code in ['WELCOME', 'LOYALTY'])",
+      "name": "cart_validation"
+    },
+    {
+      "cases": [
+        {
+          "actual": "admin",
+          "actual_type": "str",
+          "expected": "admin",
+          "name": "admin_route",
+          "outcome": "passed"
+        },
+        {
+          "actual": "canary",
+          "actual_type": "str",
+          "expected": "canary",
+          "name": "canary_api_route",
+          "outcome": "passed"
+        },
+        {
+          "actual": "default",
+          "actual_type": "str",
+          "expected": "default",
+          "name": "stable_api_route",
+          "outcome": "passed"
+        },
+        {
+          "actual": "default",
+          "actual_type": "str",
+          "expected": "default",
+          "name": "health_route",
+          "outcome": "passed"
+        }
+      ],
+      "expression": "request.path.startsWith(\"/admin\") ? \"admin\" : request.path.startsWith(\"/api\") && request.headers[\"x-canary\"] == \"1\" ? \"canary\" : \"default\"",
+      "name": "request_routing"
+    },
+    {
+      "cases": [
+        {
+          "actual": true,
+          "actual_type": "bool",
+          "expected": true,
+          "name": "valid_customer",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "invalid_customer_id",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "invalid_email",
+          "outcome": "passed"
+        },
+        {
+          "actual": false,
+          "actual_type": "bool",
+          "expected": false,
+          "name": "invalid_later_tag",
+          "outcome": "passed"
+        },
+        {
+          "actual": true,
+          "actual_type": "bool",
+          "expected": true,
+          "name": "valid_empty_tags",
+          "outcome": "passed"
+        }
+      ],
+      "expression": "payload.id.matches('^[A-Z]{3}-[0-9]{6}$') && payload.email.matches(r'^[a-z][a-z0-9._+-]*@[a-z0-9.-]+\\.[a-z]{2,}$') && payload.tags.all(t, t.matches('^[a-z][a-z0-9_-]{0,15}$'))",
+      "name": "customer_format_validation"
+    },
+    {
+      "cases": [
+        {
+          "error": {
+            "message": "Undeclared reference to 'getDayOfWeek'",
+            "type": "RuntimeError"
+          },
+          "expected": true,
+          "name": "valid_business_hours",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'getDayOfWeek'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "expired_grant",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'getDayOfWeek'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "before_grant",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'getDayOfWeek'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "deadline_exceeded_by_nanosecond",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'getDayOfWeek'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "weekend_denied",
+          "outcome": "evaluation_error"
+        }
+      ],
+      "expression": "timestamp(request.now) >= timestamp(grant.starts) && timestamp(request.now) < timestamp(grant.expires) && timestamp(request.now).getDayOfWeek('America/New_York') in [1,2,3,4,5] && timestamp(request.now).getHours('America/New_York') >= 9 && timestamp(request.now).getHours('America/New_York') < 17 && duration(job.elapsed) <= duration('30s')",
+      "name": "temporal_authorization"
+    },
+    {
+      "cases": [
+        {
+          "expected": true,
+          "name": "active_admin_with_default_resource",
+          "outcome": "not_run_compile_error"
+        },
+        {
+          "expected": false,
+          "name": "missing_principal",
+          "outcome": "not_run_compile_error"
+        },
+        {
+          "expected": false,
+          "name": "null_principal",
+          "outcome": "not_run_compile_error"
+        },
+        {
+          "expected": false,
+          "name": "inactive_admin",
+          "outcome": "not_run_compile_error"
+        },
+        {
+          "expected": false,
+          "name": "missing_roles",
+          "outcome": "not_run_compile_error"
+        },
+        {
+          "expected": false,
+          "name": "deleted_resource",
+          "outcome": "not_run_compile_error"
+        }
+      ],
+      "compile_error": {
+        "message": "Error parsing: unrecognized token: '?' at [0:32]->[0:33]",
+        "type": "ValueError"
+      },
+      "expression": "optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?active.orValue(false) && p.?roles.orValue([]).exists(r, r == 'admin')).orValue(false) && !resource.?deleted.orValue(false)",
+      "name": "optional_authorization"
+    },
+    {
+      "cases": [
+        {
+          "error": {
+            "message": "Undeclared reference to 'bitAnd'",
+            "type": "RuntimeError"
+          },
+          "expected": true,
+          "name": "quota_boundary_is_allowed",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'bitAnd'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "missing_permission",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'bitAnd'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "quota_exceeded",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'bitAnd'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "rounded_cpu_exceeds_limit",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'bitAnd'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "absolute_delta_exceeds_limit",
+          "outcome": "evaluation_error"
+        },
+        {
+          "error": {
+            "message": "Undeclared reference to 'bitAnd'",
+            "type": "RuntimeError"
+          },
+          "expected": false,
+          "name": "zero_units_denied",
+          "outcome": "evaluation_error"
+        }
+      ],
+      "expression": "math.bitAnd(account.permissions, 4) == 4 && request.units > 0 && math.isFinite(request.cpu) && math.ceil(request.cpu) <= limits.cpu && math.greatest(request.units, account.used + request.units) <= limits.units && math.abs(request.delta) <= limits.max_delta",
+      "name": "quota_and_permissions"
+    }
+  ],
+  "workloads_sha256": "be8d8ba2e50c812f566056723519d03a0d6ee9a8e5d1f57e6e25180d8e1c3be8"
+}

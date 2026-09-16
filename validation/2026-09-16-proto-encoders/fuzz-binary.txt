@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.Base64 binary activations round trip without trapping" (ec1d40b0609f7207)
+Runs: 0 -> 100046
+Unique runs: 0 -> 34
+Coverage: 0/16560 -> 661/16560 (3.99%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

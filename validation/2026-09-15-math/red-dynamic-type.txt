@@ -1,0 +1,11 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.math extrema infer dynamic results when a dynamic argument may win' failed without output
+failed command: ./.zig-cache/o/27fc01eb9f53bb5c2882c6ebd927e871/test --cache-dir=./.zig-cache --seed=0xed90eb10 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/36572acba243105f72fa4aa07095e694/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0xed90eb10 -Za5b209df0daad052 test -Dtest-filter=math extrema infer -j4

@@ -1,0 +1,6 @@
+8: Pulling from library/almalinux
+f5244827b541: Already exists
+Digest: sha256:9f355ae942d6a6c0561f0771dc053a2cfae9580fc45fa4252756db7c7e80c09f
+Status: Downloaded newer image for almalinux:8
+docker.io/library/almalinux:8
+arm64 ["almalinux@sha256:9f355ae942d6a6c0561f0771dc053a2cfae9580fc45fa4252756db7c7e80c09f"]

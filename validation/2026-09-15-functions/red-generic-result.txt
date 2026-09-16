@@ -1,0 +1,12 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.checked generic callbacks cannot return a different inferred type' failed:
+       expected error.NoMatchingOverload, found .{ .string = { 110, 111, 116, 32, 97, 110, 32, 105, 110, 116, 101, 103, 101, 114 } }
+failed command: ./.zig-cache/o/2d5fc676acc66172d05dba18e6fd4097/test --cache-dir=./.zig-cache --seed=0x3a7ebae3 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74598b0ed75e721084d414daac29cf0d/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x3a7ebae3 -Z045d02da1f192d13 test -Dtest-filter=checked generic callbacks -j4

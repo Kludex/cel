@@ -1,0 +1,3 @@
+cold_compile_and_evaluate: median 9483 ns/decision, IQR 2.9%
+warm_evaluate_reused_program: median 1713 ns/decision, IQR 0.7%
+Raw results: /Users/marcelotryle/dev/pydantic/cel/benchmarks/results/2026-09-16-node-plain/node.json

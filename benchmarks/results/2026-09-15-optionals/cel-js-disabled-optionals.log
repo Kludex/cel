@@ -1,0 +1,20 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:82
+  return new ParseError({code, message, node})
+         ^
+
+ParseError: Expected IDENTIFIER, got QUESTION
+
+>    1 | optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?active.orValue(false) && p.?roles.orValue([]).exists(r, r == 'admin')).orValue(false) && !resource.?deleted.orValue(false)
+                                         ^
+    at parseError (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:82:10)
+    at Parser.consume (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:628:11)
+    at Parser.parsePostfix (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:788:14)
+    at Parser.parseUnary (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:768:17)
+    at Parser.parseMultiplicative (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:751:21)
+    at Parser.parseAdditive (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:740:21)
+    at Parser.parseRelational (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:723:21)
+    at Parser.parseEquality (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:712:21)
+    at Parser.parseLogicalAnd (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:702:21)
+    at Parser.parseLogicalOr (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:692:21)
+
+Node.js v24.14.1

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "reasons": {
+    "check_only": "Evaluation-only mode does not run check-only cases.",
+    "extension": "This file exercises an optional CEL extension library.",
+    "error_value": "Error-valued variable bindings are not supported.",
+    "macro_configuration": "The public Program API does not allow macro expansion to be disabled.",
+    "unknown": "Unknown values and unknown propagation are not implemented.",
+    "locale": "The public Program API does not expose locale selection."
+  },
+  "fileReasons": {},
+  "fieldReasons": {
+    "disableMacros": "macro_configuration",
+    "locale": "locale"
+  },
+  "expressionReasons": {},
+  "matcherReasons": {
+    "anyUnknowns": "unknown",
+    "unknown": "unknown"
+  },
+  "exprValueReasons": {
+    "error": "error_value",
+    "unknown": "unknown"
+  },
+  "valueReasons": {}
+}

@@ -1,0 +1,106 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+____________________________________________________ test_complete_text_policy_normalizes_request_fields _____________________________________________________
+
+    def test_complete_text_policy_normalizes_request_fields() -> None:
+        source = (
+            "request.name.trim().lowerAscii().replace(' ', '-').matches('^[a-z-]+$') && "
+            "request.labels.split(',').map(x, x.trim().upperAscii()).join('|') == 'ADMIN|READ' && "
+            "'%s:%d'.format([request.name.trim(), request.revision]) == 'Alice Smith:3'"
+        )
+        environment = Environment(variables={"request": CELType("dyn")})
+>       for program in (Program(source), environment.compile(source)):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_string_extensions.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x109653e20>
+source = "request.name.trim().lowerAscii().replace(' ', '-').matches('^[a-z-]+$') && request.labels.split(',').map(x, x.trim().upperAscii()).join('|') == 'ADMIN|READ' && '%s:%d'.format([request.name.trim(), request.revision]) == 'Alice Smith:3'"
+environment = <cel.program.Environment object at 0x109653d90>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: TypeMismatch
+
+bindings/python/src/cel/program.py:33: CompileError
+___________________________________________ test_unicode_operations_use_code_points_and_preserve_empty_boundaries ____________________________________________
+
+    def test_unicode_operations_use_code_points_and_preserve_empty_boundaries() -> None:
+>       assert Program("text.charAt(1)").evaluate({"text": "A😀e\u0301Z"}) == "😀"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_string_extensions.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x109653e80>, bindings = {'text': 'A😀éZ'}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: NoMatchingOverload
+
+bindings/python/src/cel/program.py:37: EvaluationError
+_______________________________________________________ test_quoting_formatting_and_invalid_arguments ________________________________________________________
+
+    def test_quoting_formatting_and_invalid_arguments() -> None:
+>       assert Program("strings.quote(text)").evaluate({"text": '"😀\n\\\a'}) == '"\\"😀\\n\\\\\\a"'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_string_extensions.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x109650460>, bindings = {'text': '"😀\n\\\x07'}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: UndeclaredReference
+
+bindings/python/src/cel/program.py:37: EvaluationError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_string_extensions.py::test_complete_text_policy_normalizes_request_fields - cel.program.CompileError: TypeMismatch
+FAILED bindings/python/tests/test_string_extensions.py::test_unicode_operations_use_code_points_and_preserve_empty_boundaries - cel.program.EvaluationError...
+FAILED bindings/python/tests/test_string_extensions.py::test_quoting_formatting_and_invalid_arguments - cel.program.EvaluationError: UndeclaredReference
+3 failed in 0.03s

@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.optional source and activations stay bounded" (2844b2935ecafce7)
+Runs: 0 -> 118795
+Unique runs: 0 -> 698
+Coverage: 0/14280 -> 1457/14280 (10.20%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

@@ -1,0 +1,2 @@
+ldd (Debian GLIBC 2.36-9+deb12u13) 2.36
+ 177   E   L   F

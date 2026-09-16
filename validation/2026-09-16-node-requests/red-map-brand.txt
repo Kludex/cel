@@ -1,0 +1,67 @@
+✔ typed map outputs are valid inputs without assertions or casts (0.603458ms)
+✔ native maps preserve CEL key types and nested maps (0.507083ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.107166ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.432417ms)
+✔ native map conversion uses captured intrinsics (0.149791ms)
+✖ map brands and limits do not depend on mutable prototypes (14.644375ms)
+✔ proxies cannot disguise map brands or wrapper keys (0.263833ms)
+✖ proxy rejection does not execute wrapper prototype traps (0.281542ms)
+✔ map snapshot descriptors ignore inherited accessors (0.127667ms)
+✔ map snapshots do not invoke inherited array setters (0.125625ms)
+✔ native maps snapshot entries before converting values (0.084459ms)
+✔ native map results and environment constants own their data (0.156792ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.077917ms)
+✔ nested native map evaluations keep results independent (0.08025ms)
+✔ object and native maps charge the same key-value budget (34.719334ms)
+✔ native maps preserve collection, depth, and byte limits (23.057209ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 14
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.65625
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/map.test.js:122:1
+✖ map brands and limits do not depend on mutable prototypes (14.644375ms)
+  TypeError: OptionalValue hasValue must be a boolean
+      at Program.evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:265:23)
+      at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:6:38)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:126:26)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at bindings/typescript/dist/test/map.test.js:146:1
+✖ proxy rejection does not execute wrapper prototype traps (0.281542ms)
+  AssertionError [ERR_ASSERTION]: The error is expected to be an instance of "TypeError". Received "Error"
+  
+  Error message:
+  
+  prototype trap ran
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:156:16)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: prototype trap ran
+        at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:148:20)
+        at Test.runInAsyncScope (node:async_hooks:228:14)
+        at Test.run (node:internal/test_runner/test:1118:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+        at Test.postRun (node:internal/test_runner/test:1247:19)
+        at Test.run (node:internal/test_runner/test:1175:12)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:787:7),
+    operator: 'throws',
+    diff: 'simple'
+  }

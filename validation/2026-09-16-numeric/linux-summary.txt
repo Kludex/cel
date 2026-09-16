@@ -1,0 +1,13 @@
+Completed all seven steps. All six Linux audit reports exactly match the repository baselines.
+
+1. Core arm64, glibc 2.28: exit 0; all 137 tests passed.
+2. Emulated x86-64, glibc 2.41: exit 0; all 137 tests passed.
+3. Node addon: initial build exit 1 with confirmed Docker OOM at 1 GiB; retry at 4 GiB exit 0. cel.node is aarch64 ELF. Wrapper cmp, npm pack, npm install, and installed-file comparisons all exit 0.
+4. Installed npm archive: Node 24.14.1/glibc 2.28 and Node 22.14.0/glibc 2.31 each exit 0; 102 passed, 0 failed; line/branch/function coverage 100%.
+5. Wheel build, auditwheel repair, strict abi3audit 0.0.26: all exit 0. Produced cp310-abi3-manylinux_2_28_aarch64 wheel; 1 extension scanned, 0 ABI mismatches, 0 violations.
+6. Staging and offline pip install: exit 0. Installed wheel on CPython 3.10.20/glibc 2.28: pytest exit 0; 134 passed, 100% line/branch coverage. Each of the six audits exits 1 for expected baseline failures. Each engine: full 2505 passed / 3 failed / 0 unsupported; evaluation 2481 / 2 / 25. Container exit 0; individual pipeline exits recorded separately.
+7. Parity: exit 0; every top-level field, including implementation labels, equal for all six reports. SHA-256 generation and verification: exit 0; all 6 artifact files verified.
+
+Deviations: private Zig cache copy and host npm/uv/temp directories under /tmp/cel-num-linux/ preserve ownership. Builds use 4 GiB after the initial addon OOM. Audit logging adds bash PIPESTATUS and tee so tail does not hide failures.
+
+Nothing incomplete. Logs: validation/2026-09-16-numeric/linux-*.txt; checksums: linux-packages.sha256, relative to /tmp/cel-num-linux/artifacts. Raw audit JSON/stdout: /tmp/cel-num-linux/reports/. Initial OOM evidence is retained in linux-node-build.txt and linux-node-build-oom.txt.

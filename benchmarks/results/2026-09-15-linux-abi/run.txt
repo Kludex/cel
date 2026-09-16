@@ -1,0 +1,24 @@
+Looking in links: /wheels
+Processing ./before/cel_sdk-0.1.0a13-cp310-abi3-manylinux_2_28_aarch64.whl
+Processing ./wheels/typing_extensions-4.15.0-py3-none-any.whl (from cel-sdk==0.1.0a13)
+Installing collected packages: typing-extensions, cel-sdk
+
+Successfully installed cel-sdk-0.1.0a13 typing-extensions-4.15.0
+Looking in links: /wheels
+Processing ./after/cel_sdk-0.1.0a13-cp310-abi3-manylinux_2_28_aarch64.whl
+Processing ./wheels/typing_extensions-4.15.0-py3-none-any.whl (from cel-sdk==0.1.0a13)
+Installing collected packages: typing-extensions, cel-sdk
+
+Successfully installed cel-sdk-0.1.0a13 typing-extensions-4.15.0
+cold_compile_and_evaluate: median 9508 ns/decision, IQR 0.7%
+warm_evaluate_reused_program: median 1419 ns/decision, IQR 0.8%
+Raw results: /results/before-1.json
+cold_compile_and_evaluate: median 9524 ns/decision, IQR 0.7%
+warm_evaluate_reused_program: median 1398 ns/decision, IQR 1.3%
+Raw results: /results/after-1.json
+cold_compile_and_evaluate: median 9535 ns/decision, IQR 0.5%
+warm_evaluate_reused_program: median 1398 ns/decision, IQR 0.6%
+Raw results: /results/after-2.json
+cold_compile_and_evaluate: median 9585 ns/decision, IQR 0.6%
+warm_evaluate_reused_program: median 1418 ns/decision, IQR 0.6%
+Raw results: /results/before-2.json

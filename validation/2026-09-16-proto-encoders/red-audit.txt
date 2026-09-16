@@ -1,0 +1,97 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+__________________________________________ test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk[python] ___________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-968/test_pinned_proto_helper_and_e0')
+engine = 'python'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entries = [entry for entry in manifest["files"] if entry["name"] in {"proto2_ext", "encoders_ext"}]
+        for entry in entries:
+            (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": 22}, "files": entries})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=22 passed=0 failed=0 unsupported=22
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=22 passed=0 failed=0 unsupported=22
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...=22\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=22 passed=0 failed=0 unsupported=22\n', stderr='').returncode
+
+conformance/test_proto_encoders.py:29: AssertionError
+___________________________________________ test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk[node] ____________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-968/test_pinned_proto_helper_and_e1')
+engine = 'node'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entries = [entry for entry in manifest["files"] if entry["name"] in {"proto2_ext", "encoders_ext"}]
+        for entry in entries:
+            (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": 22}, "files": entries})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=22 passed=0 failed=0 unsupported=22
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=22 passed=0 failed=0 unsupported=22
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...=22\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=22 passed=0 failed=0 unsupported=22\n', stderr='').returncode
+
+conformance/test_proto_encoders.py:29: AssertionError
+____________________________________________ test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk[zig] ____________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-968/test_pinned_proto_helper_and_e2')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entries = [entry for entry in manifest["files"] if entry["name"] in {"proto2_ext", "encoders_ext"}]
+        for entry in entries:
+            (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": 22}, "files": entries})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=22 passed=0 failed=0 unsupported=22
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=22 passed=0 failed=0 unsupported=22
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...=22\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=22 passed=0 failed=0 unsupported=22\n', stderr='').returncode
+
+conformance/test_proto_encoders.py:29: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk[python] - AssertionError: total: total=22 passed=0 failed=0 unsuppo...
+FAILED bindings/python::test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk[node] - AssertionError: total: total=22 passed=0 failed=0 unsupport...
+FAILED bindings/python::test_pinned_proto_helper_and_encoder_cases_run_through_each_sdk[zig] - AssertionError: total: total=22 passed=0 failed=0 unsupporte...
+3 failed in 0.25s

@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.distinct numeric hashing agrees with public CEL value equality" (1b24b00bb1ae4a48)
+Runs: 0 -> 101284
+Unique runs: 0 -> 107
+Coverage: 0/15035 -> 739/15035 (4.92%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

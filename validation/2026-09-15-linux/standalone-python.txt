@@ -1,0 +1,4 @@
+Downloading cpython-3.10.20-linux-aarch64-gnu (download) (28.4MiB)
+ Downloaded cpython-3.10.20-linux-aarch64-gnu (download)
+Installed Python 3.10.20 in 5.46s
+ + cpython-3.10.20-linux-aarch64-gnu

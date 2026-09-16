@@ -1,0 +1,12 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.protobuf collection equality charges field and unknown byte work' failed:
+       expected error.CostLimitExceeded, found .{ .bool = true }
+failed command: ./.zig-cache/o/da32f975fb39261f3653913add7c7f8a/test --cache-dir=./.zig-cache --seed=0x3801d077 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/abd6a65039b150e7636dee73903da559/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x3801d077 -Z7cb703db358907da test -Dtest-filter=protobuf collection equality -j4

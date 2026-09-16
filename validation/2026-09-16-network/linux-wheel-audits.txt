@@ -1,0 +1,21 @@
+INFO:auditwheel.main_repair:Repairing cel_sdk-0.1.0a20-cp310-abi3-linux_aarch64.whl
+INFO:auditwheel.wheeltools:Previous filename tags: linux_aarch64
+INFO:auditwheel.wheeltools:New filename tags: manylinux_2_28_aarch64
+INFO:auditwheel.wheeltools:Previous WHEEL info tags: cp310-abi3-linux_aarch64
+INFO:auditwheel.wheeltools:New WHEEL info tags: cp310-abi3-manylinux_2_28_aarch64
+INFO:auditwheel.main_repair:
+Fixed-up wheel written to /out/artifacts/manylinux/cel_sdk-0.1.0a20-cp310-abi3-manylinux_2_28_aarch64.whl
+
+cel_sdk-0.1.0a20-cp310-abi3-manylinux_2_28_aarch64.whl is consistent
+with the following platform tag: "manylinux_2_28_aarch64".
+
+The wheel references external versioned symbols in these
+system-provided shared libraries: libm.so.6 with versions
+{'GLIBC_2.17'}, libc.so.6 with versions {'GLIBC_2.17', 'GLIBC_2.25',
+'GLIBC_2.27', 'GLIBC_2.28'}, libpthread.so.0 with versions
+{'GLIBC_2.17'}, libdl.so.2 with versions {'GLIBC_2.17'}
+
+This constrains the platform tag to "manylinux_2_28_aarch64". In order
+to achieve a more compatible tag, you would need to recompile a new
+wheel from source on a system with earlier versions of these
+libraries, such as a recent manylinux image.

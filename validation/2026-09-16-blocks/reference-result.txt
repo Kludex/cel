@@ -1,0 +1,23 @@
+Implemented and verified:
+
+- `conformance/reference/blocks.go`
+- `conformance/reference/blocks.txt`
+- `conformance/reference/blocks-notes.md`
+
+Concrete rules:
+
+- `cel.block`, `cel.index`, `cel.iterVar`, and `cel.accuVar` are conformance-only source macros, not standard `ext.Bindings()` syntax.
+- They expand to `cel.@block`, `@indexN`, `@it:depth:unique`, and `@ac:depth:unique`. The `@` forms are AST-only and cannot be parsed as source.
+- Slots evaluate lazily, cache successful and error values once per evaluation, skip unused expressions, and reset when a program is evaluated again.
+- Forward indexes work. Self, negative, and out-of-range indexes produce missing-attribute errors.
+- Nested blocks have independent frames. Slot initializers use the block-entry scope and cannot capture iteration variables introduced at the reference site.
+- Empty blocks return their result. Planning rejects wrong arity and non-list constructors.
+
+Unresolved: the pinned specification has no normative block document beyond the test-only corpus, and does not define portability for handcrafted aliases or forward references.
+
+Verified with the reproducible probe and CEL-Go block tests:
+
+```text
+probe output reproducible
+ok cel.dev/cel-go/ext
+```

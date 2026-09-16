@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.strong enum conversion never traps on untrusted values and wire bytes" (144c3f9734b5a8b3)
+Runs: 0 -> 100039
+Unique runs: 0 -> 13
+Coverage: 0/13119 -> 594/13119 (4.53%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

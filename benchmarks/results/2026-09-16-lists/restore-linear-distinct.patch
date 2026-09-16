@@ -1,0 +1,84 @@
+--- a/src/eval.zig
++++ b/src/eval.zig
+@@ -278,47 +278,6 @@
+         };
+     }
+ 
+-    fn distinctHash(self: *Context, item: Value) EvalError!?u64 {
+-        if (item.numeric()) {
+-            const integer: ?u64 = switch (item) {
+-                .int => |v| @bitCast(v),
+-                .uint => |v| v,
+-                .double => |v| if (std.math.isFinite(v) and @trunc(v) == v and v >= -0x1p63 and v < 0x1p64)
+-                    (if (v < 0) @bitCast(@as(i64, @intFromFloat(v))) else @as(u64, @intFromFloat(v)))
+-                else
+-                    null,
+-                else => unreachable,
+-            };
+-            if (integer) |v| return std.hash.Wyhash.hash(0, std.mem.asBytes(&v));
+-            return std.hash.Wyhash.hash(10, std.mem.asBytes(&item.double));
+-        }
+-        switch (item) {
+-            .null => return std.hash.Wyhash.hash(5, ""),
+-            .bool => |v| return std.hash.Wyhash.hash(1, if (v) "1" else "0"),
+-            .string, .bytes, .type_value => {
+-                const bytes = switch (item) {
+-                    .string => |v| v,
+-                    .bytes => |v| v,
+-                    else => item.type_value,
+-                };
+-                try self.charge(bytes.len);
+-                return std.hash.Wyhash.hash(if (item == .string) 2 else if (item == .bytes) 3 else 7, bytes);
+-            },
+-            .duration => |v| return std.hash.Wyhash.hash(8, std.mem.asBytes(&v.nanoseconds)),
+-            .timestamp => |v| {
+-                const nanos = v.toNanos();
+-                return std.hash.Wyhash.hash(9, std.mem.asBytes(&nanos));
+-            },
+-            .enum_value => |v| {
+-                try self.charge(v.type_name.len);
+-                const number: u64 = @bitCast(@as(i64, v.number));
+-                return std.hash.Wyhash.hash(number, v.type_name);
+-            },
+-            // Compound values share a bucket so protobuf and recursive equality remain authoritative.
+-            else => return null,
+-        }
+-    }
+-
+     fn flattenList(self: *Context, items: []const Value, levels: i64, out: *std.ArrayList(Value)) EvalError!void {
+         if (self.depth >= self.limits.max_depth) return error.DepthLimitExceeded;
+         self.depth += 1;
+@@ -665,28 +624,16 @@
+                         if (count != 1) return error.NoMatchingOverload;
+                         const out = try self.arena.alloc(Value, items.len);
+                         var used: usize = 0;
+-                        var buckets: std.AutoHashMapUnmanaged(?u64, usize) = .empty;
+-                        const hashed = items.len > 16;
+-                        const next: []usize = if (hashed) try self.arena.alloc(usize, items.len) else &.{};
++                        // ponytail: quadratic distinct is work-bounded; add semantic hashing for large collection policies.
+                         for (items) |item| {
+                             const adapted = try self.adapt(item);
+-                            const hash = if (hashed) try self.distinctHash(adapted) else null;
+-                            const head = if (hashed) buckets.get(hash) orelse items.len else if (used == 0) items.len else used - 1;
+-                            var previous = head;
+                             var seen = false;
+-                            while (previous != items.len) {
+-                                if (try self.equal(adapted, out[previous])) {
+-                                    seen = true;
+-                                    break;
+-                                }
+-                                previous = if (hashed) next[previous] else if (previous == 0) items.len else previous - 1;
+-                            }
++                            for (out[0..used]) |previous| if (try self.equal(adapted, previous)) {
++                                seen = true;
++                                break;
++                            };
+                             if (!seen) {
+                                 out[used] = adapted;
+-                                if (hashed) {
+-                                    next[used] = head;
+-                                    try buckets.put(self.arena, hash, used);
+-                                }
+                                 used += 1;
+                             }
+                         }

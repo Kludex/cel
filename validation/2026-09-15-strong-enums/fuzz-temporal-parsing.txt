@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.temporal parsing never traps on untrusted string values" (9499b175033339f9)
+Runs: 0 -> 100006
+Unique runs: 0 -> 0
+Coverage: 0/13119 -> 160/13119 (1.22%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

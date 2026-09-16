@@ -1,0 +1,17 @@
+math.greatest(1, dyn(2.5)): checked=dyn value=2.5 type=double error=<nil>
+math.greatest(1u, 1, 1.0): checked=dyn value=1 type=uint error=<nil>
+math.least(0.0, -0.0): checked=double value=0 type=double error=<nil>
+math.sign(-0.0): checked=double value=0 type=double error=<nil>
+math.greatest(0.0 / 0.0): checked=double value=NaN type=double error=<nil>
+math.greatest(1.0, 0.0 / 0.0): checked=double value=NaN values cannot be ordered: math.@max type=error error=NaN values cannot be ordered: math.@max
+math.least(dyn([])): checked=dyn value=math.@min(list) argument must not be empty type=error error=math.@min(list) argument must not be empty
+math.greatest(): compile error: ERROR: <input>:1:1: math.greatest() requires at least one argument
+ | math.greatest()
+ | ^
+math.least([]): compile error: ERROR: <input>:1:12: math.least() invalid single argument value
+ | math.least([])
+ | ...........^
+math.bitShiftRight(-1, 1): checked=int value=9223372036854775807 type=int error=<nil>
+math.bitShiftLeft(-1, 64): checked=int value=0 type=int error=<nil>
+math.bitShiftLeft(1, 63): checked=int value=-9223372036854775808 type=int error=<nil>
+math.bitShiftLeft(1u, -1): checked=uint value=math.bitShiftLeft() negative offset: -1 type=error error=math.bitShiftLeft() negative offset: -1

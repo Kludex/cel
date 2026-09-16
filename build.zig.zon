@@ -1,0 +1,21 @@
+.{
+    .name = .cel,
+    .version = "0.1.0",
+    .fingerprint = 0xe95e1efa4f731ff0, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{
+        .re2 = .{
+            .url = "https://codeload.github.com/google/re2/tar.gz/927f5d53caf8111721e734cf24724686bb745f55",
+            .hash = "N-V-__8AADh_GQCXgElXgN0nNsUTPyvRCYHP5ZgNg3zFAl2e",
+        },
+        .abseil = .{
+            .url = "https://codeload.github.com/abseil/abseil-cpp/tar.gz/2065f4ded0558c6f89fee67c8e5228feb4eb960e",
+            .hash = "N-V-__8AAAb6rwAvjbslelMWGZ5NawDm9UCy88i7ui4wvLbd",
+        },
+        .protobuf = .{
+            .url = "https://codeload.github.com/protocolbuffers/protobuf/tar.gz/f377bfefc5e2cfab68b816903c25b23e091c439d",
+            .hash = "N-V-__8AAMBy3gIEqbcpKNU7etZMDBlGUf5buqqYsQpXnTnS",
+        },
+    },
+    .paths = .{ "build.zig", "build.zig.zon", "build", "src", "third_party", "LICENSE" },
+}

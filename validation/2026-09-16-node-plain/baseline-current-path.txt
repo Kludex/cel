@@ -1,0 +1,13 @@
+✔ plain request bindings convert getters exactly once in enumeration order (1.003875ms)
+✔ unsupported values after plain data preserve earlier getter effects and error identity (0.284625ms)
+✔ plain data keeps exact numeric, string, and byte semantics (0.432875ms)
+✔ plain data mixed with wrapper classes and native maps converts consistently (0.966125ms)
+✔ plain data enforces cycle, depth, collection, and byte limits (56.612083ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 117.866667

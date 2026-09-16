@@ -1,0 +1,14 @@
+Build Summary: 8/8 steps succeeded; 1/1 tests passed
+conformance success
++- install cel-conformance success
+   +- compile exe cel-conformance Debug native-native success 2s MaxRSS:673M
+      +- WriteFile cached
+      +- compile lib cel_native Debug native-native cached 61ms MaxRSS:34M
+      +- compile lib cel_native Debug native-native (reused)
+conformance-test success
++- run test 1 pass (1 total) 902ms MaxRSS:33M
+   +- compile test Debug native-native success 2s MaxRSS:680M
+      +- WriteFile (reused)
+      +- compile lib cel_native Debug native-native (reused)
+      +- compile lib cel_native Debug native-native (reused)
+

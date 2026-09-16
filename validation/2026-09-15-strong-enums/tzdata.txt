@@ -1,0 +1,5 @@
+Get:1 http://deb.debian.org/debian trixie/main arm64 tzdata all 2026c-0+deb13u1 [264 kB]
+Get:2 http://deb.debian.org/debian trixie/main arm64 tzdata-legacy all 2026c-0+deb13u1 [184 kB]
+Fetched 448 kB in 0s (966 kB/s)
+2779c2f5e9582fb501c592ec44d1d4421e0add97d25631926673be817a221028  tzdata-legacy_2026c-0+deb13u1_all.deb
+813b9bbbe14ccda2b24617b8bade0ade4d745957e75921766c153d249886bd4c  tzdata_2026c-0+deb13u1_all.deb

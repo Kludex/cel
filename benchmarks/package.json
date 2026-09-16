@@ -1,0 +1,11 @@
+{
+  "name": "cel-benchmarks",
+  "private": true,
+  "type": "module",
+  "optionalDependencies": {
+    "@bufbuild/cel": "0.6.1"
+  },
+  "dependencies": {
+    "@marcbachmann/cel-js": "8.0.0"
+  }
+}

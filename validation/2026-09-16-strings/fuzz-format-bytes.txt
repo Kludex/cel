@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.formatted untrusted bytes always produce valid UTF-8" (94b065225178409a)
+Runs: 0 -> 200000
+Unique runs: 0 -> 132
+Coverage: 0/15789 -> 634/15789 (4.02%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

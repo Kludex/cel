@@ -1,0 +1,54 @@
+[
+  {
+    "mode": "full",
+    "all_fields_equal_except_implementation": true,
+    "summary": {
+      "core": {
+        "failed": 4,
+        "passed": 1901,
+        "total": 1905,
+        "unsupported": 0
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 199,
+        "total": 603,
+        "unsupported": 404
+      },
+      "total": {
+        "failed": 4,
+        "passed": 2100,
+        "total": 2508,
+        "unsupported": 404
+      }
+    },
+    "successfullyChecked": 2004,
+    "omittedChecks": 0
+  },
+  {
+    "mode": "evaluation",
+    "all_fields_equal_except_implementation": true,
+    "summary": {
+      "core": {
+        "failed": 4,
+        "passed": 1876,
+        "total": 1905,
+        "unsupported": 25
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 199,
+        "total": 603,
+        "unsupported": 404
+      },
+      "total": {
+        "failed": 4,
+        "passed": 2075,
+        "total": 2508,
+        "unsupported": 429
+      }
+    },
+    "successfullyChecked": 0,
+    "omittedChecks": 1979
+  }
+]

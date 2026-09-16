@@ -1,0 +1,168 @@
+Resolved 20 packages in 4ms
+   Building cel-sdk @ file:///Users/marcelotryle/dev/pydantic/cel/bindings/python
+      Built cel-sdk @ file:///Users/marcelotryle/dev/pydantic/cel/bindings/python
+Prepared 1 package in 610ms
+Uninstalled 1 package in 1ms
+Installed 1 package in 1ms
+ - cel-sdk==0.1.0a13 (from file:///Users/marcelotryle/dev/pydantic/cel/bindings/python)
+ + cel-sdk==0.1.0a14 (from file:///Users/marcelotryle/dev/pydantic/cel/bindings/python)
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/marcelotryle/dev/pydantic/cel/bindings/python
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0
+collected 86 items
+
+tests/test_enums.py ........                                                                                                                           [  9%]
+tests/test_functions.py .......................                                                                                                        [ 36%]
+tests/test_maps.py .....                                                                                                                               [ 41%]
+tests/test_math.py ...                                                                                                                                 [ 45%]
+tests/test_optional.py .........                                                                                                                       [ 55%]
+tests/test_program.py ...............................                                                                                                  [ 91%]
+tests/test_protobuf.py ...                                                                                                                             [ 95%]
+tests/test_storage.py .                                                                                                                                [ 96%]
+tests/test_temporal.py ...                                                                                                                             [100%]
+
+======================================================================= tests coverage =======================================================================
+______________________________________________________ coverage: platform darwin, python 3.14.6-final-0 ______________________________________________________
+
+Name                      Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------
+src/cel/__init__.py           6      0      0      0   100%
+src/cel/enums.py             22      0      8      0   100%
+src/cel/functions.py         28      0     14      0   100%
+src/cel/maps.py              25      0     12      0   100%
+src/cel/optional.py          18      0      4      0   100%
+src/cel/program.py           45      0      8      0   100%
+src/cel/temporal.py          19      0      8      0   100%
+src/cel/values.py            48      0     18      0   100%
+tests/__init__.py             1      0      0      0   100%
+tests/test_enums.py          99      0     18      0   100%
+tests/test_functions.py     124      0      0      0   100%
+tests/test_maps.py           75      0     16      0   100%
+tests/test_math.py           38      0      4      0   100%
+tests/test_optional.py       87      0      4      0   100%
+tests/test_program.py       137      0      4      0   100%
+tests/test_protobuf.py       38      0      0      0   100%
+tests/test_storage.py        17      0      2      0   100%
+tests/test_temporal.py       33      0      2      0   100%
+---------------------------------------------------------------------
+TOTAL                       860      0    122      0   100%
+Required test coverage of 100.0% reached. Total coverage: 100.00%
+===================================================================== 86 passed in 0.62s =====================================================================
+
+> @pydantic/cel@0.1.0-alpha.14 test
+> npm run build && node --expose-gc --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 --test dist/test/*.test.js
+
+
+> @pydantic/cel@0.1.0-alpha.14 build
+> npm run build:native && tsc -p tsconfig.json
+
+
+> @pydantic/cel@0.1.0-alpha.14 build:native
+> node build.mjs
+
+✔ nested evaluations keep outer input and result storage independent (8.594333ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (7.964ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (5.0015ms)
+✔ legacy enums remain integers by default (2.398042ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.33475ms)
+✔ EnumValue validates wrapper and spoofed native inputs (1.055667ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.279792ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.46525ms)
+✔ custom functions support global, receiver, and scalar overloads (2.244834ms)
+✔ generic custom functions preserve type metadata (0.184042ms)
+✔ custom function failures preserve CEL and JavaScript errors (0.425583ms)
+✔ checked generic return contracts reject mismatched callback values (0.09ms)
+✔ host exception identity is preserved even with native-looking error codes (0.156625ms)
+✔ environment errors preserve host identity with compile-looking codes (0.076ms)
+✔ function declarations accept precisely typed host callbacks (0.079333ms)
+✔ callbacks are reentrant and environment snapshots cannot be retargeted (4.729375ms)
+✔ callbacks own converted message and enum values for the duration of the call (0.745625ms)
+✔ callback results obey conversion limits (3.423625ms)
+✔ function and type constructors reject invalid declarations (0.274916ms)
+✔ function declaration limits are enforced (45.074084ms)
+✔ typed map outputs are valid inputs without assertions or casts (1.167917ms)
+✔ native maps preserve CEL key types and nested maps (1.097125ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.121125ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.535875ms)
+✔ native map conversion uses captured intrinsics (0.153084ms)
+✔ map brands and limits do not depend on mutable prototypes (29.545ms)
+✔ proxies cannot disguise map brands or wrapper keys (0.335792ms)
+✔ proxy rejection does not execute wrapper prototype traps (0.166625ms)
+✔ map snapshot descriptors ignore inherited accessors (0.162833ms)
+✔ map snapshots do not invoke inherited array setters (0.105875ms)
+✔ native maps snapshot entries before converting values (0.082708ms)
+✔ native map results and environment constants own their data (0.150958ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.092ms)
+✔ nested native map evaluations keep results independent (0.079917ms)
+✔ object and native maps charge the same key-value budget (31.132625ms)
+✔ native maps preserve collection, depth, and byte limits (20.25375ms)
+✔ math policies preserve numeric result types and permission decisions (2.782333ms)
+✔ math rounding, predicates and errors retain CEL behavior (0.414167ms)
+✔ math namespaces remain independent of variables and respect function overrides (0.180958ms)
+✔ OptionalValue constructors preserve presence (1.527791ms)
+✔ optional operations and static types cross the native boundary (1.406041ms)
+✔ nested optionals and present null remain distinct (0.084375ms)
+✔ optional constants own recursive payloads (0.090167ms)
+✔ callbacks accept and return optional values (0.199709ms)
+✔ native conversion validates spoofed OptionalValue metadata (0.093125ms)
+✔ optional conversion enforces cycles, depth, bytes, and value budgets (10.399916ms)
+✔ optional payloads support enum, proto, temporal, and type values (0.710291ms)
+✔ optional wrappers reject unsupported payloads (0.1135ms)
+✔ Program compiles once and evaluates native bindings (0.761791ms)
+✔ values cross the native boundary without JSON conversion (1.0915ms)
+✔ type values round trip and macros preserve native data (0.358291ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.446583ms)
+✔ environments own declarations and check complete policies (4.425ms)
+✔ byte inputs are captured before later getters run (0.16ms)
+✔ negative zero remains a double and wrappers validate inputs (0.129333ms)
+✔ compile and evaluation failures have distinct typed codes (0.273792ms)
+✔ invalid JavaScript inputs are rejected (3.947333ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.193333ms)
+✔ binding names and maps use own enumerable string properties (0.079625ms)
+✔ native programs can be reclaimed by garbage collection (2.786875ms)
+✔ plain objects and native maps bypass mutable optional instance checks (1.452ms)
+✔ optional subclasses and reentrant getters preserve value conversion order (0.187541ms)
+✔ enumerable key snapshots retain order and ignore later additions (0.111583ms)
+✔ enumerable symbol errors follow earlier string-keyed getter effects (0.302625ms)
+✔ symbol key snapshots do not invoke inherited array setters (0.130709ms)
+✔ property enumeration uses captured intrinsics for values and environments (1.108667ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (2.821208ms)
+✔ protobuf boundary errors preserve failure phases (0.35125ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (3.990583ms)
+✔ strings and keys preserve code points across inline and allocated conversion (3.151292ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.446416ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (22.477416ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (3.376333ms)
+✔ temporal values preserve nanoseconds and static types (3.051166ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.430166ms)
+ℹ tests 75
+ℹ suites 0
+ℹ pass 75
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 744.804333
+ℹ start of coverage report
+ℹ ----------------------------------------------------------
+ℹ file      | line % | branch % | funcs % | uncovered lines
+ℹ ----------------------------------------------------------
+ℹ dist      |        |          |         | 
+ℹ  index.js | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ all files | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ end of coverage report
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/marcelotryle/dev/pydantic/cel/bindings/python
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 47 items
+
+bindings/python ...............................................                                                                                        [100%]
+
+===================================================================== 47 passed in 5.53s =====================================================================

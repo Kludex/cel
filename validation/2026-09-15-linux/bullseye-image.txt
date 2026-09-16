@@ -1,0 +1,22 @@
+3.10-slim-bullseye: Pulling from library/python
+c9dcb8c12911: Pulling fs layer
+e4587adc0443: Pulling fs layer
+b98f922acb39: Pulling fs layer
+cd8b94e98a2f: Pulling fs layer
+cd8b94e98a2f: Waiting
+e4587adc0443: Verifying Checksum
+e4587adc0443: Download complete
+cd8b94e98a2f: Verifying Checksum
+cd8b94e98a2f: Download complete
+b98f922acb39: Verifying Checksum
+b98f922acb39: Download complete
+c9dcb8c12911: Verifying Checksum
+c9dcb8c12911: Download complete
+c9dcb8c12911: Pull complete
+e4587adc0443: Pull complete
+b98f922acb39: Pull complete
+cd8b94e98a2f: Pull complete
+Digest: sha256:f1fb49e4d5501ac93d0ca519fb7ee6250842245aba8612926a46a0832a1ed089
+Status: Downloaded newer image for python:3.10-slim-bullseye
+docker.io/library/python:3.10-slim-bullseye
+arm64 ["python@sha256:f1fb49e4d5501ac93d0ca519fb7ee6250842245aba8612926a46a0832a1ed089"]

@@ -1,0 +1,3 @@
+- **[P1] `src/strings.zig:39-47,79-93,125` - String-returning borrowed paths bypass `max_collection_size`.** `substring()`, `trim()`, and `replace(..., 0)` can return an input larger than the configured output limit. For example, a 100,001-byte binding with the default 100,000 limit succeeds through `text.substring(0)`, unlike allocating operations such as `lowerAscii()`.
+
+- **[P2] `src/string_format.zig:141-143` - Duration `%s` formatting loses nanosecond precision.** Converting signed 64-bit nanoseconds through `f64` changes values beyond 53-bit precision. For example, `9223372036854775807ns` may become `9223372036.854776s` instead of `9223372036.854775807s`. The existing exact `Duration.format()` should be used.

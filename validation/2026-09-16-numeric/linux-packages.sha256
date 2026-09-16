@@ -1,0 +1,6 @@
+2b91d44043b65bad7f048c2086b701e9744a8516d8e3b07081cdc21e5321e221  ./amd64/bin/cel-test
+24f1eb6e02709a7d910130a2f069634a505b17f3a80c83415068d5f89adcd65e  ./arm64/bin/cel-conformance
+fe238ad9c9ada3c470414f201ac4eb6eff8127bf0297e824091fda745564e424  ./arm64/bin/cel-test
+d5f556598b7c3f3a4e26d882e9b94784299cabbba07e96a03605901b401ff5ad  ./manylinux/cel_sdk-0.1.0a21-cp310-abi3-manylinux_2_28_aarch64.whl
+b1fa2e02cdbba2ff6a4246c4e2f1d1d7f2e74e0f09ef6090bef4a16d7eb7d80a  ./pydantic-cel-0.1.0-alpha.21.tgz
+a6db099743191ecc218963e36a9eb3576b5975752828eb7253ffeeec36192f9f  ./python/cel_sdk-0.1.0a21-cp310-abi3-linux_aarch64.whl

@@ -1,0 +1,156 @@
+1/104 root.test_0...OK
+2/104 program.test.indexed blocks preserve lazy dependencies and lexical iterator handles...OK
+3/104 program.test.indexed block allocation and dependency work obey resource limits...OK
+4/104 program.test.indexed block ownership cleans up after every allocation failure...OK
+5/104 program.test.indexed dependency graphs resolve values or bounded cycle errors...OK
+6/104 program.test.indexed block caches remain request local for untrusted scalar activations...OK
+7/104 program.test.local bindings preserve lazy lexical scope through the public API...OK
+8/104 program.test.local bindings skip unused work but cannot suppress resource errors...OK
+9/104 program.test.local binding ownership cleans up after every allocation failure...OK
+10/104 program.test.local binding caches remain scoped for untrusted scalar activations...OK
+11/104 program.test.list extension policies preserve ordering types and nested equality...OK
+12/104 program.test.large distinct lists preserve numeric aliases and unequal hash collisions...OK
+13/104 program.test.list equality adapts nested protobuf wrappers...OK
+14/104 program.test.list extensions enforce collection depth and comparison budgets...OK
+15/104 program.test.protobuf collection equality charges field and unknown byte work...OK
+16/104 program.test.list extension allocations clean up through the public API...OK
+17/104 program.test.distinct numeric hashing agrees with public CEL value equality...OK
+18/104 program.test.list extension runtime sorting preserves values and never mutates inputs...OK
+19/104 program.test.math extension policies preserve numeric types and bitwise permission decisions...OK
+20/104 program.test.math extrema infer dynamic results when a dynamic argument may win...OK
+21/104 program.test.math bit shifts use fixed width logical semantics without undefined behavior...OK
+22/104 program.test.math extrema and rounding retain NaN and signed zero rules...OK
+23/104 program.test.math evaluation obeys work and collection limits before scanning inputs...OK
+24/104 program.test.math variadic allocation failures clean up...OK
+25/104 program.test.math shifts and extrema stay bounded for untrusted runtime values...OK
+26/104 program.test.optional policies distinguish absent null and present values...OK
+27/104 program.test.optional access and entries preserve presence and laziness...OK
+28/104 program.test.optional zero values and list helpers follow the value domain...OK
+29/104 program.test.optional checking rejects invalid initializers and checks unreachable defaults...OK
+30/104 program.test.optional indexes do not turn invalid keys into absence...OK
+31/104 program.test.optional constants and callbacks own their data and obey limits...OK
+32/104 program.test.optional allocation failures release compile and evaluation storage...OK
+33/104 program.test.optional macros evaluate their receiver once and obey lexical scope...OK
+34/104 program.test.optional callback signatures preserve types and reject nullable overlaps...OK
+35/104 program.test.custom functions evaluate complete checked and unchecked policies...OK
+36/104 program.test.custom generic functions instantiate fresh parameters and abstract result types...OK
+37/104 program.test.custom overloads resolve members and validate runtime signatures...OK
+38/104 program.test.checked generic callbacks cannot return a different inferred type...OK
+39/104 program.test.custom overload backtracking restores empty collection constraints...OK
+40/104 program.test.custom callbacks receive public message values and support more than four arguments...OK
+41/104 program.test.function declarations and costs reject invalid or excessive work...OK
+42/104 program.test.function signatures and callback allocations clean up on every failure...OK
+43/104 program.test.alpha equivalent and erased generic overloads are rejected...OK
+44/104 program.test.dynamic arguments erase generic runtime constraints...OK
+45/104 program.test.custom callback collections obey configured size limits...OK
+46/104 program.test.optional source and activations stay bounded...OK
+47/104 program.test.custom function source and runtime values stay bounded...OK
+48/104 program.test.strong enums preserve identity in checked and unchecked programs...OK
+49/104 program.test.strong enum constructors enforce input types and signed 32 bit bounds...OK
+50/104 program.test.enum constants cannot impersonate primitive message or unregistered types...OK
+51/104 program.test.strong enum declarations collections and namespace resolution retain their types...OK
+52/104 program.test.protobuf construction retains message types field defaults and presence...OK
+53/104 program.test.protobuf messages are not maps and reject unknown or mistyped fields...OK
+54/104 program.test.registered proto3 messages preserve maps lists oneofs and optional presence...OK
+55/104 program.test.descriptor and protobuf limits reject malformed external data...OK
+56/104 program.test.protobuf well-known values follow CEL unboxing and null semantics...OK
+57/104 program.test.temporal policies preserve nanoseconds arithmetic and canonical types...OK
+58/104 program.test.timestamp selectors use explicit zones and reject filesystem paths...OK
+59/104 program.test.temporal boundaries report errors instead of overflowing...OK
+60/104 program.test.protobuf temporal fields box values and prune null collection entries...OK
+61/104 program.test.checked environments infer types and reject unreachable type errors...OK
+62/104 program.test.checked type values compare independently of their described types...OK
+63/104 program.test.checked collection inference unifies empty and nested lists...OK
+64/104 program.test.flat aggregate inference does not turn type variable links into nesting...OK
+65/104 program.test.failed aggregate joins do not retain speculative variable constraints...OK
+66/104 program.test.environment validation and inference budgets fail through the public API...OK
+67/104 program.test.environments resolve namespace prefixes and own constants...OK
+68/104 program.test.checked selection cannot be redirected by undeclared qualified bindings...OK
+69/104 program.test.evaluate request authorization with nested inputs and a reusable program...OK
+70/104 program.test.evaluate scalar arithmetic precedence and CEL numeric types...OK
+71/104 program.test.boolean ordering and exact numeric comparisons follow CEL...OK
+72/104 program.test.evaluate collections and string operations...OK
+73/104 program.test.quoted field selection supports punctuation without admitting quoted calls or identifiers...OK
+74/104 program.test.upstream string escapes conversions and numeric indexing...OK
+75/104 program.test.logical operators suppress errors only when the result is determined...OK
+76/104 program.test.evaluate collection macros with lexical scope...OK
+77/104 program.test.two variable comprehensions preserve keys scope and error semantics...OK
+78/104 program.test.RE2 matching supports Unicode flags classes anchors and embedded nul...OK
+79/104 program.test.regex errors remain evaluation errors and obey CEL logical suppression...OK
+80/104 program.test.reusable regex policies evaluate independent requests and dynamic patterns...OK
+81/104 program.test.regex caches and work obey explicit resource limits...OK
+82/104 program.test.regex programs support concurrent request evaluations...OK
+83/104 program.test.qualified names prefer the longest binding and respect local and absolute scope...OK
+84/104 program.test.type values preserve CEL types without becoming strings...OK
+85/104 program.test.invalid expressions and runtime faults return public errors...OK
+86/104 program.test.resource limits reject excessive work without trapping...OK
+87/104 program.test.collection equality obeys depth and cost budgets...OK
+88/104 program.test.comprehensions enforce collection and work limits even in logical branches...OK
+89/104 program.test.untrusted source never traps or leaks...OK
+90/104 program.test.dynamic RE2 inputs never trap or leak evaluation storage...OK
+91/104 program.test.checking and environment ownership clean up every Zig allocation failure...OK
+92/104 program.test.protobuf ownership cleans up after every Zig allocation failure...OK
+93/104 program.test.strong enum protobuf wire values retain identity across independent programs...OK
+94/104 program.test.strong enum policies share immutable descriptors across concurrent requests...OK
+95/104 program.test.strong enum ownership cleans up after every Zig allocation failure...OK
+96/104 program.test.strong enum conversion never traps on untrusted values and wire bytes...OK
+97/104 program.test.protobuf wire input never traps or escapes native evaluation storage...OK
+98/104 program.test.temporal parsing never traps on untrusted string values...OK
+99/104 program.test.checked source never traps or leaks...OK
+100/104 program.test.map constants reject duplicate CEL keys including signed and unsigned aliases...OK
+101/104 program.test.map key validation cleans up on every allocation failure...OK
+102/104 program.test.typed map key validation agrees with public CEL equality...OK
+103/104 program.test.large typed map constants retain distinct boolean and integer keys within linear budgets...OK
+104/104 program.test.all allocation failures clean up through the public API...OK
+All 104 tests passed.
+15 fuzz tests found.
+........................................................................ [ 64%]
+.......................................                                  [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.20-final-0 _______________
+
+Name                                      Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------
+/tmp/site/cel/__init__.py                     6      0      0      0   100%
+/tmp/site/cel/enums.py                       22      0      8      0   100%
+/tmp/site/cel/functions.py                   28      0     14      0   100%
+/tmp/site/cel/maps.py                        25      0     12      0   100%
+/tmp/site/cel/optional.py                    18      0      4      0   100%
+/tmp/site/cel/program.py                     45      0      8      0   100%
+/tmp/site/cel/temporal.py                    19      0      8      0   100%
+/tmp/site/cel/values.py                      48      0     18      0   100%
+bindings/python/tests/__init__.py             1      0      0      0   100%
+bindings/python/tests/test_bindings.py       93      0      8      0   100%
+bindings/python/tests/test_blocks.py         73      0      6      0   100%
+bindings/python/tests/test_enums.py          99      0     18      0   100%
+bindings/python/tests/test_functions.py     124      0      0      0   100%
+bindings/python/tests/test_lists.py          74      0     10      0   100%
+bindings/python/tests/test_maps.py           75      0     16      0   100%
+bindings/python/tests/test_math.py           38      0      4      0   100%
+bindings/python/tests/test_optional.py       87      0      4      0   100%
+bindings/python/tests/test_program.py       137      0      4      0   100%
+bindings/python/tests/test_protobuf.py       38      0      0      0   100%
+bindings/python/tests/test_storage.py        17      0      2      0   100%
+bindings/python/tests/test_temporal.py       33      0      2      0   100%
+-------------------------------------------------------------------------------------
+TOTAL                                      1100      0    146      0   100%
+Required test coverage of 100.0% reached. Total coverage: 100.00%
+111 passed in 0.72s
+total: total=2508 passed=2197 failed=4 unsupported=307
+core: total=1905 passed=1901 failed=4 unsupported=0
+extension: total=603 passed=296 failed=0 unsupported=307
+total: total=2508 passed=2172 failed=4 unsupported=332
+core: total=1905 passed=1876 failed=4 unsupported=25
+extension: total=603 passed=296 failed=0 unsupported=307
+total: total=2508 passed=2197 failed=4 unsupported=307
+core: total=1905 passed=1901 failed=4 unsupported=0
+extension: total=603 passed=296 failed=0 unsupported=307
+total: total=2508 passed=2172 failed=4 unsupported=332
+core: total=1905 passed=1876 failed=4 unsupported=25
+extension: total=603 passed=296 failed=0 unsupported=307
+total: total=2508 passed=2197 failed=4 unsupported=307
+core: total=1905 passed=1901 failed=4 unsupported=0
+extension: total=603 passed=296 failed=0 unsupported=307
+total: total=2508 passed=2172 failed=4 unsupported=332
+core: total=1905 passed=1876 failed=4 unsupported=25
+extension: total=603 passed=296 failed=0 unsupported=307

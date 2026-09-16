@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  sdk:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.10", "3.14"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.12.1
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.14.1
+      - run: npm ci --prefix bindings/typescript
+      - run: ./scripts/test
+      - run: ./scripts/check
+      - run: uv build --project bindings/python --out-dir dist/python
+      - name: Enforce the Linux wheel ABI baseline
+        if: runner.os == 'Linux'
+        run: |
+          uvx --from auditwheel==6.5.0 --with patchelf==0.18.0.0 auditwheel repair \
+            --plat manylinux_2_28_$(uname -m) --only-plat \
+            --wheel-dir /tmp/cel-manylinux dist/python/*.whl
+          rm dist/python/*.whl
+          mv /tmp/cel-manylinux/*.whl dist/python/
+      - run: uvx abi3audit==0.0.26 --strict dist/python/*.whl
+      - name: Test the installed wheel on the minimum Python version
+        run: |
+          uv venv --python 3.10 /tmp/cel-wheel-test
+          uv pip install --python /tmp/cel-wheel-test/bin/python \
+            dist/python/*.whl pytest==9.0.2 protobuf==6.33.0
+          /tmp/cel-wheel-test/bin/python -m pytest \
+            -c bindings/python/pyproject.toml bindings/python/tests
+      - run: npm pack --pack-destination ../../dist
+        working-directory: bindings/typescript
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.os }}-${{ matrix.python }}
+          path: dist/
+
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - run: zig build test --fuzz=100000
+      - run: zig build test --fuzz=100000 -Dtest-filter='dynamic RE2'
+      - run: zig build test --fuzz=100000 -Dtest-filter='checked source'
+      - run: zig build test --fuzz=100000 -Dtest-filter='protobuf wire input'
+      - run: zig build test --fuzz=100000 -Dtest-filter='temporal parsing'
+      - run: zig build test --fuzz=100000 -Dtest-filter='strong enum conversion'
+      - run: zig build test --fuzz=100000 -Dtest-filter='typed map key validation'
+      - run: zig build test --fuzz=100000 -Dtest-filter='custom function source'
+      - run: zig build test --fuzz=100000 -Dtest-filter='optional source'
+      - run: zig build test --fuzz=100000 -Dtest-filter='math shifts and extrema'
+      - run: zig build test --fuzz=100000 -Dtest-filter='list extension runtime sorting'
+      - run: zig build test --fuzz=100000 -Dtest-filter='distinct numeric hashing'
+      - run: zig build test --fuzz=100000 -Dtest-filter='local binding caches'
+      - run: zig build test --fuzz=100000 -Dtest-filter='indexed dependency graphs'
+      - run: zig build test --fuzz=100000 -Dtest-filter='indexed block caches'
+      - run: zig build test --fuzz=100000 -Dtest-filter='Unicode string transformations'
+      - run: zig build test --fuzz=100000 -Dtest-filter='formatted untrusted bytes'
+      - run: zig build test --fuzz=100000 -Dtest-filter='Base64 binary activations'
+      - run: zig build test --fuzz=100000 -Dtest-filter='Base64 untrusted text'
+      - run: zig build conformance-test -Dconformance=true -Doptimize=ReleaseSafe --fuzz=100000 -Dtest-filter='untrusted audit transport'
+
+  conformance:
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [python, node, zig]
+        mode: [full, evaluation]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.12.1
+          python-version: "3.14"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.14.1
+      - run: ./scripts/build-python
+      - run: npm ci --prefix bindings/typescript && npm run build --prefix bindings/typescript
+        if: matrix.engine == 'node'
+      - run: zig build conformance -Dconformance=true -Doptimize=ReleaseSafe
+        if: matrix.engine == 'zig'
+      - run: >-
+          bindings/python/.venv/bin/python conformance/run.py
+          --engine ${{ matrix.engine }} --mode ${{ matrix.mode }}
+          --report conformance/report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conformance-${{ matrix.engine }}-${{ matrix.mode }}
+          path: conformance/report.json

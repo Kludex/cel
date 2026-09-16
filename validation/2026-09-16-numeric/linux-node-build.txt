@@ -1,0 +1,11 @@
+v24.14.1
+0.16.0
+
+build_exit=1
+
+Docker recorded OOM for initial 1 GiB build; retry with 4 GiB.
+v24.14.1
+0.16.0
+
+build_retry_exit=0
+/tmp/cel-num-linux/source/bindings/typescript/cel.node: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, with debug_info, not stripped

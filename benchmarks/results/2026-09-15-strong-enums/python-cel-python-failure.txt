@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 241, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 186, in main
+    decisions = verify(workloads, programs, evaluate)
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 108, in verify
+    raise AssertionError(
+        f"{workload['name']}/{case['name']}: expected {case['expected']!r}, got {actual!r}"
+    )
+AssertionError: temporal_authorization/deadline_exceeded_by_nanosecond: expected False, got BoolType(True)

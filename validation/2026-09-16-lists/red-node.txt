@@ -1,0 +1,55 @@
+✖ list extensions evaluate a complete collection policy (2.021833ms)
+✖ sortBy scopes its variable and evaluates receiver and keys once (0.175791ms)
+✖ list extensions preserve nested equality and reject invalid boundaries (0.101917ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.752
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/lists.test.js:4:1
+✖ list extensions evaluate a complete collection policy (2.021833ms)
+  Error [CompileError]: TypeMismatch
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/lists.test.js:6:33)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    code: 'TypeMismatch'
+  }
+
+test at bindings/typescript/dist/test/lists.test.js:12:1
+✖ sortBy scopes its variable and evaluates receiver and keys once (0.175791ms)
+  Error [CompileError]: TypeMismatch
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/lists.test.js:29:34)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    code: 'TypeMismatch'
+  }
+
+test at bindings/typescript/dist/test/lists.test.js:34:1
+✖ list extensions preserve nested equality and reject invalid boundaries (0.101917ms)
+  Error [EvaluateError]: NoMatchingOverload
+      at Program.evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:281:23)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/lists.test.js:35:101)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'NoMatchingOverload'
+  }

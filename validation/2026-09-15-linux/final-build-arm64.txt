@@ -1,0 +1,14 @@
+Build Summary: 8/8 steps succeeded
+test-install success
++- install test success
+   +- compile test ReleaseSafe aarch64-linux-gnu.2.28 success 16s MaxRSS:591M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe aarch64-linux-gnu.2.28 success 39s MaxRSS:1G
+      +- compile lib cel_native ReleaseSafe aarch64-linux-gnu.2.28 (reused)
+conformance success
++- install cel-conformance success
+   +- compile exe cel-conformance ReleaseSafe aarch64-linux-gnu.2.28 success 16s MaxRSS:544M
+      +- WriteFile (reused)
+      +- compile lib cel_native ReleaseSafe aarch64-linux-gnu.2.28 (reused)
+      +- compile lib cel_native ReleaseSafe aarch64-linux-gnu.2.28 (reused)
+

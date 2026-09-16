@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.list extension runtime sorting preserves values and never mutates inputs" (6385a5caaaf2af66)
+Runs: 0 -> 101156
+Unique runs: 0 -> 32
+Coverage: 0/15014 -> 783/15014 (5.22%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

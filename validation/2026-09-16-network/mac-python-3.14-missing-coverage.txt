@@ -1,0 +1,13 @@
+Using Python 3.14.6 environment at: /tmp/cel-linux-current/mac-3.14
+Resolved 1 package in 0.70ms
+Prepared 1 package in 0.09ms
+Uninstalled 1 package in 1ms
+Installed 1 package in 1ms
+ - cel-sdk==0.1.0a19 (from file:///tmp/cel-proto-encoders/macos/cel_sdk-0.1.0a19-cp310-abi3-macosx_26_0_arm64.whl)
+ + cel-sdk==0.1.0a20 (from file:///tmp/cel-network-macos/artifacts/cel_sdk-0.1.0a20-cp310-abi3-macosx_26_0_arm64.whl)
+/tmp/cel-linux-current/mac-3.14/lib/python3.14/site-packages/cel/__init__.py
+ERROR: usage: python -m pytest [options] [file_or_dir] [file_or_dir] [...]
+python -m pytest: error: unrecognized arguments: --cov --cov-report=term-missing
+  inifile: /private/tmp/cel-network-macos/source/bindings/python/pyproject.toml
+  rootdir: /private/tmp/cel-network-macos/source/bindings/python
+

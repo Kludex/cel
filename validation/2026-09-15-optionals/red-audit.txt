@@ -1,0 +1,94 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+_______________________________________________ test_complete_pinned_optional_file_runs_in_both_modes[python] ________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-896/test_complete_pinned_optional_0')
+engine = 'python'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_complete_pinned_optional_file_runs_in_both_modes(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "optionals")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry],
+        }))
+        for mode in ("full", "evaluation"):
+            report_path = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--corpus", str(tmp_path), "--engine", engine,
+                 "--mode", mode, "--report", str(report_path)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=70 passed=0 failed=0 unsupported=70
+E             core: total=70 passed=0 failed=0 unsupported=70
+E             extension: total=0 passed=0 failed=0 unsupported=0
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...=70\ncore: total=70 passed=0 failed=0 unsupported=70\nextension: total=0 passed=0 failed=0 unsupported=0\n', stderr='').returncode
+
+conformance/test_optionals.py:28: AssertionError
+________________________________________________ test_complete_pinned_optional_file_runs_in_both_modes[node] _________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-896/test_complete_pinned_optional_1')
+engine = 'node'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_complete_pinned_optional_file_runs_in_both_modes(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "optionals")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry],
+        }))
+        for mode in ("full", "evaluation"):
+            report_path = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--corpus", str(tmp_path), "--engine", engine,
+                 "--mode", mode, "--report", str(report_path)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=70 passed=0 failed=0 unsupported=70
+E             core: total=70 passed=0 failed=0 unsupported=70
+E             extension: total=0 passed=0 failed=0 unsupported=0
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...=70\ncore: total=70 passed=0 failed=0 unsupported=70\nextension: total=0 passed=0 failed=0 unsupported=0\n', stderr='').returncode
+
+conformance/test_optionals.py:28: AssertionError
+_________________________________________________ test_complete_pinned_optional_file_runs_in_both_modes[zig] _________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-896/test_complete_pinned_optional_2')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_complete_pinned_optional_file_runs_in_both_modes(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "optionals")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry],
+        }))
+        for mode in ("full", "evaluation"):
+            report_path = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--corpus", str(tmp_path), "--engine", engine,
+                 "--mode", mode, "--report", str(report_path)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=70 passed=0 failed=0 unsupported=70
+E             core: total=70 passed=0 failed=0 unsupported=70
+E             extension: total=0 passed=0 failed=0 unsupported=0
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...=70\ncore: total=70 passed=0 failed=0 unsupported=70\nextension: total=0 passed=0 failed=0 unsupported=0\n', stderr='').returncode
+
+conformance/test_optionals.py:28: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_complete_pinned_optional_file_runs_in_both_modes[python] - AssertionError: total: total=70 passed=0 failed=0 unsupported=70
+FAILED bindings/python::test_complete_pinned_optional_file_runs_in_both_modes[node] - AssertionError: total: total=70 passed=0 failed=0 unsupported=70
+FAILED bindings/python::test_complete_pinned_optional_file_runs_in_both_modes[zig] - AssertionError: total: total=70 passed=0 failed=0 unsupported=70
+3 failed in 0.27s

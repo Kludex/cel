@@ -1,0 +1,10 @@
+Python 3.10.18 (main, Jul 23 2025, 18:23:55) [GCC 10.2.1 20210110]
+glibc 2.31
+Looking in links: /wheels
+Processing /dist/cel_sdk-0.1.0a13-cp310-abi3-manylinux_2_28_aarch64.whl
+Processing /wheels/pytest-9.0.2-py3-none-any.whl
+Processing /wheels/protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl
+Processing /wheels/pygments-2.21.0-py3-none-any.whl
+Processing /wheels/iniconfig-2.3.0-py3-none-any.whl
+ERROR: Could not find a version that satisfies the requirement exceptiongroup>=1; python_version < "3.11" (from pytest) (from versions: none)
+ERROR: No matching distribution found for exceptiongroup>=1; python_version < "3.11"

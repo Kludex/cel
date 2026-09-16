@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/../.."
+root=$PWD
+: "${CONVERTER_PATCH:?Set CONVERTER_PATCH to a baseline restoration patch}"
+experiment=$(mktemp -d)
+trap 'rm -rf "$experiment"' EXIT
+include=${NODE_INCLUDE:-$(node -p 'require("node:path").resolve(require("node:path").dirname(process.execPath), "../include/node")')}
+if [ ! -f "$include/node_api.h" ]; then
+  printf '%s\n' 'Set NODE_INCLUDE to the directory containing node_api.h' >&2
+  exit 1
+fi
+npm run build --prefix bindings/typescript >&2
+for variant in before after; do
+  mkdir -p "$experiment/$variant/src" "$experiment/$variant/dist"
+  cp src/*.zig src/*.cc src/*.h "$experiment/$variant/src/"
+  cp build.zig build.zig.zon LICENSE "$experiment/$variant/"
+  cp -R build "$experiment/$variant/build"
+  cp bindings/typescript/dist/index.js "$experiment/$variant/dist/"
+  printf '%s\n' '{"type":"module"}' > "$experiment/$variant/package.json"
+done
+patch -s -d "$experiment/before" -p1 < "$CONVERTER_PATCH"
+for variant in before after; do
+  (cd "$experiment/$variant" && zig build node -Dnode-include="$include" -Doptimize=ReleaseSafe)
+  cp "$experiment/$variant/zig-out/lib/cel.node" "$experiment/$variant/cel.node"
+done
+node "$root/benchmarks/profiling/paired.mjs" \
+  --before "$experiment/before/dist/index.js" --after "$experiment/after/dist/index.js" "$@"

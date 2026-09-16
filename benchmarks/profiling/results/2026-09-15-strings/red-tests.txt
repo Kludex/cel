@@ -1,0 +1,48 @@
+✔ strings and keys preserve code points across inline and allocated conversion (1.632083ms)
+✖ lone surrogates are rejected rather than replaced in source and activations (1.030458ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (19.087625ms)
+✖ public string conversion agrees with lossless Node Unicode round trips (0.390375ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 265.5385
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/strings.test.js:18:1
+✖ lone surrogates are rejected rather than replaced in source and activations (1.030458ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (TypeError).
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/strings.test.js:23:20)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at bindings/typescript/dist/test/strings.test.js:45:1
+✖ public string conversion agrees with lossless Node Unicode round trips (0.390375ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (TypeError).
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/strings.test.js:53:20)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

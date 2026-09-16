@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.Unicode string transformations round trip through public evaluation" (2cf91490e7db1091)
+Runs: 0 -> 100030
+Unique runs: 0 -> 15
+Coverage: 0/16290 -> 748/16290 (4.59%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

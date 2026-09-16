@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "zig.test.untrusted audit transport returns JSON without traps or leaks" (1f4f09faba178a15)
+Runs: 0 -> 198873
+Unique runs: 0 -> 138
+Coverage: 0/14626 -> 1130/14626 (7.73%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

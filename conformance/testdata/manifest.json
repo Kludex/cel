@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/google/cel-spec",
+    "commit": "ba58ae5007845f3a1279b488cdeb79645ce958bb",
+    "module": "cel.dev/expr@v0.25.3",
+    "path": "tests/simple/testdata/*.textproto",
+    "license": "Apache-2.0"
+  },
+  "summary": {
+    "files": 31,
+    "coreFiles": 23,
+    "extensionFiles": 8,
+    "tests": 2508,
+    "coreTests": 1905,
+    "extensionTests": 603
+  },
+  "files": [
+    {
+      "name": "basic",
+      "kind": "core",
+      "source": "tests/simple/testdata/basic.textproto",
+      "output": "basic.json",
+      "sourceSha256": "22cf5b68d9ca7c37881bcb8c3d958d2e1cc2c4a8a0c5bda8387ced5089ee7d9d",
+      "outputSha256": "b94b0374c82bc43b60d4bdba81fdbab1a3a5b80c3feeb66018c2c130e7f5182b",
+      "tests": 43
+    },
+    {
+      "name": "bindings_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/bindings_ext.textproto",
+      "output": "bindings_ext.json",
+      "sourceSha256": "37e9a845a852cd5a1a5a5bd22f1a9cc99aadab14210fce3f04fe13fe45d86a51",
+      "outputSha256": "7240de8da5b826f221b77de43433519eb6a73b5d2c8c1109ffc3b7f908fb8da4",
+      "tests": 8
+    },
+    {
+      "name": "block_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/block_ext.textproto",
+      "output": "block_ext.json",
+      "sourceSha256": "214e40690b599209e053687461b2d89e93956f9d703abee9e05e10ba6f28bacf",
+      "outputSha256": "e2e8c7288b3f2664510de362c07ec9530c26b02f218bd01abd2186d6b8ae93f0",
+      "tests": 37
+    },
+    {
+      "name": "comparisons",
+      "kind": "core",
+      "source": "tests/simple/testdata/comparisons.textproto",
+      "output": "comparisons.json",
+      "sourceSha256": "db6b7d55f9991054a2caca70d9efc4e54829cc604c5d275c961aabc749548491",
+      "outputSha256": "6d10e57922c441dcc6359c758e42659e589021caa78e5c1f9b0bc46696498d81",
+      "tests": 406
+    },
+    {
+      "name": "conversions",
+      "kind": "core",
+      "source": "tests/simple/testdata/conversions.textproto",
+      "output": "conversions.json",
+      "sourceSha256": "f25b686d21fbf1b0689d8e580035a118b30e9eb0dd38d7896a2fc712fe7700d6",
+      "outputSha256": "0fafc5e81ec145538b5c73fcc13112813f282894416d5f147450eb8698c15e77",
+      "tests": 109
+    },
+    {
+      "name": "dynamic",
+      "kind": "core",
+      "source": "tests/simple/testdata/dynamic.textproto",
+      "output": "dynamic.json",
+      "sourceSha256": "b6b21b84a22d3a6540d81c54355adf5b0f570ecd92087a66388a8ff68b23a3ca",
+      "outputSha256": "bb6bf34e1a9db9a73c545732214501f708c304f0620be516ec3afd434f099a9c",
+      "tests": 226
+    },
+    {
+      "name": "encoders_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/encoders_ext.textproto",
+      "output": "encoders_ext.json",
+      "sourceSha256": "92f046b651c23dd5ff381f4469d7f9f938ff140324010c5585f6b02d56396418",
+      "outputSha256": "cbe1bc919af59aec306b101f80c8be505d8a89cab4943ab954836e0172a5c404",
+      "tests": 4
+    },
+    {
+      "name": "enums",
+      "kind": "core",
+      "source": "tests/simple/testdata/enums.textproto",
+      "output": "enums.json",
+      "sourceSha256": "983833f5481bbc8bc271e2a6dc4b4b2f88f9399294fa9addf5c245f831e0639c",
+      "outputSha256": "20cd485c03502dbc6e99c2579aa4ca2ff8aadb96963a9b73f58e443723ef5035",
+      "tests": 85
+    },
+    {
+      "name": "fields",
+      "kind": "core",
+      "source": "tests/simple/testdata/fields.textproto",
+      "output": "fields.json",
+      "sourceSha256": "24897c82f78106a9962e97e90e673d139bd7c315f2ef0a91a63c5f92b57dcba2",
+      "outputSha256": "5e8eabec0553d66378fde3870d6debd34e6fdbe068009f3debc606fce5681664",
+      "tests": 60
+    },
+    {
+      "name": "fp_math",
+      "kind": "core",
+      "source": "tests/simple/testdata/fp_math.textproto",
+      "output": "fp_math.json",
+      "sourceSha256": "4baa5351db23b39794cf0ba49aa40800489b201654e5b1f263617c3c4942e493",
+      "outputSha256": "88ffb3fbed94f64b862f5aeab3c9bfbf95049cf5cd549d5d91c895f1f0ba5d44",
+      "tests": 30
+    },
+    {
+      "name": "integer_math",
+      "kind": "core",
+      "source": "tests/simple/testdata/integer_math.textproto",
+      "output": "integer_math.json",
+      "sourceSha256": "71063679ee0841f8fbe260dbd9266cebdb8587997e6351121b3123988d0ebe6a",
+      "outputSha256": "8dd0ce844b2d9c2d5da52e264c43430220c13f3b5649a1af6d833e77196f0dad",
+      "tests": 64
+    },
+    {
+      "name": "lists",
+      "kind": "core",
+      "source": "tests/simple/testdata/lists.textproto",
+      "output": "lists.json",
+      "sourceSha256": "36f84a783d8e89e273217d2d0c4566aa01048903cbe5631a6b067778e68cefc4",
+      "outputSha256": "6b7718ecf4d6cb276d30d8c1823aba24e2e22fe4576b0c29f97bcd2b009d448d",
+      "tests": 39
+    },
+    {
+      "name": "lists_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/lists_ext.textproto",
+      "output": "lists_ext.json",
+      "sourceSha256": "d3fa6c58516657a1801bd1f7c203760e848e94cef2c30190957e14442413ebd7",
+      "outputSha256": "5de4bd46ec2f9d8fdf1a3201481bc53484f8851e430c0f39ac5f169b2dee7c8a",
+      "tests": 52
+    },
+    {
+      "name": "logic",
+      "kind": "core",
+      "source": "tests/simple/testdata/logic.textproto",
+      "output": "logic.json",
+      "sourceSha256": "544e550fac6f730b792025acc173b594f08e23442e52287e8e2ff6f92e1bda4d",
+      "outputSha256": "61ef2fb3df2da54e362c3f2f1bec62b77700fdfbb03efb0c558450d29e6074e6",
+      "tests": 30
+    },
+    {
+      "name": "macros",
+      "kind": "core",
+      "source": "tests/simple/testdata/macros.textproto",
+      "output": "macros.json",
+      "sourceSha256": "780bcac0b2d8e7375aa1d245111a08ccd28abaa134d1df863b0bb5f2357283e8",
+      "outputSha256": "bfbe6abfd3150c4ffa24cbab0ee5290bc9989544b0e9ac1c5b80f5d7a5347d3c",
+      "tests": 44
+    },
+    {
+      "name": "macros2",
+      "kind": "core",
+      "source": "tests/simple/testdata/macros2.textproto",
+      "output": "macros2.json",
+      "sourceSha256": "105ff3c0f25a82b31d908ab9c88d77540df649a37eaaad171dfedc1c582e8d4a",
+      "outputSha256": "36c7d36294937da1e4824d3ee73f502ac25ec583c0df6294427ce990afc265ca",
+      "tests": 46
+    },
+    {
+      "name": "math_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/math_ext.textproto",
+      "output": "math_ext.json",
+      "sourceSha256": "063a90843c6c782fa1fb52c70c95407626ac9fad7bdbc60e46837d26cbd51ee3",
+      "outputSha256": "b355aa34e1c031f6550607d648fec90a4ac12350a3165e6d6a035ea738397bf9",
+      "tests": 199
+    },
+    {
+      "name": "namespace",
+      "kind": "core",
+      "source": "tests/simple/testdata/namespace.textproto",
+      "output": "namespace.json",
+      "sourceSha256": "da20ab41e90c1114001baddd5d344cb79f6fbd067ef00f0e6a9cac2ab380f330",
+      "outputSha256": "220d7e50b1bf11e42f27108ed156bf026349f1e4b34d5a1a54e9d1f65cc47f92",
+      "tests": 14
+    },
+    {
+      "name": "network_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/network_ext.textproto",
+      "output": "network_ext.json",
+      "sourceSha256": "dc9a0d7c1c8aee3290aa86cf405f19753a2d90de5f2304ce8f5f521e6b90af1e",
+      "outputSha256": "87491dfb04ba5a731162b8422bae90b8d90f7043360171db5bd71a34f2930ebf",
+      "tests": 69
+    },
+    {
+      "name": "optionals",
+      "kind": "core",
+      "source": "tests/simple/testdata/optionals.textproto",
+      "output": "optionals.json",
+      "sourceSha256": "8b1dd3fb49dfac599f49ff3bd6b892d3c4eae7cf17be5592ac12d2a941ff4484",
+      "outputSha256": "9205e3f50f2b6eb4ec3800a7b2f5dd88e77df1f819be4004912ba327a7e23e91",
+      "tests": 70
+    },
+    {
+      "name": "parse",
+      "kind": "core",
+      "source": "tests/simple/testdata/parse.textproto",
+      "output": "parse.json",
+      "sourceSha256": "4e7065345a8caa07bc8258b1197e2358c2f7c476efa301fd2b958527ce77c85f",
+      "outputSha256": "462328ef6d6e1c5759ec79f027c8f7036853f191115ec39c64fff42df4e4d3a9",
+      "tests": 219
+    },
+    {
+      "name": "plumbing",
+      "kind": "core",
+      "source": "tests/simple/testdata/plumbing.textproto",
+      "output": "plumbing.json",
+      "sourceSha256": "8079b65dabb254d65f657ca8673fa7cd2f6fb30b199d7030a2087bdb8bf3b9f2",
+      "outputSha256": "4cd2399378672fe1f19625beb33989963fb5c4cd8564691b2714787d1f7ad3c8",
+      "tests": 5
+    },
+    {
+      "name": "proto2",
+      "kind": "core",
+      "source": "tests/simple/testdata/proto2.textproto",
+      "output": "proto2.json",
+      "sourceSha256": "370d06acbb3346334f0579dcbde96e2b90070108258d6ccf1dfc0bb2cbcf435f",
+      "outputSha256": "e2324c6beaed3e7690cfc5464b20183fb609c236abdfe62cedc325f7cc46e6b4",
+      "tests": 118
+    },
+    {
+      "name": "proto2_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/proto2_ext.textproto",
+      "output": "proto2_ext.json",
+      "sourceSha256": "2f08a46ce9d85a8ed6237a980dfcbe1117525bb891035d0aec40d4bdeba97808",
+      "outputSha256": "bcef4801c800afad730a28f1c03f6e6b0d4e145c77971d3f26865457c633f1fd",
+      "tests": 18
+    },
+    {
+      "name": "proto3",
+      "kind": "core",
+      "source": "tests/simple/testdata/proto3.textproto",
+      "output": "proto3.json",
+      "sourceSha256": "2fcd222ed468b399e241621f661e3802ed7ff88ef336cc7a79ae0941bed4f1b5",
+      "outputSha256": "765359aee9bf40633d3c33ff5617ab15d8babb7503632cd3073d863aa1a53708",
+      "tests": 85
+    },
+    {
+      "name": "string",
+      "kind": "core",
+      "source": "tests/simple/testdata/string.textproto",
+      "output": "string.json",
+      "sourceSha256": "1602b94ab8c315b6097a024c845de163ea5c6a5956271127f23e21720c72d4b1",
+      "outputSha256": "d63ae103c0171a41e006ce4166e4a12d772cf02caee227d445817193749a89bb",
+      "tests": 51
+    },
+    {
+      "name": "string_ext",
+      "kind": "extension",
+      "source": "tests/simple/testdata/string_ext.textproto",
+      "output": "string_ext.json",
+      "sourceSha256": "3941adc809d813a66a1cab6122e3273d7de83da30b586a4ef2094f96aa39d959",
+      "outputSha256": "c58b0542384676b1fcd6b01b0e2d9f8f7f8019473300d61a4f25216af8b8a335",
+      "tests": 216
+    },
+    {
+      "name": "timestamps",
+      "kind": "core",
+      "source": "tests/simple/testdata/timestamps.textproto",
+      "output": "timestamps.json",
+      "sourceSha256": "343c530fd664afca903a553204bae5d10e173bb70b74998dbe0ffe3b79ceaed2",
+      "outputSha256": "d5df71101207589643dc3d921c81bb0efa73450dc0dcc4c20d28f72bb5d3b280",
+      "tests": 78
+    },
+    {
+      "name": "type_deduction",
+      "kind": "core",
+      "source": "tests/simple/testdata/type_deduction.textproto",
+      "output": "type_deduction.json",
+      "sourceSha256": "389ba4e34c23a6098b90dee16fd140ce7ffc4c6f94bef9b9f249401cf4a1fc49",
+      "outputSha256": "d21d89a4c6f65a851c0ea616b848effe49a63a6217a4a7a0f9a694577f981e34",
+      "tests": 47
+    },
+    {
+      "name": "unknowns",
+      "kind": "core",
+      "source": "tests/simple/testdata/unknowns.textproto",
+      "output": "unknowns.json",
+      "sourceSha256": "a361be4b7b765c35d830728d8824795c03edd681c7029252525818c7e23620e3",
+      "outputSha256": "fddf14fe83bcaaa54a42d2fa373a8a996af494813d90c626334422d7b465d792",
+      "tests": 0
+    },
+    {
+      "name": "wrappers",
+      "kind": "core",
+      "source": "tests/simple/testdata/wrappers.textproto",
+      "output": "wrappers.json",
+      "sourceSha256": "1fe1299f452c032b244735af3529fe2f636ff61fcabf6c6870d1c325a619f438",
+      "outputSha256": "69a1f26964fae8acae1ee1d21fabd6953b3a4dd40a606e5937c92eaf4866322f",
+      "tests": 36
+    }
+  ]
+}

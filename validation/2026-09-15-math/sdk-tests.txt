@@ -1,0 +1,155 @@
+Resolved 20 packages in 7ms
+Checked 17 packages in 3ms
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/marcelotryle/dev/pydantic/cel/bindings/python
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0
+collected 86 items
+
+tests/test_enums.py ........                                                                                                                           [  9%]
+tests/test_functions.py .......................                                                                                                        [ 36%]
+tests/test_maps.py .....                                                                                                                               [ 41%]
+tests/test_math.py ...                                                                                                                                 [ 45%]
+tests/test_optional.py .........                                                                                                                       [ 55%]
+tests/test_program.py ...............................                                                                                                  [ 91%]
+tests/test_protobuf.py ...                                                                                                                             [ 95%]
+tests/test_storage.py .                                                                                                                                [ 96%]
+tests/test_temporal.py ...                                                                                                                             [100%]
+
+======================================================================= tests coverage =======================================================================
+______________________________________________________ coverage: platform darwin, python 3.14.6-final-0 ______________________________________________________
+
+Name                      Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------
+src/cel/__init__.py           6      0      0      0   100%
+src/cel/enums.py             22      0      8      0   100%
+src/cel/functions.py         28      0     14      0   100%
+src/cel/maps.py              25      0     12      0   100%
+src/cel/optional.py          18      0      4      0   100%
+src/cel/program.py           45      0      8      0   100%
+src/cel/temporal.py          19      0      8      0   100%
+src/cel/values.py            48      0     18      0   100%
+tests/__init__.py             1      0      0      0   100%
+tests/test_enums.py          99      0     18      0   100%
+tests/test_functions.py     124      0      0      0   100%
+tests/test_maps.py           75      0     16      0   100%
+tests/test_math.py           38      0      4      0   100%
+tests/test_optional.py       87      0      4      0   100%
+tests/test_program.py       137      0      4      0   100%
+tests/test_protobuf.py       38      0      0      0   100%
+tests/test_storage.py        17      0      2      0   100%
+tests/test_temporal.py       33      0      2      0   100%
+---------------------------------------------------------------------
+TOTAL                       860      0    122      0   100%
+Required test coverage of 100.0% reached. Total coverage: 100.00%
+===================================================================== 86 passed in 0.95s =====================================================================
+
+> @pydantic/cel@0.1.0-alpha.12 test
+> npm run build && node --expose-gc --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 --test dist/test/*.test.js
+
+
+> @pydantic/cel@0.1.0-alpha.12 build
+> npm run build:native && tsc -p tsconfig.json
+
+
+> @pydantic/cel@0.1.0-alpha.12 build:native
+> node build.mjs
+
+✔ nested evaluations keep outer input and result storage independent (30.925917ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (34.958084ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (16.676583ms)
+✔ legacy enums remain integers by default (5.847833ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (5.7975ms)
+✔ EnumValue validates wrapper and spoofed native inputs (6.972458ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.612542ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (6.239125ms)
+✔ custom functions support global, receiver, and scalar overloads (5.649417ms)
+✔ generic custom functions preserve type metadata (0.4955ms)
+✔ custom function failures preserve CEL and JavaScript errors (1.579042ms)
+✔ checked generic return contracts reject mismatched callback values (0.2405ms)
+✔ host exception identity is preserved even with native-looking error codes (1.212791ms)
+✔ environment errors preserve host identity with compile-looking codes (0.32525ms)
+✔ function declarations accept precisely typed host callbacks (0.251833ms)
+✔ callbacks are reentrant and environment snapshots cannot be retargeted (6.176458ms)
+✔ callbacks own converted message and enum values for the duration of the call (1.417917ms)
+✔ callback results obey conversion limits (27.290834ms)
+✔ function and type constructors reject invalid declarations (0.48375ms)
+✔ function declaration limits are enforced (138.893917ms)
+✔ typed map outputs are valid inputs without assertions or casts (2.03725ms)
+✔ native maps preserve CEL key types and nested maps (7.400583ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.258042ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.928875ms)
+✔ native map conversion uses captured intrinsics (0.276875ms)
+✔ map brands and limits do not depend on mutable prototypes (83.612667ms)
+✔ proxies cannot disguise map brands or wrapper keys (1.495334ms)
+✔ map snapshot descriptors ignore inherited accessors (0.65875ms)
+✔ map snapshots do not invoke inherited array setters (0.332125ms)
+✔ native maps snapshot entries before converting values (0.242917ms)
+✔ native map results and environment constants own their data (0.390666ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.27975ms)
+✔ nested native map evaluations keep results independent (0.227833ms)
+✔ object and native maps charge the same key-value budget (109.657667ms)
+✔ native maps preserve collection, depth, and byte limits (60.203625ms)
+✔ math policies preserve numeric result types and permission decisions (11.672125ms)
+✔ math rounding, predicates and errors retain CEL behavior (1.420083ms)
+✔ math namespaces remain independent of variables and respect function overrides (0.477958ms)
+✔ OptionalValue constructors preserve presence (3.542125ms)
+✔ optional operations and static types cross the native boundary (6.717833ms)
+✔ nested optionals and present null remain distinct (0.263583ms)
+✔ optional constants own recursive payloads (0.238666ms)
+✔ callbacks accept and return optional values (0.525292ms)
+✔ native conversion validates spoofed OptionalValue metadata (0.229667ms)
+✔ optional conversion enforces cycles, depth, bytes, and value budgets (35.930333ms)
+✔ optional payloads support enum, proto, temporal, and type values (1.45175ms)
+✔ optional wrappers reject unsupported payloads (0.291458ms)
+✔ Program compiles once and evaluates native bindings (1.307959ms)
+✔ values cross the native boundary without JSON conversion (2.938208ms)
+✔ type values round trip and macros preserve native data (0.954625ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (1.268458ms)
+✔ environments own declarations and check complete policies (13.761375ms)
+✔ byte inputs are captured before later getters run (0.351584ms)
+✔ negative zero remains a double and wrappers validate inputs (0.874417ms)
+✔ compile and evaluation failures have distinct typed codes (1.005667ms)
+✔ invalid JavaScript inputs are rejected (14.0315ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.68925ms)
+✔ binding names and maps use own enumerable string properties (0.218833ms)
+✔ native programs can be reclaimed by garbage collection (13.062334ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (16.446708ms)
+✔ protobuf boundary errors preserve failure phases (1.316209ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (16.573125ms)
+✔ strings and keys preserve code points across inline and allocated conversion (7.093083ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (3.246542ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (81.544959ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (18.160542ms)
+✔ temporal values preserve nanoseconds and static types (6.711042ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.997291ms)
+ℹ tests 68
+ℹ suites 0
+ℹ pass 68
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 922.313875
+ℹ start of coverage report
+ℹ ----------------------------------------------------------
+ℹ file      | line % | branch % | funcs % | uncovered lines
+ℹ ----------------------------------------------------------
+ℹ dist      |        |          |         | 
+ℹ  index.js | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ all files | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ end of coverage report
+==================================================================== test session starts =====================================================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/marcelotryle/dev/pydantic/cel/bindings/python
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 47 items
+
+bindings/python ...............................................                                                                                        [100%]
+
+==================================================================== 47 passed in 11.65s =====================================================================

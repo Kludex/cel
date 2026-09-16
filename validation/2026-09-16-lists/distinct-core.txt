@@ -1,0 +1,8 @@
+Build Summary: 5/5 steps succeeded; 3/3 tests passed
+test success
++- run test 3 pass (3 total) 684ms MaxRSS:28M
+   +- compile test Debug native-native success 2s MaxRSS:683M
+      +- WriteFile cached
+      +- compile lib cel_native Debug native-native cached 52ms MaxRSS:34M
+      +- compile lib cel_native Debug native-native (reused)
+

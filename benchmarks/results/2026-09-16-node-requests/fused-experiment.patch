@@ -1,0 +1,75 @@
+--- a/src/node.zig
++++ b/src/node.zig
+@@ -590,7 +590,7 @@
+ 
+         switch (try self.snapshotMap(input)) {
+             .entries => |entries| return self.nativeMap(input, entries, depth),
+-            .plain => return self.map(input, depth),
++            .keys => |keys| return self.map(input, keys, depth),
+             .other => {},
+         }
+ 
+@@ -745,8 +745,7 @@
+         return .{ .list = out };
+     }
+ 
+-    fn map(self: *Converter, input: c.napi_value, depth: usize) NapiError!Value {
+-        const keys = try self.propertyNames(input);
++    fn map(self: *Converter, input: c.napi_value, keys: c.napi_value, depth: usize) NapiError!Value {
+         var len: u32 = 0;
+         try check(self.env, c.napi_get_array_length(self.env, keys, &len));
+         if (len > self.remaining / 2) return failRange(self.env, "input exceeds collection limit");
+@@ -765,7 +764,11 @@
+         return .{ .map = out };
+     }
+ 
+-    fn snapshotMap(self: *Converter, input: c.napi_value) NapiError!union(enum) { plain, other, entries: c.napi_value } {
++    fn snapshotMap(self: *Converter, input: c.napi_value) NapiError!union(enum) {
++        keys: c.napi_value,
++        other,
++        entries: c.napi_value,
++    } {
+         var budget: c.napi_value = null;
+         try check(self.env, c.napi_create_uint32(self.env, @intCast(self.remaining / 2), &budget));
+         const args = [_]c.napi_value{ input, budget };
+@@ -773,12 +776,15 @@
+         try check(self.env, c.napi_call_function(self.env, input, self.map_snapshot, args.len, &args, &snapshot));
+         var kind: c.napi_valuetype = undefined;
+         try check(self.env, c.napi_typeof(self.env, snapshot, &kind));
+-        if (kind == c.napi_boolean) {
+-            var plain = false;
+-            try check(self.env, c.napi_get_value_bool(self.env, snapshot, &plain));
+-            return if (plain) .plain else .other;
+-        }
+-        return .{ .entries = snapshot };
++        if (kind == c.napi_boolean) return .other;
++        var length: u32 = 0;
++        try check(self.env, c.napi_get_array_length(self.env, snapshot, &length));
++        if (length == 0) return .{ .keys = snapshot };
++        var first: c.napi_value = null;
++        var pair = false;
++        try check(self.env, c.napi_get_element(self.env, snapshot, 0, &first));
++        try check(self.env, c.napi_is_array(self.env, first, &pair));
++        return if (pair) .{ .entries = snapshot } else .{ .keys = snapshot };
+     }
+ 
+     fn nativeMap(self: *Converter, input: c.napi_value, snapshot: c.napi_value, depth: usize) NapiError!Value {
+--- a/bindings/typescript/index.ts
++++ b/bindings/typescript/index.ts
+@@ -374,11 +374,14 @@
+   return keys;
+ }
+ 
+-function snapshotMap(input: object, entryBudget: number): [unknown, unknown][] | boolean {
++function snapshotMap(
++  input: object,
++  entryBudget: number,
++): [unknown, unknown][] | (string | symbol)[] | false {
+   if (isProxy(input)) throw new TypeErrorConstructor("Proxies are not supported as CEL inputs");
+   if (!isMap(input)) {
+     const prototype = getPrototypeOf(input);
+-    return prototype === objectPrototype || prototype === null;
++    return prototype === objectPrototype || prototype === null ? enumerableKeys(input) : false;
+   }
+   const entries: [unknown, unknown][] = [];
+   setPrototypeOf(entries, null);

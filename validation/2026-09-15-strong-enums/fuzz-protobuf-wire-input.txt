@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.protobuf wire input never traps or escapes native evaluation storage" (f602afccb1ad480f)
+Runs: 0 -> 104174
+Unique runs: 0 -> 16
+Coverage: 0/13115 -> 649/13115 (4.95%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

@@ -1,0 +1,111 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+__________________________________________________________ test_collection_policy_and_static_types ___________________________________________________________
+
+    def test_collection_policy_and_static_types() -> None:
+        environment = Environment(variables={"batches": CELType("list", (CELType("dyn"),))})
+>       program = environment.compile(
+            "batches.flatten().distinct().sort().slice(0, 3).reverse() == [3, 2, 1]"
+            " && lists.range(3).all(i, i < 3)"
+        )
+
+bindings/python/tests/test_lists.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x107637c70>
+source = 'batches.flatten().distinct().sort().slice(0, 3).reverse() == [3, 2, 1] && lists.range(3).all(i, i < 3)'
+environment = <cel.program.Environment object at 0x107637af0>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: TypeMismatch
+
+bindings/python/src/cel/program.py:33: CompileError
+_____________________________________________ test_sort_by_evaluates_receiver_and_keys_once_and_preserves_input ______________________________________________
+
+    def test_sort_by_evaluates_receiver_and_keys_once_and_preserves_input() -> None:
+        calls: list[int] = []
+        values = [{"id": "first", "rank": 2}, {"id": "second", "rank": 1}, {"id": "third", "rank": 2}]
+        environment = Environment(
+            variables={"value": CELType("string")},
+            functions=(
+                Function("items", (), CELType("list", (CELType("dyn"),)), lambda: values),
+                Function("key", (CELType("int"),), CELType("int"), lambda n: calls.append(n) or n),
+            ),
+        )
+>       result = environment.compile("items().sortBy(value, key(value.rank)).map(item, item.id)").evaluate({})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_lists.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x107636410>, source = 'items().sortBy(value, key(value.rank)).map(item, item.id)'
+environment = <cel.program.Environment object at 0x107635990>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: TypeMismatch
+
+bindings/python/src/cel/program.py:33: CompileError
+__________________________________________________________ test_list_boundaries_and_nested_equality __________________________________________________________
+
+    def test_list_boundaries_and_nested_equality() -> None:
+>       assert Program("[1, 1u, 1.0, true, true, {'x': [1]}, {'x': [1u]}].distinct().size()").evaluate({}) == 3
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_lists.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1076add20>, bindings = {}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: NoMatchingOverload
+
+bindings/python/src/cel/program.py:37: EvaluationError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_lists.py::test_collection_policy_and_static_types - cel.program.CompileError: TypeMismatch
+FAILED bindings/python/tests/test_lists.py::test_sort_by_evaluates_receiver_and_keys_once_and_preserves_input - cel.program.CompileError: TypeMismatch
+FAILED bindings/python/tests/test_lists.py::test_list_boundaries_and_nested_equality - cel.program.EvaluationError: NoMatchingOverload
+3 failed in 0.03s

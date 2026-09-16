@@ -1,0 +1,6 @@
+Attempt 1: combined binding and default Zig benchmark command timed out at the 240-second tool deadline. Zig output was empty.
+Attempt 2: standalone `zig build benchmark -Dbenchmarks=true -Doptimize=ReleaseSafe -j4` timed out at the 300-second tool deadline. Zig output was empty.
+A process check afterward found no remaining cel-benchmark or zig-build benchmark process.
+A 100-cold/1000-warm-iteration diagnostic then completed (8-second build, 2-second run reported by Zig).
+The final 1000-cold/10000-warm-iteration run completed with 30 samples and five warmups. All final samples exceeded 100 ms.
+No cause is asserted for the two incomplete attempts. They are not counted as successful measurements.

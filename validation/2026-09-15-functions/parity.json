@@ -1,0 +1,70 @@
+[
+  {
+    "mode": "full",
+    "identical_except_implementation": true,
+    "summary": {
+      "core": {
+        "failed": 10,
+        "passed": 1825,
+        "total": 1905,
+        "unsupported": 70
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 0,
+        "total": 603,
+        "unsupported": 603
+      },
+      "total": {
+        "failed": 10,
+        "passed": 1825,
+        "total": 2508,
+        "unsupported": 673
+      }
+    },
+    "checked": 1729,
+    "failures": [
+      "comparisons/lt_literal/not_lt_dyn_int_big_lossy_double",
+      "comparisons/gt_literal/not_gt_dyn_big_double_int",
+      "comparisons/lte_literal/lte_dyn_big_double_int",
+      "comparisons/gte_literal/gte_dyn_int_big_lossy_double",
+      "type_deduction/flexible_type_parameter_assignment/optional_none",
+      "type_deduction/flexible_type_parameter_assignment/optional_none_2",
+      "type_deduction/flexible_type_parameter_assignment/optional_dyn_promotion",
+      "type_deduction/flexible_type_parameter_assignment/optional_dyn_promotion_2",
+      "type_deduction/flexible_type_parameter_assignment/optional_in_ternary",
+      "type_deduction/legacy_nullable_types/null_assignable_to_abstract_parameter_candidate"
+    ]
+  },
+  {
+    "mode": "evaluation",
+    "identical_except_implementation": true,
+    "summary": {
+      "core": {
+        "failed": 4,
+        "passed": 1806,
+        "total": 1905,
+        "unsupported": 95
+      },
+      "extension": {
+        "failed": 0,
+        "passed": 0,
+        "total": 603,
+        "unsupported": 603
+      },
+      "total": {
+        "failed": 4,
+        "passed": 1806,
+        "total": 2508,
+        "unsupported": 698
+      }
+    },
+    "checked": 0,
+    "failures": [
+      "comparisons/lt_literal/not_lt_dyn_int_big_lossy_double",
+      "comparisons/gt_literal/not_gt_dyn_big_double_int",
+      "comparisons/lte_literal/lte_dyn_big_double_int",
+      "comparisons/gte_literal/gte_dyn_int_big_lossy_double"
+    ]
+  }
+]

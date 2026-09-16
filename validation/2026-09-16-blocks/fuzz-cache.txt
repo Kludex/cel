@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.indexed block caches remain request local for untrusted scalar activations" (c536331b2727fa5f)
+Runs: 0 -> 100012
+Unique runs: 0 -> 6
+Coverage: 0/15115 -> 518/15115 (3.43%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

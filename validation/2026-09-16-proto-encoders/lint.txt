@@ -1,0 +1,10 @@
+   Building cel-sdk @ file:///Users/marcelotryle/dev/pydantic/cel/bindings/python
+      Built cel-sdk @ file:///Users/marcelotryle/dev/pydantic/cel/bindings/python
+Uninstalled 1 package in 1ms
+Installed 1 package in 1ms
+All checks passed!
+51 files left unchanged
+
+> @pydantic/cel@0.1.0-alpha.19 format
+> oxfmt index.ts test build.mjs
+

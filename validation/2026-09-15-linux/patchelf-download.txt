@@ -1,0 +1,7 @@
+Collecting patchelf==0.18.0.0
+  Downloading patchelf-0.18.0.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl.metadata (3.5 kB)
+WARNING: The candidate selected for download or install is a yanked version: 'patchelf' candidate (version 0.18.0.0 at https://files.pythonhosted.org/packages/75/29/3818512ea004b507925e681e03abffab272c312094a4a11b4d2467163199/patchelf-0.18.0.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl (from https://pypi.org/simple/patchelf/))
+Reason for being yanked: https://github.com/mayeut/patchelf-pypi/issues/87
+Downloading patchelf-0.18.0.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl (465 kB)
+Saved ./wheels/patchelf-0.18.0.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl
+Successfully downloaded patchelf

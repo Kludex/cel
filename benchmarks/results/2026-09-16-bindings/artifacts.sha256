@@ -1,0 +1,5 @@
+ca6bb9684a45ce640e7afdc3f8ec487a8937e252eebb051339e429bbd937c2da  /tmp/cel-bindings-before/cel.node
+5ff06ea20c00f8a40091b046ec1d5de3c60933f8ec6f6894ec3f559fa73790ed  /tmp/cel-bindings-before/dist/index.js
+d1b70871c2df2df9f4e92ae8f18fb45827f1fc66627f06dacc4fbcd1cda1e16a  bindings/typescript/cel.node
+26d8d73db8ea29e6262f9ed90377dc814c0c5f21723b8b642df7f0a0029f34f6  benchmarks/results/2026-09-16-bindings/bound-workloads.json
+9d150190c5e508417fa8aa9f147395b816ec8884c0d9f806063d826062a41040  benchmarks/results/2026-09-16-bindings/bound-large-workloads.json

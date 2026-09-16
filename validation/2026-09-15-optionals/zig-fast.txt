@@ -1,0 +1,14 @@
+Build Summary: 8/8 steps succeeded; 81/81 tests passed
+test success
++- run test 80 pass (80 total) 391ms MaxRSS:21M
+|  +- compile test ReleaseFast native-native success 9s MaxRSS:540M
+|     +- WriteFile cached
+|     +- compile lib cel_native ReleaseFast native-native cached 72ms MaxRSS:35M
+|     +- compile lib cel_native ReleaseFast native-native (reused)
++- run test 1 pass (1 total) 304ms MaxRSS:9M
+   +- compile test ReleaseFast native-native success 6s MaxRSS:417M
+      +- WriteFile (reused)
+      +- compile lib cel_native ReleaseFast native-native (reused)
+      +- compile lib cel_native ReleaseFast native-native (reused)
+      +- options cached
+

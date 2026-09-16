@@ -1,0 +1,36 @@
+sort_mixed_numeric_values | source="[3, 1u, 2.0].sort()" | checked=dyn | value=list elements must have the same type | type=error | eval_error="list elements must have the same type" | receiver_calls=0 | key_calls=0
+sortBy_mixed_numeric_keys | source="[3, 1, 2].sortBy(x, x == 3 ? dyn(2) : x == 1 ? dyn(1u) : dyn(0.0))" | checked=list(int) | value=list elements must have the same type | type=error | eval_error="list elements must have the same type" | receiver_calls=0 | key_calls=0
+sort_singleton_list_dynamic | source="dyn([[1]]).sort()" | checked=dyn | value=list elements must be comparable | type=error | eval_error="list elements must be comparable" | receiver_calls=0 | key_calls=0
+sort_singleton_map_dynamic | source="dyn([{'a': 1}]).sort()" | checked=dyn | value=list elements must be comparable | type=error | eval_error="list elements must be comparable" | receiver_calls=0 | key_calls=0
+sortBy_singleton_list_key_dynamic | source="[1].sortBy(v, dyn([v]))" | checked=list(int) | value=list elements must be comparable | type=error | eval_error="list elements must be comparable" | receiver_calls=0 | key_calls=0
+sort_nan_singleton | source="[0.0 / 0.0].sort()" | checked=list(double) | value=[NaN] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sort_nan_middle | source="[2.0, 0.0 / 0.0, 1.0].sort()" | checked=list(double) | value=[2, NaN, 1] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sortBy_nan_key | source="['b', 'a'].sortBy(v, v == 'b' ? 0.0 / 0.0 : 0.0)" | checked=list(string) | value=[b, a] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sortBy_equal_key_groups_24 | source="lists.range(24).sortBy(v, v % 3)" | checked=list(int) | value=[12, 0, 21, 3, 18, 15, 6, 9, 10, 4, 1, 22, 16, 13, 7, 19, 17, 8, 14, 5, 20, 2, 11, 23] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sortBy_all_equal_24 | source="lists.range(24).sortBy(v, 0)" | checked=list(int) | value=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+distinct_nested_numeric_aliases | source="[[1], [1u], [1.0], [2]].distinct()" | checked=list(dyn) | value=[[1], [2]] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+distinct_nested_nan | source="[[0.0 / 0.0], [0.0 / 0.0]].distinct().size()" | checked=int | value=2 | type=int | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+distinct_optional_none | source="[optional.none(), optional.none()].distinct().size()" | checked=int | value=1 | type=int | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+distinct_optional_numeric_aliases | source="[optional.of(dyn(1)), optional.of(dyn(1u)), optional.of(dyn(1.0))].distinct().size()" | checked=int | value=1 | type=int | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+distinct_optional_nan | source="[optional.of(0.0 / 0.0), optional.of(0.0 / 0.0)].distinct().size()" | checked=int | value=2 | type=int | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sortBy_receiver_once | source="probe.receiver().sortBy(v, v)" | checked=list(int) | value=[0, 1, 2, 3] | type=list(dyn) | eval_error="<nil>" | receiver_calls=1 | key_calls=0
+sortBy_key_once_per_element | source="probe.receiver().sortBy(v, probe.key(v))" | checked=list(int) | value=[0, 1, 2, 3] | type=list(dyn) | eval_error="<nil>" | receiver_calls=1 | key_calls=4
+sortBy_empty_skips_key | source="probe.empty().sortBy(v, probe.key(v))" | checked=list(int) | value=[] | type=list(dyn) | eval_error="<nil>" | receiver_calls=1 | key_calls=0
+sortBy_key_error | source="probe.receiver().sortBy(v, probe.failKey(v))" | checked=list(int) | value=probe key error at 2 | type=error | eval_error="probe key error at 2" | receiver_calls=1 | key_calls=3
+sortBy_shadows_outer_x | source="[3, 1, 2].sortBy(x, x)" | checked=list(int) | value=[1, 2, 3] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sortBy_nested_shadowing | source="[[3, 1], [2, 0]].sortBy(x, x.sortBy(x, x)[0])" | checked=list(list(int)) | value=[[2, 0], [3, 1]] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+sortBy_invalid_binding_literal | source="[1].sortBy(1, 1)" | compile_error="ERROR: <input>:1:12: argument is not an identifier\n | [1].sortBy(1, 1)\n | ...........^" | receiver_calls=0 | key_calls=0
+sortBy_invalid_binding_select | source="[1].sortBy(x.y, 1)" | compile_error="ERROR: <input>:1:13: argument is not an identifier\n | [1].sortBy(x.y, 1)\n | ............^" | receiver_calls=0 | key_calls=0
+sortBy_invalid_receiver_scalar | source="(1).sortBy(v, v)" | compile_error="ERROR: <input>:1:2: sortBy can only be applied to a list, identifier, comprehension, call or select expression\n | (1).sortBy(v, v)\n | .^" | receiver_calls=0 | key_calls=0
+sortBy_invalid_receiver_map | source="{'x': 1}.sortBy(v, v)" | compile_error="ERROR: <input>:1:1: sortBy can only be applied to a list, identifier, comprehension, call or select expression\n | {'x': 1}.sortBy(v, v)\n | ^" | receiver_calls=0 | key_calls=0
+sortBy_invalid_arity_one | source="[1].sortBy(x)" | compile_error="ERROR: <input>:1:11: undeclared reference to 'sortBy' (in container '')\n | [1].sortBy(x)\n | ..........^" | receiver_calls=0 | key_calls=0
+sortBy_invalid_arity_three | source="[1].sortBy(x, x, x)" | compile_error="ERROR: <input>:1:11: undeclared reference to 'sortBy' (in container '')\n | [1].sortBy(x, x, x)\n | ..........^" | receiver_calls=0 | key_calls=0
+check_list_dyn_empty | source="dyns.sort()" | checked=dyn | value=[] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+check_list_dyn_mixed | source="dyns.sort()" | checked=dyn | value=list elements must have the same type | type=error | eval_error="list elements must have the same type" | receiver_calls=0 | key_calls=0
+check_empty_literal | source="[].sort()" | checked=list(int) | value=[] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+check_mixed_literal | source="[1, 'x'].sort()" | checked=dyn | value=list elements must have the same type | type=error | eval_error="list elements must have the same type" | receiver_calls=0 | key_calls=0
+check_list_list | source="nested.sort()" | compile_error="ERROR: <input>:1:12: found no matching overload for 'sort' applied to 'list(list(int)).()'\n | nested.sort()\n | ...........^" | receiver_calls=0 | key_calls=0
+check_empty_unorderable_sortBy | source="[].sortBy(v, [v])" | compile_error="ERROR: <input>:1:10: found no matching overload for '@sortByAssociatedKeys' applied to 'list(dyn).(list(list(dyn)))'\n | [].sortBy(v, [v])\n | .........^" | receiver_calls=0 | key_calls=0
+check_empty_dynamic_unorderable_sortBy | source="[].sortBy(v, dyn([v]))" | checked=list(dyn) | value=[] | type=list(dyn) | eval_error="<nil>" | receiver_calls=0 | key_calls=0
+container=lists | range(3)=[0, 1, 2] | error=<nil>
+container=lists.child | range(3)=[0, 1, 2] | error=<nil>

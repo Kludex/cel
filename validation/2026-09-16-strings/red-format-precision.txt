@@ -1,0 +1,15 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_________________________________________ test_formatting_preserves_large_precision_and_sanitizes_invalid_byte_runs __________________________________________
+
+    def test_formatting_preserves_large_precision_and_sanitizes_invalid_byte_runs() -> None:
+>       assert Program("'%.400f'.format([1.25])").evaluate({}) == "1.25" + "0" * 398
+E       AssertionError: assert '(float)' == '1.2500000000...0000000000000'
+E         
+E         - 1.2500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+E         + (float)
+
+bindings/python/tests/test_string_extensions.py:33: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_string_extensions.py::test_formatting_preserves_large_precision_and_sanitizes_invalid_byte_runs - AssertionError: assert ...
+1 failed, 3 deselected in 0.02s

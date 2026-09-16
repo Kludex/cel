@@ -1,0 +1,50 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/error.js:42
+    return new _CelError(first.message, rest, first.exprId);
+           ^
+
+_CelError: unbound function: flatten
+    at celErrorMerge (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/error.js:42:12)
+    at EvalAnd.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:631:20)
+    at Object.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/plan.js:51:32)
+    at Object.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/eval.js:42:29)
+    at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/plan.js:63:28
+    at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:137:22)
+    at verify (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:150:22)
+    at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:256:19 {
+  _cause: [
+    _CelError: unbound function: slice
+        at celErrorMerge (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/error.js:42:12)
+        at EvalAnd.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:631:20)
+        at EvalAnd.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:616:29)
+        at Object.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/plan.js:51:32)
+        at Object.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/eval.js:42:29)
+        at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/plan.js:63:28
+        at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:137:22)
+        at verify (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:150:22)
+        at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:256:19 {
+      _cause: [
+        _CelError: unbound function: range
+            at celError (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/error.js:33:16)
+            at EvalCall.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:386:20)
+            at EvalFold.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:572:42)
+            at EvalAnd.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:616:29)
+            at EvalAnd.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/planner.js:616:29)
+            at Object.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/plan.js:51:32)
+            at Object.eval (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/eval.js:42:29)
+            at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/plan.js:63:28
+            at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:137:22)
+            at verify (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:150:22) {
+          _cause: undefined,
+          _exprId: 78n,
+          Symbol(@bufbuild/cel/error): {}
+        }
+      ],
+      _exprId: 54n,
+      Symbol(@bufbuild/cel/error): {}
+    }
+  ],
+  _exprId: 9n,
+  Symbol(@bufbuild/cel/error): {}
+}
+
+Node.js v24.14.1

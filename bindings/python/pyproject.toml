@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cel-sdk"
+version = "0.1.0a21"
+description = "CEL expressions powered by a shared Zig engine"
+license = "MIT"
+license-files = ["LICENSE", "licenses/*"]
+requires-python = ">=3.10"
+dependencies = ["typing-extensions>=4.12"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=6",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "protobuf==6.33.0",
+    "types-protobuf>=7.35.1.20260906",
+]
+
+[tool.hatch.build.hooks.custom]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cel"]
+exclude = ["*.so", "*.o"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/cel/**/*.py", "src/cel/**/*.pyi", "src/cel/py.typed", "hatch_build.py", "pyproject.toml", "LICENSE", "licenses"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"../../src" = "zig/src"
+"../../build" = "zig/build"
+"../../build.zig" = "zig/build.zig"
+"../../build.zig.zon" = "zig/build.zig.zon"
+"../../LICENSE" = "zig/LICENSE"
+"../../third_party" = "zig/third_party"
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+filterwarnings = ["error"]
+xfail_strict = true
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source_pkgs = ["cel", "tests"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 100
+exclude_also = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError", "@overload"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "FA", "UP", "RUF100"]
+ignore = ["UP035"]  # TypeAlias intentionally comes from typing_extensions.
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.mypy]
+strict = true

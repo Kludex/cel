@@ -1,0 +1,27 @@
+Collecting pytest==9.0.2
+  File was already downloaded /wheels/pytest-9.0.2-py3-none-any.whl
+Collecting pytest-cov==7.0.0
+  File was already downloaded /wheels/pytest_cov-7.0.0-py3-none-any.whl
+Collecting protobuf==6.33.0
+  File was already downloaded /wheels/protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl
+Collecting typing-extensions==4.15.0
+  File was already downloaded /wheels/typing_extensions-4.15.0-py3-none-any.whl
+Collecting iniconfig>=1.0.1
+  File was already downloaded /wheels/iniconfig-2.3.0-py3-none-any.whl
+Collecting exceptiongroup>=1
+  Downloading exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+Collecting pluggy<2,>=1.5
+  File was already downloaded /wheels/pluggy-1.6.0-py3-none-any.whl
+Collecting tomli>=1
+  Downloading tomli-2.4.1-py3-none-any.whl (14 kB)
+Collecting packaging>=22
+  File was already downloaded /wheels/packaging-26.3-py3-none-any.whl
+Collecting pygments>=2.7.2
+  File was already downloaded /wheels/pygments-2.21.0-py3-none-any.whl
+Collecting coverage[toml]>=7.10.6
+  Downloading coverage-7.16.1-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (254 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 254.1/254.1 kB 7.1 MB/s eta 0:00:00
+Saved /wheels/exceptiongroup-1.3.1-py3-none-any.whl
+Saved /wheels/tomli-2.4.1-py3-none-any.whl
+Saved /wheels/coverage-7.16.1-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl
+Successfully downloaded pytest pytest-cov protobuf typing-extensions exceptiongroup iniconfig packaging pluggy pygments tomli coverage

@@ -1,0 +1,5 @@
+kcov 43+dfsg-1+b4
+All 136 tests passed.
+21 fuzz tests found.
+full exit=0 bytes=367032
+evaluation exit=0 bytes=265612

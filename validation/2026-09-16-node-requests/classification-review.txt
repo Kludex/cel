@@ -1,0 +1,13 @@
+**Recommendation:** Reorder `src/node.zig:589-609` so `snapshotMap()` classifies proxies, branded Maps, and plain objects before `OptionalValue` `instanceof`.
+
+- This is observable hardening, not a transparent optimization. `napi_instanceof` executes mutable `OptionalValue[Symbol.hasInstance]`; plain objects and Maps will no longer trigger its exceptions, side effects, or reentrant evaluations.
+- Current order can accept `Proxy<OptionalValue>` before `snapshotMap()` rejects proxies. It can also misclassify a real Map when `Symbol.hasInstance` returns true or its prototype is changed to `OptionalValue.prototype`. Intrinsic Map brand should win.
+- Normal `OptionalValue` subclasses remain `.other` and reach `instanceof`. Wrappers changed to `Object.prototype` or `null` are already treated as records today.
+
+Missing public regressions:
+
+- Reject proxied optionals before any `getPrototypeOf` or property trap runs.
+- Poison `OptionalValue[Symbol.hasInstance]`; verify plain/null-prototype records and real Maps bypass it.
+- Verify a branded Map with `OptionalValue.prototype` still converts as a Map.
+- Verify an `OptionalValue` subclass and valid `Object.create(OptionalValue.prototype)` still convert as optionals.
+- Verify reentrant `hasValue`/`value` getters run once, in order, and nested evaluation remains independent.

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/repo/benchmarks/python.py", line 277, in <module>
+    main()
+    ~~~~^^
+  File "/repo/benchmarks/python.py", line 221, in main
+    programs = [compile_program(workload["expression"]) for workload in workloads]
+                ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/repo/benchmarks/python.py", line 91, in compile_program
+    return rust_cel.Program(expression)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+ValueError: Error parsing: unrecognized token: '?' at [0:32]->[0:33]

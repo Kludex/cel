@@ -1,0 +1,7 @@
+904acb37b787ac4b7554d0a7a938587025321afb79d7280f4abd0c8a5a4f5fd5  /tmp/cel-plain-linux/artifacts/manylinux/cel_sdk-0.1.0a20-cp310-abi3-manylinux_2_28_aarch64.whl
+894a94c2a7a9854b5e05bbf88a780a96507578e46e63e3ad535c627770f85223  /tmp/cel-plain-linux/artifacts/pydantic-cel-0.1.0-alpha.20.tgz
+88623faefda10a17a7f499e2a5c651c7458c413779df8702c42cecec07b6f6e4  /tmp/cel-plain-linux/artifacts/arm64/bin/cel-conformance
+d775b9cb34b50bd4ed648ebb119b58a9de8c08a00d1963307dc7def1a6fe1a86  /tmp/cel-plain-linux/artifacts/arm64/bin/cel-test
+6312c85aaf33bcbb520f44971276198050323feb618be5d26ce867b64176aced  /tmp/cel-plain-linux/artifacts/amd64/bin/cel-test
+735f37c688dbc7966ea28450bbb352c2276784e7b84b7cee942c7b80f820ba81  /tmp/cel-plain-macos/artifacts/pydantic-cel-0.1.0-alpha.20.tgz
+975d95ec0b05ef44a1d5b73f4d39ea800194046eee3c08ce4a389cd3f0180a20  bindings/typescript/cel.node

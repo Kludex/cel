@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+zig build test -Dbenchmarks=true
+zig build test -Dbenchmarks=true -Doptimize=ReleaseSafe
+./scripts/build-python
+(cd bindings/python && .venv/bin/python -m pytest --cov --cov-report=term-missing)
+npm --prefix bindings/typescript test
+zig build conformance conformance-test -Dconformance=true -Doptimize=ReleaseSafe
+bindings/python/.venv/bin/python -m pytest -c bindings/python/pyproject.toml conformance/test_*.py

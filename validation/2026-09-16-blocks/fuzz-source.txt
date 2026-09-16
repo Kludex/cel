@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.untrusted source never traps or leaks" (52eab8ad02868f6d)
+Runs: 0 -> 101950
+Unique runs: 0 -> 305
+Coverage: 0/15110 -> 1974/15110 (13.06%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

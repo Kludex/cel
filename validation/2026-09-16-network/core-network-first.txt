@@ -1,0 +1,16 @@
+test
++- run test 15 pass, 1 fail (16 total)
+error: 'network_tests.test.nested raw network metadata is validated before escaping evaluation' failed:
+       expected error.InvalidArgument, found .{ .list = { .{ .ip = .{ ... } } } }
+failed command: ./.zig-cache/o/5f7b978697ded7079db0f52d09647013/test --cache-dir=./.zig-cache --seed=0xf2c15919 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 15/16 tests passed (1 failed)
+test transitive failure
++- run test 15 pass, 1 fail (16 total)
+   +- compile test ReleaseSafe native-native success 8s MaxRSS:545M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe native-native cached 71ms MaxRSS:35M
+      +- compile lib cel_native ReleaseSafe native-native (reused)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/ea501539d90e69e3ac4e7c7b6a1a4a4f/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0xf2c15919 -Zcb60e9bc39cc47b9 test -Dtest-filter=network -Doptimize=ReleaseSafe -j4 --summary all

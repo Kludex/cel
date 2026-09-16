@@ -1,0 +1,111 @@
+
+> @pydantic/cel@0.1.0-alpha.15 test
+> npm run build && node --expose-gc --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 --test dist/test/*.test.js
+
+
+> @pydantic/cel@0.1.0-alpha.15 build
+> npm run build:native && tsc -p tsconfig.json
+
+
+> @pydantic/cel@0.1.0-alpha.15 build:native
+> node build.mjs
+
+✔ nested evaluations keep outer input and result storage independent (13.255459ms)
+✔ local bindings evaluate complete policies and preserve lexical scope (3.727167ms)
+✔ local initializer values and CEL errors are cached only for one evaluation (0.278667ms)
+✔ local initialization preserves host errors and reentrant result storage (4.006042ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (10.791292ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (6.332041ms)
+✔ legacy enums remain integers by default (2.651541ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.437708ms)
+✔ EnumValue validates wrapper and spoofed native inputs (0.924875ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.199584ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.596125ms)
+✔ custom functions support global, receiver, and scalar overloads (3.422875ms)
+✔ generic custom functions preserve type metadata (0.305291ms)
+✔ custom function failures preserve CEL and JavaScript errors (0.699167ms)
+✔ checked generic return contracts reject mismatched callback values (0.127958ms)
+✔ host exception identity is preserved even with native-looking error codes (0.213417ms)
+✔ environment errors preserve host identity with compile-looking codes (0.104875ms)
+✔ function declarations accept precisely typed host callbacks (0.101833ms)
+✔ callbacks are reentrant and environment snapshots cannot be retargeted (4.274459ms)
+✔ callbacks own converted message and enum values for the duration of the call (1.266416ms)
+✔ callback results obey conversion limits (3.271958ms)
+✔ function and type constructors reject invalid declarations (0.195333ms)
+✔ function declaration limits are enforced (41.71075ms)
+✔ list extensions evaluate a complete collection policy (3.0005ms)
+✔ sortBy scopes its variable and evaluates receiver and keys once (0.429458ms)
+✔ list extensions preserve nested equality and reject invalid boundaries (0.603167ms)
+✔ typed map outputs are valid inputs without assertions or casts (0.680375ms)
+✔ native maps preserve CEL key types and nested maps (1.109041ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.136625ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.626041ms)
+✔ native map conversion uses captured intrinsics (0.192ms)
+✔ map brands and limits do not depend on mutable prototypes (31.592916ms)
+✔ proxies cannot disguise map brands or wrapper keys (0.323292ms)
+✔ proxy rejection does not execute wrapper prototype traps (0.165792ms)
+✔ map snapshot descriptors ignore inherited accessors (0.157334ms)
+✔ map snapshots do not invoke inherited array setters (0.095667ms)
+✔ native maps snapshot entries before converting values (0.080708ms)
+✔ native map results and environment constants own their data (0.155042ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.094625ms)
+✔ nested native map evaluations keep results independent (0.081708ms)
+✔ object and native maps charge the same key-value budget (32.4695ms)
+✔ native maps preserve collection, depth, and byte limits (21.998375ms)
+✔ math policies preserve numeric result types and permission decisions (3.406417ms)
+✔ math rounding, predicates and errors retain CEL behavior (0.58775ms)
+✔ math namespaces remain independent of variables and respect function overrides (0.218958ms)
+✔ OptionalValue constructors preserve presence (2.133042ms)
+✔ optional operations and static types cross the native boundary (1.838333ms)
+✔ nested optionals and present null remain distinct (0.100917ms)
+✔ optional constants own recursive payloads (0.09775ms)
+✔ callbacks accept and return optional values (0.26275ms)
+✔ native conversion validates spoofed OptionalValue metadata (0.139458ms)
+✔ optional conversion enforces cycles, depth, bytes, and value budgets (13.069375ms)
+✔ optional payloads support enum, proto, temporal, and type values (0.817708ms)
+✔ optional wrappers reject unsupported payloads (0.1445ms)
+✔ Program compiles once and evaluates native bindings (0.874458ms)
+✔ values cross the native boundary without JSON conversion (0.993125ms)
+✔ type values round trip and macros preserve native data (0.311042ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.38625ms)
+✔ environments own declarations and check complete policies (5.541625ms)
+✔ byte inputs are captured before later getters run (0.136334ms)
+✔ negative zero remains a double and wrappers validate inputs (0.120209ms)
+✔ compile and evaluation failures have distinct typed codes (0.271167ms)
+✔ invalid JavaScript inputs are rejected (4.190833ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.198ms)
+✔ binding names and maps use own enumerable string properties (0.08325ms)
+✔ native programs can be reclaimed by garbage collection (4.504ms)
+✔ plain objects and native maps bypass mutable optional instance checks (1.9735ms)
+✔ optional subclasses and reentrant getters preserve value conversion order (0.252542ms)
+✔ enumerable key snapshots retain order and ignore later additions (0.148292ms)
+✔ enumerable symbol errors follow earlier string-keyed getter effects (0.398833ms)
+✔ symbol key snapshots do not invoke inherited array setters (0.174167ms)
+✔ property enumeration uses captured intrinsics for values and environments (2.40075ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (3.726333ms)
+✔ protobuf boundary errors preserve failure phases (0.361917ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (4.701083ms)
+✔ strings and keys preserve code points across inline and allocated conversion (3.020625ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.533292ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (25.804458ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (3.394666ms)
+✔ temporal values preserve nanoseconds and static types (3.022458ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.389291ms)
+ℹ tests 81
+ℹ suites 0
+ℹ pass 81
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 483.977834
+ℹ start of coverage report
+ℹ ----------------------------------------------------------
+ℹ file      | line % | branch % | funcs % | uncovered lines
+ℹ ----------------------------------------------------------
+ℹ dist      |        |          |         | 
+ℹ  index.js | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ all files | 100.00 |   100.00 |  100.00 | 
+ℹ ----------------------------------------------------------
+ℹ end of coverage report

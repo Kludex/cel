@@ -1,0 +1,3 @@
+No findings. The captured intrinsic path preserves own-key order, snapshots keys before getters, safely appends enumerable symbols using a null-prototype array, and resists later prototype pollution.
+
+Proxy rejection, reentrant `EnvHandle.active` restoration, and native indexes are correct: environment `error=17`, `optional=18`, `propertyNames=19`; evaluate `error=15`, `optional=16`, `propertyNames=17`.

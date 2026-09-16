@@ -1,0 +1,23 @@
+## Conclusion
+
+No findings. Performance was not reassessed, as requested.
+
+## Method
+
+Read-only review of `src/eval.zig`, `src/value.zig`, `src/temporal.zig`, `src/proto.zig`, and relevant `src/program.zig` tests. No commands or timings run.
+
+## Results
+
+- Exact numeric aliases share hashes, including `int`/`uint`/integral `double`, `-0`, `i64` minimum, and representable values below `2^64`.
+- Hash collisions traverse linked chains and retain first-occurrence ordering.
+- Timestamps, durations, enums, booleans, strings, bytes, types, and null hash consistently with `Context.equal`.
+- Compound values use the null bucket, with recursive equality adapting nested WKT messages.
+- Collection limits, byte/equality work budgets, and arena ownership are preserved.
+
+## Cause
+
+Canonical integer hashing matches `Value.order` semantics. Hashes only select candidate chains - `Context.equal` remains authoritative.
+
+## Next step
+
+None. Existing collision, alias, WKT, allocation-failure, and fuzz coverage addresses the reviewed risks.

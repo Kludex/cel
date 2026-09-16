@@ -1,0 +1,7 @@
+Implemented `src/string_format.zig`.
+
+- API: `pub fn format(arena, template, arguments, remaining, max_output, max_depth, max_collection) EvalError!Value`
+- Supports `%s`, `%d`, `%b`, `%o`, `%x`, `%X`, `%f`, `%e`, `%%`, decimal precision, recursive collections, deterministic sorted maps, nonfinite floats, ties-to-even correction, and normalized signed exponents.
+- Rejects malformed clauses, argument count mismatches, messages, enums, optionals, unsupported types, and invalid map keys with `InvalidArgument`.
+- Precision is capped by `max_output` because the requested API has no separate precision limit. Output, recursion, collections, and work are bounded before formatting.
+- Verified with `zig fmt --check src/string_format.zig` and a temporary public API test covering recursive formatting, numeric clauses, rounding, and exponent syntax.

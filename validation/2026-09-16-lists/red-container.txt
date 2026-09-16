@@ -1,0 +1,35 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+___________________________________________________ test_list_range_resolves_container_and_absolute_names ____________________________________________________
+
+    def test_list_range_resolves_container_and_absolute_names() -> None:
+        for container in ("lists", "lists.child"):
+>           assert Environment(container=container).compile("range(3)").evaluate({}) == [0, 1, 2]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_lists.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x107518820>, source = 'range(3)', environment = <cel.program.Environment object at 0x107518730>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: TypeMismatch
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_lists.py::test_list_range_resolves_container_and_absolute_names - cel.program.CompileError: TypeMismatch
+1 failed, 5 deselected in 0.02s

@@ -1,0 +1,59 @@
+{
+  "engine": "python-cel",
+  "engine_version": "0.1.1",
+  "runtime": "python",
+  "environment": {
+    "python": "3.14.7",
+    "implementation": "CPython",
+    "executable": "/usr/local/bin/python",
+    "platform": "Linux-6.10.14-linuxkit-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "logical_cpus": 12
+  },
+  "workloads": [
+    {
+      "name": "request_authorization",
+      "expression": "request.method == \"GET\" && request.path.startsWith(\"/v1/\") && principal.authenticated && (principal.role == \"admin\" || resource.owner == principal.id)",
+      "cases": 4
+    }
+  ],
+  "warmups": 1,
+  "metrics": {
+    "cold_compile_and_evaluate": {
+      "iterations_per_sample": 1,
+      "decisions_per_sample": 4,
+      "total_ns": [
+        844292
+      ],
+      "ns_per_decision": [
+        211073.0
+      ],
+      "distribution_ns_per_decision": {
+        "min": 211073.0,
+        "p25": 211073.0,
+        "median": 211073.0,
+        "p75": 211073.0,
+        "max": 211073.0,
+        "relative_iqr": 0.0
+      }
+    },
+    "warm_evaluate_reused_program": {
+      "iterations_per_sample": 1,
+      "decisions_per_sample": 4,
+      "total_ns": [
+        34958
+      ],
+      "ns_per_decision": [
+        8739.5
+      ],
+      "distribution_ns_per_decision": {
+        "min": 8739.5,
+        "p25": 8739.5,
+        "median": 8739.5,
+        "p75": 8739.5,
+        "max": 8739.5,
+        "relative_iqr": 0.0
+      }
+    }
+  }
+}

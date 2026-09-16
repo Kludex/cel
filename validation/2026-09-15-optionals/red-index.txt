@@ -1,0 +1,12 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.optional indexes do not turn invalid keys into absence' failed:
+       expected error.IndexOutOfBounds, found .{ .optional = null }
+failed command: ./.zig-cache/o/84d2ca955371cf762c72f745dc189f10/test --cache-dir=./.zig-cache --seed=0x71c75487 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/3d07ae27b5453222e2b7f6babd161f05/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x71c75487 -Zdcf555bfee3e5bc0 test -Dtest-filter=optional indexes do not -j4

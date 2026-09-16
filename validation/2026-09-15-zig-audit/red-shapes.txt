@@ -1,0 +1,136 @@
+.....F.FFFFF                                                                                                                                           [100%]
+========================================================================== FAILURES ==========================================================================
+__________________________________________________ test_zig_adapter_rejects_malformed_typed_values[value5] ___________________________________________________
+
+value = {'stringValue': 'x', 'boolValue': True}
+
+    @pytest.mark.parametrize("value", [
+        {"boolValue": 1}, {"bytesValue": "!!"}, {"int64Value": "9223372036854775808"},
+        {"uint64Value": "-1"}, {"enumValue": {"type": "int", "value": 2**31}},
+        {"stringValue": "x", "boolValue": True}, {"listValue": {"unexpected": []}},
+        {"typeValue": ""}, {"enumValue": {"type": ""}}, {"enumValue": {"type": "bad..Name"}},
+        {"messageValue": {"typeName": "", "data": ""}},
+        {"mapValue": {"entries": [{"key": {"doubleValue": 1.5}, "value": {"boolValue": True}}]}},
+    ])
+    def test_zig_adapter_rejects_malformed_typed_values(value: dict[str, Any]) -> None:
+        outcome = run_adapter(json.dumps([{"id": "bad", "expr": "true", "bindings": {"v": value}}]))[0]
+>       assert outcome["outcome"] == "input_error"
+E       AssertionError: assert 'unsupported' == 'input_error'
+E         
+E         - input_error
+E         + unsupported
+
+conformance/test_zig.py:79: AssertionError
+__________________________________________________ test_zig_adapter_rejects_malformed_typed_values[value7] ___________________________________________________
+
+value = {'typeValue': ''}
+
+    @pytest.mark.parametrize("value", [
+        {"boolValue": 1}, {"bytesValue": "!!"}, {"int64Value": "9223372036854775808"},
+        {"uint64Value": "-1"}, {"enumValue": {"type": "int", "value": 2**31}},
+        {"stringValue": "x", "boolValue": True}, {"listValue": {"unexpected": []}},
+        {"typeValue": ""}, {"enumValue": {"type": ""}}, {"enumValue": {"type": "bad..Name"}},
+        {"messageValue": {"typeName": "", "data": ""}},
+        {"mapValue": {"entries": [{"key": {"doubleValue": 1.5}, "value": {"boolValue": True}}]}},
+    ])
+    def test_zig_adapter_rejects_malformed_typed_values(value: dict[str, Any]) -> None:
+        outcome = run_adapter(json.dumps([{"id": "bad", "expr": "true", "bindings": {"v": value}}]))[0]
+>       assert outcome["outcome"] == "input_error"
+E       AssertionError: assert 'value' == 'input_error'
+E         
+E         - input_error
+E         + value
+
+conformance/test_zig.py:79: AssertionError
+__________________________________________________ test_zig_adapter_rejects_malformed_typed_values[value8] ___________________________________________________
+
+value = {'enumValue': {'type': ''}}
+
+    @pytest.mark.parametrize("value", [
+        {"boolValue": 1}, {"bytesValue": "!!"}, {"int64Value": "9223372036854775808"},
+        {"uint64Value": "-1"}, {"enumValue": {"type": "int", "value": 2**31}},
+        {"stringValue": "x", "boolValue": True}, {"listValue": {"unexpected": []}},
+        {"typeValue": ""}, {"enumValue": {"type": ""}}, {"enumValue": {"type": "bad..Name"}},
+        {"messageValue": {"typeName": "", "data": ""}},
+        {"mapValue": {"entries": [{"key": {"doubleValue": 1.5}, "value": {"boolValue": True}}]}},
+    ])
+    def test_zig_adapter_rejects_malformed_typed_values(value: dict[str, Any]) -> None:
+        outcome = run_adapter(json.dumps([{"id": "bad", "expr": "true", "bindings": {"v": value}}]))[0]
+>       assert outcome["outcome"] == "input_error"
+E       AssertionError: assert 'value' == 'input_error'
+E         
+E         - input_error
+E         + value
+
+conformance/test_zig.py:79: AssertionError
+__________________________________________________ test_zig_adapter_rejects_malformed_typed_values[value9] ___________________________________________________
+
+value = {'enumValue': {'type': 'bad..Name'}}
+
+    @pytest.mark.parametrize("value", [
+        {"boolValue": 1}, {"bytesValue": "!!"}, {"int64Value": "9223372036854775808"},
+        {"uint64Value": "-1"}, {"enumValue": {"type": "int", "value": 2**31}},
+        {"stringValue": "x", "boolValue": True}, {"listValue": {"unexpected": []}},
+        {"typeValue": ""}, {"enumValue": {"type": ""}}, {"enumValue": {"type": "bad..Name"}},
+        {"messageValue": {"typeName": "", "data": ""}},
+        {"mapValue": {"entries": [{"key": {"doubleValue": 1.5}, "value": {"boolValue": True}}]}},
+    ])
+    def test_zig_adapter_rejects_malformed_typed_values(value: dict[str, Any]) -> None:
+        outcome = run_adapter(json.dumps([{"id": "bad", "expr": "true", "bindings": {"v": value}}]))[0]
+>       assert outcome["outcome"] == "input_error"
+E       AssertionError: assert 'value' == 'input_error'
+E         
+E         - input_error
+E         + value
+
+conformance/test_zig.py:79: AssertionError
+__________________________________________________ test_zig_adapter_rejects_malformed_typed_values[value10] __________________________________________________
+
+value = {'messageValue': {'typeName': '', 'data': ''}}
+
+    @pytest.mark.parametrize("value", [
+        {"boolValue": 1}, {"bytesValue": "!!"}, {"int64Value": "9223372036854775808"},
+        {"uint64Value": "-1"}, {"enumValue": {"type": "int", "value": 2**31}},
+        {"stringValue": "x", "boolValue": True}, {"listValue": {"unexpected": []}},
+        {"typeValue": ""}, {"enumValue": {"type": ""}}, {"enumValue": {"type": "bad..Name"}},
+        {"messageValue": {"typeName": "", "data": ""}},
+        {"mapValue": {"entries": [{"key": {"doubleValue": 1.5}, "value": {"boolValue": True}}]}},
+    ])
+    def test_zig_adapter_rejects_malformed_typed_values(value: dict[str, Any]) -> None:
+        outcome = run_adapter(json.dumps([{"id": "bad", "expr": "true", "bindings": {"v": value}}]))[0]
+>       assert outcome["outcome"] == "input_error"
+E       AssertionError: assert 'value' == 'input_error'
+E         
+E         - input_error
+E         + value
+
+conformance/test_zig.py:79: AssertionError
+__________________________________________________ test_zig_adapter_rejects_malformed_typed_values[value11] __________________________________________________
+
+value = {'mapValue': {'entries': [{'key': {'doubleValue': 1.5}, 'value': {'boolValue': True}}]}}
+
+    @pytest.mark.parametrize("value", [
+        {"boolValue": 1}, {"bytesValue": "!!"}, {"int64Value": "9223372036854775808"},
+        {"uint64Value": "-1"}, {"enumValue": {"type": "int", "value": 2**31}},
+        {"stringValue": "x", "boolValue": True}, {"listValue": {"unexpected": []}},
+        {"typeValue": ""}, {"enumValue": {"type": ""}}, {"enumValue": {"type": "bad..Name"}},
+        {"messageValue": {"typeName": "", "data": ""}},
+        {"mapValue": {"entries": [{"key": {"doubleValue": 1.5}, "value": {"boolValue": True}}]}},
+    ])
+    def test_zig_adapter_rejects_malformed_typed_values(value: dict[str, Any]) -> None:
+        outcome = run_adapter(json.dumps([{"id": "bad", "expr": "true", "bindings": {"v": value}}]))[0]
+>       assert outcome["outcome"] == "input_error"
+E       AssertionError: assert 'unsupported' == 'input_error'
+E         
+E         - input_error
+E         + unsupported
+
+conformance/test_zig.py:79: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_zig_adapter_rejects_malformed_typed_values[value5] - AssertionError: assert 'unsupported' == 'input_error'
+FAILED bindings/python::test_zig_adapter_rejects_malformed_typed_values[value7] - AssertionError: assert 'value' == 'input_error'
+FAILED bindings/python::test_zig_adapter_rejects_malformed_typed_values[value8] - AssertionError: assert 'value' == 'input_error'
+FAILED bindings/python::test_zig_adapter_rejects_malformed_typed_values[value9] - AssertionError: assert 'value' == 'input_error'
+FAILED bindings/python::test_zig_adapter_rejects_malformed_typed_values[value10] - AssertionError: assert 'value' == 'input_error'
+FAILED bindings/python::test_zig_adapter_rejects_malformed_typed_values[value11] - AssertionError: assert 'unsupported' == 'input_error'
+6 failed, 6 passed, 9 deselected in 0.19s

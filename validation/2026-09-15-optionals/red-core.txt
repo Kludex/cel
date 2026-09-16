@@ -1,0 +1,11 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.optional policies distinguish absent null and present values' failed without output
+failed command: ./.zig-cache/o/20e3204ea2a6ca50be40400ee78a10c4/test --cache-dir=./.zig-cache --seed=0xbf8ff7d9 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/3d07ae27b5453222e2b7f6babd161f05/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0xbf8ff7d9 -Z6d0acb79a39601d1 test -Dtest-filter=optional policies -j4

@@ -1,0 +1,20 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87
+  return new EvaluationError({code, message, node})
+         ^
+
+EvaluationError: found no matching overload for 'string.replace(string, string)'
+
+>    1 | cel.bind(name, request.name.trim().lowerAscii().replace(' ', '-'), name.matches('^[a-z-]+$') && request.labels.split(',').map(x, x.trim().upperAscii()).join('|') == 'ADMIN|READ' && request.revision >= 0 && '%s:%d'.format([name, request.revision]) == request.key && name.substring(0,1) != '-')
+                        ^
+    at TypeChecker.evaluationError [as createError] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87:10)
+    at Object.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:590:19)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at Object.bindTypeCheck [as typeCheck] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/macros.js:195:53)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:160:44)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at #evaluateAST (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/evaluator.js:113:29)
+    at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:117:40)
+    at verify (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:150:22)
+
+Node.js v24.14.1

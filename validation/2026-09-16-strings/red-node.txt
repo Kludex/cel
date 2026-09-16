@@ -1,0 +1,54 @@
+✖ complete text policies normalize names labels and formatted revisions (1.6495ms)
+✖ Unicode string operations index code points rather than UTF-16 units (0.10925ms)
+✖ quoting formatting and error boundaries preserve CEL values (0.065125ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.330583
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/string-extensions.test.js:4:1
+✖ complete text policies normalize names labels and formatted revisions (1.6495ms)
+  Error [CompileError]: TypeMismatch
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/string-extensions.test.js:7:61)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    code: 'TypeMismatch'
+  }
+
+test at bindings/typescript/dist/test/string-extensions.test.js:12:1
+✖ Unicode string operations index code points rather than UTF-16 units (0.10925ms)
+  Error [EvaluateError]: NoMatchingOverload
+      at Program.evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:281:23)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/string-extensions.test.js:13:48)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    code: 'NoMatchingOverload'
+  }
+
+test at bindings/typescript/dist/test/string-extensions.test.js:22:1
+✖ quoting formatting and error boundaries preserve CEL values (0.065125ms)
+  Error [EvaluateError]: UndeclaredReference
+      at Program.evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:281:23)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/string-extensions.test.js:23:53)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'UndeclaredReference'
+  }

@@ -1,0 +1,11 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.custom functions evaluate complete checked and unchecked policies' failed without output
+failed command: ./.zig-cache/o/c138f7b38a8aa10ce754a6d9f1fc3706/test --cache-dir=./.zig-cache --seed=0x2142b712 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74598b0ed75e721084d414daac29cf0d/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x2142b712 -Z4800e30e171df81c test -Dtest-filter=custom functions evaluate -j4

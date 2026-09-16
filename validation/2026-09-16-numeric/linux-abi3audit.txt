@@ -1,0 +1,8 @@
+Downloading pygments (1.2MiB)
+ Downloaded pygments
+Installed 21 packages in 33ms
+[11:35:29] 💁 cel_sdk-0.1.0a21-cp310-abi3-manylinux_2_28_aarch64.whl: 1         
+           extensions scanned; 0 ABI version mismatches and 0 ABI violations    
+           found                                                                
+
+exit=0

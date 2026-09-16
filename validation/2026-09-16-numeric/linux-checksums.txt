@@ -1,0 +1,9 @@
+sha256_generation_exit=0
+Paths relative to /tmp/cel-num-linux/artifacts
+./amd64/bin/cel-test: OK
+./arm64/bin/cel-conformance: OK
+./arm64/bin/cel-test: OK
+./manylinux/cel_sdk-0.1.0a21-cp310-abi3-manylinux_2_28_aarch64.whl: OK
+./pydantic-cel-0.1.0-alpha.21.tgz: OK
+./python/cel_sdk-0.1.0a21-cp310-abi3-linux_aarch64.whl: OK
+sha256_verification_exit=0

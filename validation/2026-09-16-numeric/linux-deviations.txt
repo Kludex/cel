@@ -1,0 +1,5 @@
+Copied /tmp/cel-network-linux/cache into /tmp/cel-num-linux/cache (copy-on-write, no hard links).
+Deviation: use this private copy as /cache-global to keep writes within ownership.
+Host npm, uv, and temporary directories will also be under /tmp/cel-num-linux/.
+Addon build initially used the core 1 GiB cap and exited 1 with a Docker OOM event; retried with 4 GiB. Wheel build uses 4 GiB too.
+Audit command uses bash/PIPESTATUS and tee to retain full stdout under /tmp/cel-num-linux/reports and record each real test/audit exit; the prescribed tail summaries are preserved. Six audit exit codes are 1 for the expected baseline failures, while the container exits 0.

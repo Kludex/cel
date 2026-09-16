@@ -1,0 +1,230 @@
+{
+  "engine": "candidate",
+  "engine_version": "0.1.0-alpha.21",
+  "runtime": "node",
+  "environment": {
+    "node": "v24.14.1",
+    "v8": "13.6.233.17-node.44",
+    "platform": "darwin 25.6.0",
+    "architecture": "arm64",
+    "cpu": "Apple M3 Max",
+    "logical_cpus": 16
+  },
+  "workloads": [
+    {
+      "name": "request_authorization",
+      "expression": "request.method == \"GET\" && request.path.startsWith(\"/v1/\") && principal.authenticated && (principal.role == \"admin\" || resource.owner == principal.id)",
+      "cases": 4
+    },
+    {
+      "name": "request_data_validation",
+      "expression": "payload.name.size() >= 3 && payload.tags.size() > 0 && payload.tags.size() <= 5 && payload.tags[0] != \"\" && payload.email.endsWith(\"@example.com\") && payload.region.contains(\"us-\") && payload.metadata[\"source\"] == \"api\"",
+      "cases": 5
+    },
+    {
+      "name": "cart_validation",
+      "expression": "cart.items.size() > 0 && cart.items.size() <= 50 && cart.items.all(item, item.quantity > 0 && item.quantity <= stock[item.sku] && item.price > 0 && item.price * item.quantity <= 100000) && cart.coupons.all(code, code in ['WELCOME', 'LOYALTY'])",
+      "cases": 4
+    },
+    {
+      "name": "request_routing",
+      "expression": "request.path.startsWith(\"/admin\") ? \"admin\" : request.path.startsWith(\"/api\") && request.headers[\"x-canary\"] == \"1\" ? \"canary\" : \"default\"",
+      "cases": 4
+    },
+    {
+      "name": "customer_format_validation",
+      "expression": "payload.id.matches('^[A-Z]{3}-[0-9]{6}$') && payload.email.matches(r'^[a-z][a-z0-9._+-]*@[a-z0-9.-]+\\.[a-z]{2,}$') && payload.tags.all(t, t.matches('^[a-z][a-z0-9_-]{0,15}$'))",
+      "cases": 5
+    },
+    {
+      "name": "temporal_authorization",
+      "expression": "timestamp(request.now) >= timestamp(grant.starts) && timestamp(request.now) < timestamp(grant.expires) && timestamp(request.now).getDayOfWeek('America/New_York') in [1,2,3,4,5] && timestamp(request.now).getHours('America/New_York') >= 9 && timestamp(request.now).getHours('America/New_York') < 17 && duration(job.elapsed) <= duration('30s')",
+      "cases": 5
+    },
+    {
+      "name": "optional_authorization",
+      "expression": "optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?active.orValue(false) && p.?roles.orValue([]).exists(r, r == 'admin')).orValue(false) && !resource.?deleted.orValue(false)",
+      "cases": 6
+    },
+    {
+      "name": "quota_and_permissions",
+      "expression": "math.bitAnd(account.permissions, 4) == 4 && request.units > 0 && math.isFinite(request.cpu) && math.ceil(request.cpu) <= limits.cpu && math.greatest(request.units, account.used + request.units) <= limits.units && math.abs(request.delta) <= limits.max_delta",
+      "cases": 6
+    },
+    {
+      "name": "batch_dispatch",
+      "expression": "request.enabled && request.slots > 0 && request.batches.flatten().size() >= request.slots && request.batches.flatten().map(j, j.id).distinct().size() == request.batches.flatten().size() && request.batches.flatten().sortBy(j, j.priority).slice(0, request.slots).all(j, j.ready && j.cost <= request.max_cost) && request.nodes.size() >= request.slots && lists.range(request.slots).all(i, request.nodes[i].free)",
+      "cases": 6
+    },
+    {
+      "name": "text_ingestion",
+      "expression": "cel.bind(name, request.name.trim().lowerAscii().replace(' ', '-'), name.matches('^[a-z-]+$') && request.labels.split(',').map(x, x.trim().upperAscii()).join('|') == 'ADMIN|READ' && request.revision >= 0 && '%s:%d'.format([name, request.revision]) == request.key && name.substring(0,1) != '-')",
+      "cases": 6
+    },
+    {
+      "name": "attachment_ingestion",
+      "expression": "request.enabled && request.media_type == 'text/plain' && cel.bind(data, base64.decode(request.payload), data.size() <= request.max_bytes && data == bytes(request.expected) && base64.encode(data) == request.canonical)",
+      "cases": 6
+    },
+    {
+      "name": "network_gateway_authorization",
+      "expression": "request.authenticated && isIP(request.source) && cel.bind(source, ip(request.source), source.isGlobalUnicast() && !source.isLoopback() && routes.exists(route, request.tenant == route.tenant && request.method in route.methods && request.path.startsWith(route.prefix) && route.networks.exists(network, cidr(network).containsIP(source))))",
+      "cases": 7
+    }
+  ],
+  "warmups": 5,
+  "metrics": {
+    "cold_compile_and_evaluate": {
+      "iterations_per_sample": 300,
+      "decisions_per_sample": 19200,
+      "total_ns": [
+        173827875,
+        171823166,
+        172054208,
+        173792166,
+        174224250,
+        176810042,
+        170894667,
+        171873792,
+        173155250,
+        199208042,
+        181740625,
+        177300000,
+        175230459,
+        172949125,
+        181840625,
+        178392417,
+        187782917,
+        175989542,
+        174174792,
+        172749167,
+        176590625,
+        177748834,
+        178686709,
+        175732542,
+        178371084,
+        186646958,
+        178867834,
+        177151916,
+        179340500,
+        178601750
+      ],
+      "ns_per_decision": [
+        9053.53515625,
+        8949.123229166667,
+        8961.156666666666,
+        9051.6753125,
+        9074.1796875,
+        9208.856354166666,
+        8900.76390625,
+        8951.76,
+        9018.502604166666,
+        10375.418854166666,
+        9465.657552083334,
+        9234.375,
+        9126.58640625,
+        9007.766927083334,
+        9470.865885416666,
+        9291.27171875,
+        9780.360260416666,
+        9166.121979166666,
+        9071.60375,
+        8997.352447916666,
+        9197.428385416666,
+        9257.751770833333,
+        9306.599427083333,
+        9152.7365625,
+        9290.160625,
+        9721.195729166666,
+        9316.033020833333,
+        9226.662291666667,
+        9340.651041666666,
+        9302.174479166666
+      ],
+      "distribution_ns_per_decision": {
+        "min": 8900.76390625,
+        "p25": 9052.1402734375,
+        "median": 9203.142369791665,
+        "p75": 9305.493190104165,
+        "max": 10375.418854166666,
+        "relative_iqr": 0.027528957663229124
+      }
+    },
+    "warm_evaluate_reused_program": {
+      "iterations_per_sample": 3000,
+      "decisions_per_sample": 192000,
+      "total_ns": [
+        301204834,
+        300762291,
+        300397250,
+        298547667,
+        298447417,
+        300011000,
+        300014958,
+        299937041,
+        300088666,
+        299525125,
+        298787750,
+        299253542,
+        300101875,
+        299506041,
+        297682916,
+        299082500,
+        306603875,
+        301407459,
+        299840708,
+        299025375,
+        298146166,
+        299019708,
+        296545584,
+        299865292,
+        302185542,
+        299547125,
+        300973583,
+        300172000,
+        300191708,
+        299607084
+      ],
+      "ns_per_decision": [
+        1568.7751770833333,
+        1566.470265625,
+        1564.5690104166667,
+        1554.935765625,
+        1554.4136302083334,
+        1562.5572916666667,
+        1562.57790625,
+        1562.1720885416667,
+        1562.9618020833334,
+        1560.0266927083333,
+        1556.1861979166667,
+        1558.6121979166667,
+        1563.0305989583333,
+        1559.927296875,
+        1550.4318541666667,
+        1557.7213541666667,
+        1596.8951822916667,
+        1569.830515625,
+        1561.6703541666666,
+        1557.423828125,
+        1552.8446145833334,
+        1557.3943125,
+        1544.50825,
+        1561.7983958333334,
+        1573.88303125,
+        1560.1412760416667,
+        1567.5707447916666,
+        1563.3958333333333,
+        1563.4984791666666,
+        1560.4535625
+      ],
+      "distribution_ns_per_decision": {
+        "min": 1544.50825,
+        "p25": 1557.4982096354167,
+        "median": 1561.734375,
+        "p75": 1563.4728177083332,
+        "max": 1596.8951822916667,
+        "relative_iqr": 0.0038256237222904525
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_________________________________________________ test_large_collection_policies_fit_the_default_work_budget _________________________________________________
+
+    def test_large_collection_policies_fit_the_default_work_budget() -> None:
+        request = {"ids": list(range(1500)) + list(range(1500))}
+        program = Program("request.ids.distinct().sort().slice(0, 3) == [0, 1, 2]")
+>       assert program.evaluate({"request": request}) is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_lists.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x109a5cca0>, bindings = {'request': {'ids': [0, 1, 2, 3, 4, 5, ...]}}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: CostLimitExceeded
+
+bindings/python/src/cel/program.py:37: EvaluationError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_lists.py::test_large_collection_policies_fit_the_default_work_budget - cel.program.EvaluationError: CostLimitExceeded
+1 failed, 7 deselected in 0.04s

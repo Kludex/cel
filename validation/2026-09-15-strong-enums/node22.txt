@@ -1,0 +1,32 @@
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (8.829209ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (5.749959ms)
+✔ legacy enums remain integers by default (2.282083ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (2.14575ms)
+✔ EnumValue validates wrapper and spoofed native inputs (0.989541ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.202042ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.345958ms)
+✔ Program compiles once and evaluates native bindings (1.058792ms)
+✔ values cross the native boundary without JSON conversion (0.880542ms)
+✔ type values round trip and macros preserve native data (0.305583ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.395ms)
+✔ environments own declarations and check complete policies (3.568917ms)
+✔ byte inputs are captured before later getters run (0.1395ms)
+✔ negative zero remains a double and wrappers validate inputs (0.253083ms)
+✔ compile and evaluation failures have distinct typed codes (0.444167ms)
+✔ invalid JavaScript inputs are rejected (3.261583ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.214291ms)
+✔ binding names and maps use own enumerable string properties (0.07475ms)
+✔ native programs can be reclaimed by garbage collection (2.4565ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (2.995208ms)
+✔ protobuf boundary errors preserve failure phases (1.29725ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (1.989458ms)
+✔ temporal values preserve nanoseconds and static types (2.1845ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.379292ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 83.35275

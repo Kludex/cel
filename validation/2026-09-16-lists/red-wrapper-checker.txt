@@ -1,0 +1,36 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+____________________________________________________ test_checked_sorting_adapts_protobuf_scalar_wrappers ____________________________________________________
+
+    def test_checked_sorting_adapts_protobuf_scalar_wrappers() -> None:
+        source = "[google.protobuf.Int64Value{value: 2}, google.protobuf.Int64Value{value: 1}]"
+>       assert Environment().compile(source + ".sort()").evaluate({}) == [1, 2]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_lists.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10b3b1090>, source = '[google.protobuf.Int64Value{value: 2}, google.protobuf.Int64Value{value: 1}].sort()'
+environment = <cel.program.Environment object at 0x10b39a050>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: TypeMismatch
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_lists.py::test_checked_sorting_adapts_protobuf_scalar_wrappers - cel.program.CompileError: TypeMismatch
+1 failed, 8 deselected in 0.03s

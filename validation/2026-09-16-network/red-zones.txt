@@ -1,0 +1,3 @@
+1/2 network.test.network parsing rejects numeric zones and oversized CIDR input...OK
+2/2 network.test.network values parse format classify and contain...OK
+All 2 tests passed.

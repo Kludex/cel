@@ -1,0 +1,20 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87
+  return new EvaluationError({code, message, node})
+         ^
+
+EvaluationError: found no matching overload for 'dyn.decode(dyn)'
+
+>    1 | request.enabled && request.media_type == 'text/plain' && cel.bind(data, base64.decode(request.payload), data.size() <= request.max_bytes && data == bytes(request.expected) && base64.encode(data) == request.canonical)
+                                                                                 ^
+    at TypeChecker.evaluationError [as createError] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87:10)
+    at Object.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:590:19)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at Object.bindTypeCheck [as typeCheck] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/macros.js:195:53)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:160:44)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at Object.checkLogicalOp [as check] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:188:25)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+
+Node.js v24.14.1

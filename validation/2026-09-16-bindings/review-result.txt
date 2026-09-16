@@ -1,0 +1,1 @@
+No finding. `Scope` and `LazyBinding` pointers remain valid during synchronous body evaluation. Errors are cached, while each top-level or reentrant evaluation creates fresh cells. Initializers capture the outer scope, and `checker.zig` always infers the initializer, including when unused. Tests cover nested scopes, errors, repeated evaluation, concurrency, and reentry.

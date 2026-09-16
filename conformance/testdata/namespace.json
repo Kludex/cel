@@ -1,0 +1,453 @@
+{
+  "name":  "namespace",
+  "description":  "Uses of qualified identifiers and namespaces.",
+  "section":  [
+    {
+      "name":  "qualified",
+      "description":  "Qualified variable lookups.",
+      "test":  [
+        {
+          "name":  "self_eval_qualified_lookup",
+          "expr":  "x.y",
+          "typeEnv":  [
+            {
+              "name":  "x.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "BOOL"
+                }
+              }
+            }
+          ],
+          "bindings":  {
+            "x.y":  {
+              "value":  {
+                "boolValue":  true
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        }
+      ]
+    },
+    {
+      "name":  "namespace",
+      "description":  "Namespaced identifiers.",
+      "test":  [
+        {
+          "name":  "self_eval_container_lookup",
+          "expr":  "y",
+          "typeEnv":  [
+            {
+              "name":  "x.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "BOOL"
+                }
+              }
+            },
+            {
+              "name":  "y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            }
+          ],
+          "container":  "x",
+          "bindings":  {
+            "x.y":  {
+              "value":  {
+                "boolValue":  true
+              }
+            },
+            "y":  {
+              "value":  {
+                "stringValue":  "false"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "self_eval_container_lookup_unchecked",
+          "expr":  "y",
+          "disableCheck":  true,
+          "typeEnv":  [
+            {
+              "name":  "x.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "BOOL"
+                }
+              }
+            },
+            {
+              "name":  "y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "BOOL"
+                }
+              }
+            }
+          ],
+          "container":  "x",
+          "bindings":  {
+            "x.y":  {
+              "value":  {
+                "boolValue":  true
+              }
+            },
+            "y":  {
+              "value":  {
+                "boolValue":  false
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        }
+      ]
+    },
+    {
+      "name":  "namespace_shadowing",
+      "description":  "Variable shadowing in comprehensions",
+      "test":  [
+        {
+          "name":  "basic",
+          "expr":  "y",
+          "typeEnv":  [
+            {
+              "name":  "com.example.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "BOOL"
+                }
+              }
+            },
+            {
+              "name":  "y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y":  {
+              "value":  {
+                "boolValue":  true
+              }
+            },
+            "y":  {
+              "value":  {
+                "stringValue":  "string"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "disambiguation",
+          "expr":  ".y",
+          "typeEnv":  [
+            {
+              "name":  "com.example.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            },
+            {
+              "name":  "y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y":  {
+              "value":  {
+                "stringValue":  "com.example.y"
+              }
+            },
+            "y":  {
+              "value":  {
+                "stringValue":  "y"
+              }
+            }
+          },
+          "value":  {
+            "stringValue":  "y"
+          }
+        },
+        {
+          "name":  "comprehension_shadowing",
+          "expr":  "[0].exists(y, y == 0)",
+          "typeEnv":  [
+            {
+              "name":  "com.example.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_disambiguation",
+          "expr":  "['compre'].exists(y, .y == 'y')",
+          "typeEnv":  [
+            {
+              "name":  "y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "y":  {
+              "value":  {
+                "stringValue":  "y"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_parse_only",
+          "expr":  "[0].exists(y, y == 0)",
+          "disableCheck":  true,
+          "typeEnv":  [
+            {
+              "name":  "com.example.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_selector",
+          "expr":  "[{'z': 0}].exists(y, y.z == 0)",
+          "typeEnv":  [
+            {
+              "name":  "y.z",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "bindings":  {
+            "y.z":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_selector_parse_only",
+          "expr":  "[{'z': 0}].exists(y, y.z == 0)",
+          "disableCheck":  true,
+          "typeEnv":  [
+            {
+              "name":  "y.z",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "bindings":  {
+            "y.z":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_namespaced_selector",
+          "expr":  "[{'z': 0}].exists(y, y.z == 0)",
+          "typeEnv":  [
+            {
+              "name":  "com.example.y.z",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y.z":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_namespaced_selector_parse_only",
+          "expr":  "[{'z': 0}].exists(y, y.z == 0)",
+          "disableCheck":  true,
+          "typeEnv":  [
+            {
+              "name":  "com.example.y.z",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y.z":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_namespaced_selector_disambiguation",
+          "expr":  "[{'z': 'compre'}].exists(y, .y.z == 'y.z')",
+          "typeEnv":  [
+            {
+              "name":  "com.example.y.z",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            },
+            {
+              "name":  "y.z",
+              "ident":  {
+                "type":  {
+                  "primitive":  "STRING"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y.z":  {
+              "value":  {
+                "stringValue":  "com.example.y.z"
+              }
+            },
+            "y.z":  {
+              "value":  {
+                "stringValue":  "y.z"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "comprehension_shadowing_nesting",
+          "expr":  "[1].exists(y, [0].exists(y, y == 0))",
+          "typeEnv":  [
+            {
+              "name":  "com.example.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            },
+            {
+              "name":  "y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.y":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            },
+            "y":  {
+              "value":  {
+                "int64Value":  "42"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        }
+      ]
+    }
+  ]
+}

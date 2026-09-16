@@ -1,0 +1,93 @@
+--- a/src/node.zig
++++ b/src/node.zig
+@@ -225,26 +225,6 @@
+     }
+ 
+     fn object(self: *Converter, input: c.napi_value, depth: usize) NapiError!Value {
+-        var is_array = false;
+-        try check(self.env, c.napi_is_array(self.env, input, &is_array));
+-        if (is_array) return self.list(input, depth);
+-
+-        var is_typed_array = false;
+-        try check(self.env, c.napi_is_typedarray(self.env, input, &is_typed_array));
+-        if (is_typed_array) {
+-            var array_type: c.napi_typedarray_type = undefined;
+-            var len: usize = 0;
+-            var data: ?*anyopaque = null;
+-            try check(self.env, c.napi_get_typedarray_info(self.env, input, &array_type, &len, &data, null, null));
+-            if (array_type != c.napi_uint8_array) return failType(self.env, "bytes must be a Uint8Array or Buffer");
+-            try self.chargeBytes(len);
+-            if (len == 0) return .{ .bytes = &.{} };
+-            const bytes = @as([*]const u8, @ptrCast(data orelse return error.NapiFailure))[0..len];
+-            // A later property getter may detach or mutate this ArrayBuffer.
+-            return .{ .bytes = try self.arena.dupe(u8, bytes) };
+-        }
+-        if (try self.plainObject(input)) return self.map(input, depth);
+-
+         var matches = false;
+         try check(self.env, c.napi_instanceof(self.env, input, self.uint_type, &matches));
+         if (matches) return self.uint(input);
+@@ -267,7 +247,23 @@
+             return .{ .type_value = text };
+         }
+ 
+-        return failType(self.env, "CEL maps must be plain objects");
++        var is_typed_array = false;
++        try check(self.env, c.napi_is_typedarray(self.env, input, &is_typed_array));
++        if (is_typed_array) {
++            var array_type: c.napi_typedarray_type = undefined;
++            var len: usize = 0;
++            var data: ?*anyopaque = null;
++            try check(self.env, c.napi_get_typedarray_info(self.env, input, &array_type, &len, &data, null, null));
++            if (array_type != c.napi_uint8_array) return failType(self.env, "bytes must be a Uint8Array or Buffer");
++            try self.chargeBytes(len);
++            if (len == 0) return .{ .bytes = &.{} };
++            const bytes = @as([*]const u8, @ptrCast(data orelse return error.NapiFailure))[0..len];
++            return .{ .bytes = try self.arena.dupe(u8, bytes) };
++        }
++        var is_array = false;
++        try check(self.env, c.napi_is_array(self.env, input, &is_array));
++        if (is_array) return self.list(input, depth);
++        return self.map(input, depth);
+     }
+ 
+     fn uint(self: *Converter, input: c.napi_value) NapiError!Value {
+@@ -299,6 +295,9 @@
+     }
+ 
+     fn map(self: *Converter, input: c.napi_value, depth: usize) NapiError!Value {
++        var value_type: c.napi_valuetype = undefined;
++        try check(self.env, c.napi_typeof(self.env, input, &value_type));
++        if (value_type != c.napi_object or !try self.plainObject(input)) return failType(self.env, "CEL maps must be plain objects");
+         const keys = try self.propertyNames(input);
+         var len: u32 = 0;
+         try check(self.env, c.napi_get_array_length(self.env, keys, &len));
+@@ -318,14 +317,24 @@
+     }
+ 
+     fn plainObject(self: *Converter, input: c.napi_value) NapiError!bool {
++        var is_array = false;
++        try check(self.env, c.napi_is_array(self.env, input, &is_array));
++        if (is_array) return false;
+         var prototype: c.napi_value = null;
+         try check(self.env, c.napi_get_prototype(self.env, input, &prototype));
++        var null_value: c.napi_value = null;
++        try check(self.env, c.napi_get_null(self.env, &null_value));
+         var same = false;
+-        try check(self.env, c.napi_strict_equals(self.env, prototype, self.object_prototype, &same));
++        try check(self.env, c.napi_strict_equals(self.env, prototype, null_value, &same));
+         if (same) return true;
+-        var value_type: c.napi_valuetype = undefined;
+-        try check(self.env, c.napi_typeof(self.env, prototype, &value_type));
+-        return value_type == c.napi_null;
++        var global: c.napi_value = null;
++        var object_type: c.napi_value = null;
++        var object_prototype: c.napi_value = null;
++        try check(self.env, c.napi_get_global(self.env, &global));
++        try check(self.env, c.napi_get_named_property(self.env, global, "Object", &object_type));
++        try check(self.env, c.napi_get_named_property(self.env, object_type, "prototype", &object_prototype));
++        try check(self.env, c.napi_strict_equals(self.env, prototype, object_prototype, &same));
++        return same;
+     }
+ 
+     fn propertyNames(self: *Converter, input: c.napi_value) NapiError!c.napi_value {

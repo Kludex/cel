@@ -1,0 +1,37 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+________________________________________ test_dynamic_formatting_ignores_extra_values_but_evaluates_the_argument_list ________________________________________
+
+    def test_dynamic_formatting_ignores_extra_values_but_evaluates_the_argument_list() -> None:
+        program = Program("template.format(values)")
+>       assert program.evaluate({"template": "%s", "values": ["first", "unused"]}) == "first"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_string_extensions.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1074642e0>, bindings = {'template': '%s', 'values': ['first', 'unused']}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: InvalidArgument
+
+bindings/python/src/cel/program.py:37: EvaluationError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_string_extensions.py::test_dynamic_formatting_ignores_extra_values_but_evaluates_the_argument_list - cel.program.Evaluati...
+1 failed, 4 deselected in 0.03s

@@ -1,0 +1,149 @@
+--- a/src/node.zig
++++ b/src/node.zig
+@@ -128,10 +128,10 @@
+ }
+ 
+ fn environmentImpl(env: c.napi_env, info: c.napi_callback_info) NapiError!c.napi_value {
+-    var argc: usize = 21;
+-    var argv: [21]c.napi_value = @splat(null);
++    var argc: usize = 20;
++    var argv: [20]c.napi_value = @splat(null);
+     try check(env, c.napi_get_cb_info(env, info, &argc, &argv, null, null));
+-    if (argc != 20) return failType(env, "invalid environment arguments");
++    if (argc != 19) return failType(env, "invalid environment arguments");
+     var strong_kind: c.napi_valuetype = undefined;
+     try check(env, c.napi_typeof(env, argv[4], &strong_kind));
+     if (strong_kind != c.napi_boolean) return failType(env, "strongEnums must be a boolean");
+@@ -162,7 +162,6 @@
+         .map_snapshot = argv[15],
+         .map_set = argv[16],
+         .optional_type = argv[18],
+-        .property_names = argv[19],
+     };
+     const variables = try converter.declarations(argv[0]);
+     const descriptors = try converter.fromJavaScript(argv[3], 0);
+@@ -276,10 +275,10 @@
+ }
+ 
+ fn evaluateImpl(env: c.napi_env, info: c.napi_callback_info) NapiError!c.napi_value {
+-    var argc: usize = 19;
+-    var argv: [19]c.napi_value = @splat(null);
++    var argc: usize = 18;
++    var argv: [18]c.napi_value = @splat(null);
+     try check(env, c.napi_get_cb_info(env, info, &argc, &argv, null, null));
+-    if (argc != 18) return failType(env, "evaluate requires a program, bindings, and conversion types");
++    if (argc != 17) return failType(env, "evaluate requires a program, bindings, and conversion types");
+ 
+     var tagged = false;
+     try check(env, c.napi_check_object_type_tag(env, argv[0], &program_tag, &tagged));
+@@ -325,7 +324,6 @@
+         .map_snapshot = argv[13],
+         .map_set = argv[14],
+         .optional_type = argv[16],
+-        .property_names = argv[17],
+         .callbacks = argv[3],
+     };
+     const previous = if (owner) |handle_owner| handle_owner.active else null;
+@@ -393,7 +391,6 @@
+     map_snapshot: c.napi_value,
+     map_set: c.napi_value,
+     optional_type: c.napi_value,
+-    property_names: c.napi_value,
+     callbacks: c.napi_value = null,
+     remaining: usize = max_values,
+     input_bytes: usize = 0,
+@@ -586,12 +583,6 @@
+             const bytes = @as([*]const u8, @ptrCast(data orelse return error.NapiFailure))[0..len];
+             // A later property getter may detach or mutate this ArrayBuffer.
+             return .{ .bytes = try self.arena.dupe(u8, bytes) };
+-        }
+-
+-        switch (try self.snapshotMap(input)) {
+-            .entries => |entries| return self.nativeMap(input, entries, depth),
+-            .plain => return self.map(input, depth),
+-            .other => {},
+         }
+ 
+         var matches = false;
+@@ -615,6 +606,11 @@
+             defer self.popAncestor();
+             return Value.fromOptional(self.arena, try self.fromJavaScript(value, depth + 1));
+         }
++        switch (try self.snapshotMap(input)) {
++            .entries => |entries| return self.nativeMap(input, entries, depth),
++            .plain => return self.map(input, depth),
++            .other => {},
++        }
+ 
+         matches = false;
+         try check(self.env, c.napi_instanceof(self.env, input, self.uint_type, &matches));
+@@ -862,8 +858,18 @@
+ 
+     fn propertyNames(self: *Converter, input: c.napi_value) NapiError!c.napi_value {
+         var keys: c.napi_value = null;
+-        const args = [_]c.napi_value{input};
+-        try check(self.env, c.napi_call_function(self.env, input, self.property_names, args.len, &args, &keys));
++        const filter: c.napi_key_filter = c.napi_key_enumerable;
++        try check(
++            self.env,
++            c.napi_get_all_property_names(
++                self.env,
++                input,
++                c.napi_key_own_only,
++                filter,
++                c.napi_key_numbers_to_strings,
++                &keys,
++            ),
++        );
+         return keys;
+     }
+ 
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -182,9 +182,6 @@
+ const mapSet = Map.prototype.set;
+ const setPrototypeOf = Object.setPrototypeOf;
+ const getPrototypeOf = Object.getPrototypeOf;
+-const objectKeys = Object.keys;
+-const getOwnPropertySymbols = Object.getOwnPropertySymbols;
+-const propertyIsEnumerable = Object.prototype.propertyIsEnumerable;
+ const reflectApply = Reflect.apply;
+ const isMap = types.isMap;
+ const isProxy = types.isProxy;
+@@ -192,19 +189,6 @@
+ const TypeErrorConstructor = TypeError;
+ const native = createRequire(import.meta.url)("../cel.node");
+ const objectPrototype = Object.prototype;
+-function enumerableKeys(input) {
+-    const keys = objectKeys(input);
+-    const symbols = getOwnPropertySymbols(input);
+-    if (symbols.length > 0) {
+-        setPrototypeOf(keys, null);
+-        for (let index = 0; index < symbols.length; index += 1) {
+-            const symbol = symbols[index];
+-            if (reflectApply(propertyIsEnumerable, input, [symbol]))
+-                keys[keys.length] = symbol;
+-        }
+-    }
+-    return keys;
+-}
+ function snapshotMap(input, entryBudget) {
+     if (isProxy(input))
+         throw new TypeErrorConstructor("Proxies are not supported as CEL inputs");
+@@ -250,7 +234,7 @@
+             declaration.implementation !== undefined,
+         ])));
+         const callbacks = Object.freeze(functions.map(({ implementation }) => implementation));
+-        environmentHandles.set(this, native.environment(options.variables ?? {}, options.constants ?? {}, options.container ?? "", options.descriptors ?? new Uint8Array(), options.strongEnums ?? false, signatures, UInt, Double, CELType, EnumValue, Message, Duration, Timestamp, objectPrototype, mapConstructor, snapshotMap, mapSet, CompileError, OptionalValue, enumerableKeys));
++        environmentHandles.set(this, native.environment(options.variables ?? {}, options.constants ?? {}, options.container ?? "", options.descriptors ?? new Uint8Array(), options.strongEnums ?? false, signatures, UInt, Double, CELType, EnumValue, Message, Duration, Timestamp, objectPrototype, mapConstructor, snapshotMap, mapSet, CompileError, OptionalValue));
+         environmentCallbacks.set(this, callbacks);
+     }
+     compile(source, options = {}) {
+@@ -278,6 +262,6 @@
+     evaluate(bindings) {
+         if (isProxy(bindings))
+             throw new TypeErrorConstructor("Proxies are not supported as CEL bindings");
+-        return native.evaluate(this.#handle, bindings, this.#environment === undefined ? undefined : environmentHandles.get(this.#environment), this.#environment === undefined ? [] : (environmentCallbacks.get(this.#environment) ?? []), UInt, Double, CELType, EnumValue, objectPrototype, Message, Duration, Timestamp, mapConstructor, snapshotMap, mapSet, EvaluateError, OptionalValue, enumerableKeys);
++        return native.evaluate(this.#handle, bindings, this.#environment === undefined ? undefined : environmentHandles.get(this.#environment), this.#environment === undefined ? [] : (environmentCallbacks.get(this.#environment) ?? []), UInt, Double, CELType, EnumValue, objectPrototype, Message, Duration, Timestamp, mapConstructor, snapshotMap, mapSet, EvaluateError, OptionalValue);
+     }
+ }

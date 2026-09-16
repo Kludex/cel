@@ -1,0 +1,8 @@
+Implemented metered semantic protobuf equality in `src/proto.zig`, `src/protobuf.cc`, and `src/protobuf.h`. It preserves `MessageDifferencer::Equals`, charges encoded bytes plus reflection field work, includes unknown/map/nested fields, caches immutable message costs, and maps exhaustion to `CostLimitExceeded`.
+
+Parent API change:
+```zig
+return self.messages.equal(self.arena, a.message, b.message, &self.remaining);
+```
+
+All 95 tests passed with that call applied temporarily. Formatting checks passed. Cost is a conservative work proxy, not exact protobuf allocation accounting.

@@ -1,0 +1,191 @@
+FFFFF                                                                                                                                                  [100%]
+========================================================================== FAILURES ==========================================================================
+___________________________________________________ test_local_bindings_reuse_values_in_complete_policies ____________________________________________________
+
+    def test_local_bindings_reuse_values_in_complete_policies() -> None:
+        source = (
+            "cel.bind(jobs, batches.flatten(), "
+            "jobs.size() >= 2 && jobs.distinct().size() == jobs.size() && "
+            "jobs.sort().slice(0,2) == [1,2])"
+        )
+        environment = Environment(variables={"batches": CELType("list", (CELType("dyn"),))})
+>       for program in (Program(source), environment.compile(source)):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_bindings.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106cc40a0>
+source = 'cel.bind(jobs, batches.flatten(), jobs.size() >= 2 && jobs.distinct().size() == jobs.size() && jobs.sort().slice(0,2) == [1,2])'
+environment = <cel.program.Environment object at 0x106cc7b80>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+______________________________________________ test_initializers_are_lazy_and_cached_only_within_one_evaluation ______________________________________________
+
+    def test_initializers_are_lazy_and_cached_only_within_one_evaluation() -> None:
+        calls = 0
+    
+        def tick() -> int:
+            nonlocal calls
+            calls += 1
+            return calls
+    
+        environment = Environment(functions=(Function("tick", (), CELType("int"), tick),))
+>       assert environment.compile("cel.bind(x, tick(), 42)").evaluate({}) == 42
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_bindings.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106bb3ac0>, source = 'cel.bind(x, tick(), 42)', environment = <cel.program.Environment object at 0x106bb35b0>
+check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+_______________________________________________________ test_initializers_capture_outer_lexical_scope ________________________________________________________
+
+    def test_initializers_capture_outer_lexical_scope() -> None:
+        source = "cel.bind(x, 10, [1,2].map(y, cel.bind(z, x+y, cel.bind(x, 100, z+z))))"
+>       assert Environment().compile(source).evaluate({}) == [22, 24]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_bindings.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106c48580>, source = 'cel.bind(x, 10, [1,2].map(y, cel.bind(z, x+y, cel.bind(x, 100, z+z))))'
+environment = <cel.program.Environment object at 0x106c49f30>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+_______________________________________________ test_used_host_errors_remain_fatal_and_unused_calls_do_not_run _______________________________________________
+
+    def test_used_host_errors_remain_fatal_and_unused_calls_do_not_run() -> None:
+        marker = RuntimeError("initializer failed")
+    
+        def fail() -> int:
+            raise marker
+    
+        environment = Environment(functions=(Function("fail", (), CELType("int"), fail),))
+>       assert environment.compile("cel.bind(x, fail(), true)").evaluate({}) is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_bindings.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106c06fb0>, source = 'cel.bind(x, fail(), true)', environment = <cel.program.Environment object at 0x106c07070>
+check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+___________________________________________ test_bound_results_survive_program_collection_and_reentrant_evaluation ___________________________________________
+
+    def test_bound_results_survive_program_collection_and_reentrant_evaluation() -> None:
+        identity = Program("cel.bind(x, value, [x, x])")
+        calls = 0
+    
+        def nested() -> int:
+            nonlocal calls
+            calls += 1
+            assert identity.evaluate({"value": 9}) == [9, 9]
+            return 2
+    
+        environment = Environment(functions=(Function("nested", (), CELType("int"), nested),))
+>       program = environment.compile("cel.bind(x, [nested(), 3], [x, x])")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_bindings.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106cc5930>, source = 'cel.bind(x, [nested(), 3], [x, x])'
+environment = <cel.program.Environment object at 0x106cc4ca0>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_bindings.py::test_local_bindings_reuse_values_in_complete_policies - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_bindings.py::test_initializers_are_lazy_and_cached_only_within_one_evaluation - cel.program.CompileError: UndeclaredRefer...
+FAILED bindings/python/tests/test_bindings.py::test_initializers_capture_outer_lexical_scope - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_bindings.py::test_used_host_errors_remain_fatal_and_unused_calls_do_not_run - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_bindings.py::test_bound_results_survive_program_collection_and_reentrant_evaluation - cel.program.CompileError: Undeclare...
+5 failed in 0.04s

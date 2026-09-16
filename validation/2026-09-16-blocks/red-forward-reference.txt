@@ -1,0 +1,30 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+______________________________________________ test_forward_dependencies_and_cycles_follow_lazy_slot_resolution ______________________________________________
+
+    def test_forward_dependencies_and_cycles_follow_lazy_slot_resolution() -> None:
+>       assert Program("cel.block([cel.index(1)+1, 5], cel.index(0))").evaluate({}) == 6
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1071d3190>, source = 'cel.block([cel.index(1)+1, 5], cel.index(0))', environment = None, check = False
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: InvalidSyntax
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_blocks.py::test_forward_dependencies_and_cycles_follow_lazy_slot_resolution - cel.program.CompileError: InvalidSyntax
+1 failed, 6 deselected in 0.03s

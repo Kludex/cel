@@ -1,0 +1,4 @@
+================================================================== short test summary info ===================================================================
+FAILED tests/test_storage.py::test_borrowed_inputs_survive_callbacks_that_drop_and_mutate_bindings - AssertionError: assert ['TEMPORARY-X...\xff', '5120'] ...
+1 failed, 1 deselected in 0.33s
+exit=1

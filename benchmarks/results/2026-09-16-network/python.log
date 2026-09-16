@@ -1,0 +1,3 @@
+cold_compile_and_evaluate: median 7359 ns/decision, IQR 0.6%
+warm_evaluate_reused_program: median 1471 ns/decision, IQR 0.9%
+Raw results: benchmarks/results/2026-09-16-network/python.json

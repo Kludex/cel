@@ -1,0 +1,16 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+____________________________________________________ test_distinct_adapts_nested_protobuf_wrapper_values _____________________________________________________
+
+    def test_distinct_adapts_nested_protobuf_wrapper_values() -> None:
+        values: list[Value] = [[Message("google.protobuf.Int64Value", b"\x08\x01")], [1]]
+>       assert Program("values.distinct().size()").evaluate({"values": values}) == 1
+E       AssertionError: assert 2 == 1
+E        +  where 2 = evaluate({'values': [[Message(type_name='google.protobuf.Int64Value', data=b'\x08\x01')], [1]]})
+E        +    where evaluate = <cel.program.Program object at 0x10b1ac9d0>.evaluate
+E        +      where <cel.program.Program object at 0x10b1ac9d0> = Program('values.distinct().size()')
+
+bindings/python/tests/test_lists.py:81: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_lists.py::test_distinct_adapts_nested_protobuf_wrapper_values - AssertionError: assert 2 == 1
+1 failed, 6 deselected in 0.02s

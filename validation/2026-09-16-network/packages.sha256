@@ -1,0 +1,4 @@
+c6fc87716c085a7b103ec56ed33afc85adeefd6b0920ff8bb9fcc743c99cb216  /tmp/cel-network-macos/artifacts/cel_sdk-0.1.0a20-cp310-abi3-macosx_26_0_arm64.whl
+87c957bc85fc2b736365613b68c1424836698f5520786651fbedcff98c9e53cb  /tmp/cel-network-macos/artifacts/cel_sdk-0.1.0a20.tar.gz
+ea0da2481aee8925cfe3d86c6c550c79a84cdf4bcce2789d17c1df91bc55672f  /tmp/cel-network-macos/artifacts/pydantic-cel-0.1.0-alpha.20.tgz
+be837aef11bf239fe29e58b0684f5a09ca596fec5d32b801941db44310e020af  bindings/typescript/cel.node

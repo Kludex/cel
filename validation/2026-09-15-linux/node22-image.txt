@@ -1,0 +1,26 @@
+22.14.0-bullseye-slim: Pulling from library/node
+59627ca2e971: Pulling fs layer
+e49eb6d9f63c: Pulling fs layer
+8b3cb1ad1a0a: Pulling fs layer
+4a23d80a2c41: Pulling fs layer
+ce8105f70c01: Pulling fs layer
+4a23d80a2c41: Waiting
+ce8105f70c01: Waiting
+e49eb6d9f63c: Download complete
+4a23d80a2c41: Verifying Checksum
+4a23d80a2c41: Download complete
+ce8105f70c01: Verifying Checksum
+ce8105f70c01: Download complete
+59627ca2e971: Verifying Checksum
+59627ca2e971: Download complete
+59627ca2e971: Pull complete
+e49eb6d9f63c: Pull complete
+8b3cb1ad1a0a: Verifying Checksum
+8b3cb1ad1a0a: Download complete
+8b3cb1ad1a0a: Pull complete
+4a23d80a2c41: Pull complete
+ce8105f70c01: Pull complete
+Digest: sha256:73a9dfbb6c761aebdf4666cce2627635a30d1d4c20f67ff642d01b8f09e709a3
+Status: Downloaded newer image for node:22.14.0-bullseye-slim
+docker.io/library/node:22.14.0-bullseye-slim
+arm64 ["node@sha256:73a9dfbb6c761aebdf4666cce2627635a30d1d4c20f67ff642d01b8f09e709a3"]

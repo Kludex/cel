@@ -1,0 +1,68 @@
+Traceback (most recent call last):
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/lexer.py", line 689, in lex
+    yield lexer.next_token(lexer_state, parser_state)
+          ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/lexer.py", line 622, in next_token
+    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,
+                               allowed=allowed, token_history=lex_state.last_token and [lex_state.last_token],
+                               state=parser_state, terminals_by_name=self.terminals_by_name)
+lark.exceptions.UnexpectedCharacters: No terminal matches '?' in the current parser context, at line 1 col 33
+
+optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?a
+                                ^
+Expected one of: 
+	* IDENT
+
+Previous tokens: Token('DOT', '.')
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/celpy/celparser.py", line 137, in parse
+    return CELParser.CEL_PARSER.parse(self.text)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/lark.py", line 677, in parse
+    return self.parser.parse(text, start=start, on_error=on_error)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/parser_frontends.py", line 131, in parse
+    return self.parser.parse(stream, chosen_start, **kw)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/parsers/lalr_parser.py", line 42, in parse
+    return self.parser.parse(lexer, start)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/parsers/lalr_parser.py", line 88, in parse
+    return self.parse_from_state(parser_state)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/parsers/lalr_parser.py", line 111, in parse_from_state
+    raise e
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/parsers/lalr_parser.py", line 100, in parse_from_state
+    for token in state.lexer.lex(state):
+                 ~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/lark/lexer.py", line 698, in lex
+    raise UnexpectedToken(token, e.allowed, state=parser_state, token_history=[last_token], terminals_by_name=self.root_lexer.terminals_by_name)
+lark.exceptions.UnexpectedToken: Unexpected token Token('QMARK', '?') at line 1, column 33.
+Expected one of: 
+	* IDENT
+Previous tokens: [Token('DOT', '.')]
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 277, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 221, in main
+    programs = [compile_program(workload["expression"]) for workload in workloads]
+                ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 107, in compile_program
+    return environment.program(environment.compile(expression))
+                               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/celpy/__init__.py", line 331, in compile
+    ast = self.cel_parser.parse(text)
+  File "/Users/marcelotryle/.cache/uv/archive-v0/zcWG5rEv0WkKX2uN/lib/python3.14/site-packages/celpy/celparser.py", line 140, in parse
+    raise CELParseError(message, *ex.args, line=ex.line, column=ex.column)
+celpy.celparser.CELParseError: optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?a
+                                ^
+

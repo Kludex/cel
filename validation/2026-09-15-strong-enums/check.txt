@@ -1,0 +1,19 @@
+All checks passed!
+24 files already formatted
+Success: no issues found in 19 source files
+
+> @pydantic/cel@0.1.0-alpha.7 check
+> tsc -p tsconfig.json --noEmit && oxlint index.ts test build.mjs && oxfmt --check index.ts test build.mjs
+
+Found 0 warnings and 0 errors.
+Finished in 10ms on 6 files with 88 rules using 16 threads.
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 5ms on 6 files using 16 threads.
+Found 0 warnings and 0 errors.
+Finished in 2ms on 5 files with 88 rules using 16 threads.
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 2ms on 5 files using 16 threads.

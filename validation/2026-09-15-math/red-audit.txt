@@ -1,0 +1,94 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+______________________________________________ test_pinned_math_extension_runs_checking_and_evaluation[python] _______________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-902/test_pinned_math_extension_run0')
+engine = 'python'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_math_extension_runs_checking_and_evaluation(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "math_ext")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry],
+        }))
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=199 passed=0 failed=0 unsupported=199
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=199 passed=0 failed=0 unsupported=199
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...9\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=199 passed=0 failed=0 unsupported=199\n', stderr='').returncode
+
+conformance/test_math.py:28: AssertionError
+_______________________________________________ test_pinned_math_extension_runs_checking_and_evaluation[node] ________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-902/test_pinned_math_extension_run1')
+engine = 'node'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_math_extension_runs_checking_and_evaluation(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "math_ext")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry],
+        }))
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=199 passed=0 failed=0 unsupported=199
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=199 passed=0 failed=0 unsupported=199
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...9\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=199 passed=0 failed=0 unsupported=199\n', stderr='').returncode
+
+conformance/test_math.py:28: AssertionError
+________________________________________________ test_pinned_math_extension_runs_checking_and_evaluation[zig] ________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-902/test_pinned_math_extension_run2')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_math_extension_runs_checking_and_evaluation(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "math_ext")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry],
+        }))
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=199 passed=0 failed=0 unsupported=199
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=199 passed=0 failed=0 unsupported=199
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...9\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=199 passed=0 failed=0 unsupported=199\n', stderr='').returncode
+
+conformance/test_math.py:28: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_pinned_math_extension_runs_checking_and_evaluation[python] - AssertionError: total: total=199 passed=0 failed=0 unsupported=199
+FAILED bindings/python::test_pinned_math_extension_runs_checking_and_evaluation[node] - AssertionError: total: total=199 passed=0 failed=0 unsupported=199
+FAILED bindings/python::test_pinned_math_extension_runs_checking_and_evaluation[zig] - AssertionError: total: total=199 passed=0 failed=0 unsupported=199
+3 failed in 0.31s

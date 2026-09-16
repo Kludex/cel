@@ -1,0 +1,9 @@
+Build Summary: 6/6 steps succeeded
+benchmark success
++- run exe cel-benchmark success 19s
+   +- compile exe cel-benchmark ReleaseSafe native-native success 8s MaxRSS:477M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe native-native cached 79ms MaxRSS:35M
+      +- compile lib cel_native ReleaseSafe native-native (reused)
+      +- options success
+

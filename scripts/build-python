@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+uv sync --project bindings/python
+python=bindings/python/.venv/bin/python
+include=$($python -c 'import sysconfig; print(sysconfig.get_path("include"))')
+zig build python -Doptimize=ReleaseSafe -Dpython-include="$include"
+temporary=$(mktemp bindings/python/src/cel/.native.XXXXXX)
+trap 'rm -f "$temporary"' EXIT
+cp -p zig-out/lib/_native.so "$temporary"
+mv -f "$temporary" bindings/python/src/cel/_native.abi3.so

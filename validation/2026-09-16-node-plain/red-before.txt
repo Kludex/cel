@@ -1,0 +1,32 @@
+✔ plain request bindings convert getters exactly once in enumeration order (1.212958ms)
+✔ unsupported values after plain data preserve earlier getter effects and error identity (0.292583ms)
+✔ plain data keeps exact numeric, string, and byte semantics (0.547875ms)
+✔ plain data mixed with wrapper classes and native maps converts consistently (2.746042ms)
+✖ plain data enforces cycle, depth, collection, and byte limits (0.657542ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.3165
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/plain-data.test.js:119:1
+✖ plain data enforces cycle, depth, collection, and byte limits (0.657542ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (RangeError).
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/plain-data.test.js:130:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

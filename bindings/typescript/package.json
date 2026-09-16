@@ -1,0 +1,37 @@
+{
+  "name": "@pydantic/cel",
+  "version": "0.1.0-alpha.21",
+  "engines": { "node": ">=22" },
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "cel.node",
+    "dist/index.js",
+    "dist/index.d.ts",
+    "README.md",
+    "LICENSE",
+    "licenses"
+  ],
+  "scripts": {
+    "build:native": "node build.mjs",
+    "build": "npm run build:native && tsc -p tsconfig.json",
+    "test": "npm run build && node --expose-gc --experimental-test-coverage --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 --test dist/test/*.test.js",
+    "check": "tsc -p tsconfig.json --noEmit && oxlint index.ts test build.mjs && oxfmt --check index.ts test build.mjs",
+    "format": "oxfmt index.ts test build.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.3",
+    "oxfmt": "0.15.0",
+    "oxlint": "1.15.0",
+    "typescript": "5.9.2"
+  }
+}

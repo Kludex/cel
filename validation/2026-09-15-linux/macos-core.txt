@@ -1,0 +1,8 @@
+Build Summary: 5/5 steps succeeded; 87/87 tests passed
+test success
++- run test 87 pass (87 total) 273ms MaxRSS:26M
+   +- compile test ReleaseSafe native-native cached 71ms MaxRSS:35M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe native-native cached 126ms MaxRSS:35M
+      +- compile lib cel_native ReleaseSafe native-native (reused)
+

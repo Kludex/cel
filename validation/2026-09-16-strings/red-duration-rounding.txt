@@ -1,0 +1,22 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_________________________________________ test_formatting_preserves_large_precision_and_sanitizes_invalid_byte_runs __________________________________________
+
+    def test_formatting_preserves_large_precision_and_sanitizes_invalid_byte_runs() -> None:
+        assert Program("'%.400f'.format([1.25])").evaluate({}) == "1.25" + "0" * 398
+        assert Program("'%.20f'.format([1.1])").evaluate({}) == format(1.1, ".20f")
+        assert Program("'%.2f'.format([2.675])").evaluate({}) == format(2.675, ".2f")
+        assert Program("'%s'.format([value])").evaluate({"value": b"\xff\xffA\xc0\xafB"}) == "\ufffdA\ufffdB"
+        assert Program("'%s'.format([duration('1.500s')])").evaluate({}) == "1.5s"
+        assert Program("'%s'.format([duration('9223372036.854775807s')])").evaluate({}) == "9223372036.854776s"
+>       assert Program("'%s'.format([duration('2405875930.906139466s')])").evaluate({}) == "2405875930.9061394s"
+E       AssertionError: assert '2405875930.90614s' == '2405875930.9061394s'
+E         
+E         - 2405875930.9061394s
+E         ?                --
+E         + 2405875930.90614s
+
+bindings/python/tests/test_string_extensions.py:45: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_string_extensions.py::test_formatting_preserves_large_precision_and_sanitizes_invalid_byte_runs - AssertionError: assert ...
+1 failed, 6 deselected in 0.03s

@@ -1,0 +1,56 @@
+✖ local bindings evaluate complete policies and preserve lexical scope (1.038958ms)
+✖ local initializer values and CEL errors are cached only for one evaluation (0.162292ms)
+✖ local initialization preserves host errors and reentrant result storage (0.095333ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.722375
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/bindings.test.js:4:1
+✖ local bindings evaluate complete policies and preserve lexical scope (1.038958ms)
+  Error [CompileError]: UndeclaredReference
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/bindings.test.js:7:61)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    code: 'UndeclaredReference'
+  }
+
+test at bindings/typescript/dist/test/bindings.test.js:17:1
+✖ local initializer values and CEL errors are cached only for one evaluation (0.162292ms)
+  Error [CompileError]: UndeclaredReference
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/bindings.test.js:20:30)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    code: 'UndeclaredReference'
+  }
+
+test at bindings/typescript/dist/test/bindings.test.js:29:1
+✖ local initialization preserves host errors and reentrant result storage (0.095333ms)
+  Error [CompileError]: UndeclaredReference
+      at new Program (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:273:26)
+      at Environment.compile (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:257:16)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/bindings.test.js:41:30)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'UndeclaredReference'
+  }

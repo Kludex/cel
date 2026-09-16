@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.typed map key validation agrees with public CEL equality" (a63655b0e616ce8b)
+Runs: 0 -> 109982
+Unique runs: 0 -> 176
+Coverage: 0/14150 -> 775/14150 (5.48%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

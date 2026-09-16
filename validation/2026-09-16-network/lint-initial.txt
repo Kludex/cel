@@ -1,0 +1,30 @@
+E501 Line too long (124 > 120)
+  --> bindings/python/tests/test_network.py:91:121
+   |
+89 |         expected = ipaddress.ip_network(network, strict=False)
+90 |         for address in ("0.0.0.0", "192.168.1.16", "192.168.1.17", "192.168.1.18", "192.168.2.1", "255.255.255.255"):
+91 |             assert program.evaluate({"network": network, "address": address}) is (ipaddress.ip_address(address) in expected)
+   |                                                                                                                         ^^^^
+
+E501 Line too long (125 > 120)
+  --> conformance/test_network.py:32:121
+   |
+30 |         report = json.loads(output.read_text())
+31 |         failures = 3 if mode == "full" else 2
+32 |         assert report["summary"]["extension"] == {"total": 69, "passed": 69 - failures, "failed": failures, "unsupported": 0}
+   |                                                                                                                         ^^^^^
+33 |         expected = {
+34 |             "network_ext/ipv4/ipv4_equals_ipv6": ("evaluate", "InvalidArgument"),
+   |
+
+E501 Line too long (131 > 120)
+  --> conformance/test_network.py:39:121
+   |
+37 |         if mode == "full":
+38 |             expected["network_ext/ip_type/is_ip_cidr_compile_error"] = ("compile", "TypeMismatch")
+39 |         actual = {result["id"]: (result["phase"], result["error"]) for result in report["results"] if result["status"] == "failed"}
+   |                                                                                                                         ^^^^^^^^^^^
+40 |         assert actual == expected
+   |
+
+Found 5 errors (2 fixed, 3 remaining).

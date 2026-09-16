@@ -1,0 +1,40 @@
+## Conclusion
+
+Confirmed CEL-Go semantics. Reproducible probe and output are in:
+
+- `conformance/reference/proto-encoders.go`
+- `conformance/reference/proto-encoders.txt`
+
+## Method
+
+Pinned CEL-Go commit `16c2ebb13679d18704cee890f3fdc861fe2ca7b1`, using only public `cel`, `ext.Protos()`, `ext.Encoders()`, and generated `proto2pb` APIs.
+
+```sh
+probe="$PWD/conformance/reference/proto-encoders.go"
+(cd /tmp/cel-go-reference && go run "$probe")
+```
+
+Two runs produced byte-identical output.
+
+## Results
+
+- Present scalar: `hasExt=true`, `getExt=42`. Absent scalar: `false`, default `0`. Explicitly-set `0`: `true`, `0`.
+- Present repeated: `true`, `["one", "two"]`. Absent or explicitly empty repeated: `false`, `[]`.
+- Wrong receiver message fails checking with `undefined field`; unchecked evaluation returns `no such field`.
+- String-key maps are accepted receivers. A qualified key is found by both helpers. Missing-map `hasExt` is false; `getExt` errors.
+- Fully qualified dotted names and a quoted final component work. Simple identifiers, strings, and whole quoted identifiers fail parsing. Relative and leading-dot paths become literal wrong field names and fail checking.
+- Variables named `proto` or matching the extension path do not shadow macro expansion. Direct syntax also beats a matching custom member function. `dyn(proto).getExt(...)` does not expand and reaches the custom function.
+- `ProtosVersion(0)` remains functional.
+- Standard and URL encoders emit padding. Both decoders accept padded and unpadded input.
+- CR/LF are ignored, including internally. Spaces and tabs are rejected.
+- `Zh==`, `Zm9=`, `Zh`, and `Zm9` accept nonzero trailing padding bits. Excessive, leading, interior, and incomplete padding are rejected.
+- Standard and URL-safe alphabets are not interchangeable.
+- Default `Encoders()` includes URL methods. Versions 0 and 1 do not; version 2 does.
+
+## Cause
+
+Proto helpers are syntactic macros rewritten to CEL select/presence operations. Base64 delegates to Go's non-strict padded decoder, then its raw decoder.
+
+## Next step
+
+Match these public behaviors in engine tests. Document two specification gaps if retained: map receivers exceed the proto-only helper contract, and nonzero padding bits are accepted despite RFC 4648 canonical-encoding requirements.

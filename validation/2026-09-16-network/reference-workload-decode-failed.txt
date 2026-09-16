@@ -1,0 +1,26 @@
+reference=cel-go@16c2ebb13679d18704cee890f3fdc861fe2ca7b1 | go=go1.26.0
+classification/ipv4 | source="[ip('0.0.0.0').isUnspecified(), ip('127.42.0.1').isLoopback(), ip('192.168.0.1').isGlobalUnicast(), ip('224.0.0.1').isLinkLocalMulticast(), ip('169.254.1.2').isLinkLocalUnicast()]" | value=[true, true, true, true, true] | error=<nil>
+classification/ipv6 | source="[ip('::').isUnspecified(), ip('::1').isLoopback(), ip('2001:db8::1').isGlobalUnicast(), ip('ff02::1').isLinkLocalMulticast(), ip('fe80::1').isLinkLocalUnicast()]" | value=[true, true, true, true, true] | error=<nil>
+classification/false_cases | source="[ip('255.255.255.255').isGlobalUnicast(), ip('224.0.1.1').isLinkLocalMulticast(), ip('192.168.0.1').isLinkLocalUnicast(), ip('ff00::1').isGlobalUnicast(), ip('fd00::1').isLinkLocalMulticast(), ip('fd80::1').isLinkLocalUnicast()]" | value=[false, false, false, false, false, false] | error=<nil>
+canonical/ipv6 | source="string(ip('2001:0DB8:0:0:1:0:0:1'))" | value=2001:db8::1:0:0:1 | error=<nil>
+canonical/embedded_ipv4 | source="string(ip('2001:db8::192.0.2.1'))" | value=2001:db8::c000:201 | error=<nil>
+malformed/mapped_dotted | source="ip('::ffff:192.0.2.1')" | compile_error="ERROR: <input>:1:4: invalid ip argument: IPv4-mapped IPv6 address \"::ffff:192.0.2.1\" is not allowed\n | ip('::ffff:192.0.2.1')\n | ...^"
+malformed/mapped_hex | source="ip('::ffff:c000:201')" | compile_error="ERROR: <input>:1:4: invalid ip argument: IPv4-mapped IPv6 address \"::ffff:c000:201\" is not allowed\n | ip('::ffff:c000:201')\n | ...^"
+malformed/ipv4_leading_zero | source="ip('192.168.001.1')" | compile_error="ERROR: <input>:1:4: invalid ip argument: IP Address \"192.168.001.1\" parse error during conversion from string: ParseAddr(\"192.168.001.1\"): IPv4 field has octet with leading zero\n | ip('192.168.001.1')\n | ...^"
+malformed/cidr_ipv4_leading_zero | source="cidr('192.168.001.1/24')" | compile_error="ERROR: <input>:1:6: invalid cidr argument: CIDR \"192.168.001.1/24\" parse error during conversion from string: netip.ParsePrefix(\"192.168.001.1/24\"): ParseAddr(\"192.168.001.1\"): IPv4 field has octet with leading zero\n | cidr('192.168.001.1/24')\n | .....^"
+cidr/host_bits_preserved | source="string(cidr('192.168.0.129/24'))" | value=192.168.0.129/24 | error=<nil>
+cidr/masked | source="string(cidr('192.168.0.129/24').masked())" | value=192.168.0.0/24 | error=<nil>
+cidr/containment | source="[cidr('192.168.0.129/24').containsIP(ip('192.168.0.1')), cidr('192.168.0.129/24').containsCIDR(cidr('192.168.0.250/32')), cidr('192.168.0.129/24').containsCIDR(cidr('192.168.0.0/23')), cidr('2001:db8::1/32').containsCIDR(cidr('2001:db8:ffff::1/48'))]" | value=[true, true, false, true] | error=<nil>
+malformed/empty_prefix | source="cidr('192.168.0.1/')" | compile_error="ERROR: <input>:1:6: invalid cidr argument: CIDR \"192.168.0.1/\" parse error during conversion from string: netip.ParsePrefix(\"192.168.0.1/\"): bad bits after slash: \"\"\n | cidr('192.168.0.1/')\n | .....^"
+malformed/leading_zero_prefix | source="cidr('192.168.0.1/024')" | compile_error="ERROR: <input>:1:6: invalid cidr argument: CIDR \"192.168.0.1/024\" parse error during conversion from string: netip.ParsePrefix(\"192.168.0.1/024\"): bad bits after slash: \"024\"\n | cidr('192.168.0.1/024')\n | .....^"
+malformed/ipv4_prefix_too_large | source="cidr('192.168.0.1/33')" | compile_error="ERROR: <input>:1:6: invalid cidr argument: CIDR \"192.168.0.1/33\" parse error during conversion from string: netip.ParsePrefix(\"192.168.0.1/33\"): prefix length out of range\n | cidr('192.168.0.1/33')\n | .....^"
+malformed/ipv6_prefix_too_large | source="cidr('2001:db8::1/129')" | compile_error="ERROR: <input>:1:6: invalid cidr argument: CIDR \"2001:db8::1/129\" parse error during conversion from string: netip.ParsePrefix(\"2001:db8::1/129\"): prefix length out of range\n | cidr('2001:db8::1/129')\n | .....^"
+corpus_contradiction/compile_not_evaluate_error | source="isIP(cidr('192.168.0.0/24'))" | compile_error="ERROR: <input>:1:5: found no matching overload for 'isIP' applied to '(net.CIDR)'\n | isIP(cidr('192.168.0.0/24'))\n | ....^"
+corpus_contradiction/mapped_hex_equals_ipv4 | source="ip('::ffff:c0a8:1') == ip('192.168.0.1')" | compile_error="ERROR: <input>:1:4: invalid ip argument: IPv4-mapped IPv6 address \"::ffff:c0a8:1\" is not allowed\n | ip('::ffff:c0a8:1') == ip('192.168.0.1')\n | ...^"
+corpus_contradiction/mapped_hex_not_equals_ipv4 | source="ip('::ffff:c0a8:1') == ip('192.168.10.1')" | compile_error="ERROR: <input>:1:4: invalid ip argument: IPv4-mapped IPv6 address \"::ffff:c0a8:1\" is not allowed\n | ip('::ffff:c0a8:1') == ip('192.168.10.1')\n | ...^"
+panic: json: cannot unmarshal string into Go struct field .Cases.Expected of type bool
+
+goroutine 1 [running]:
+main.main()
+	/Users/marcelotryle/dev/pydantic/cel/conformance/reference/network.go:91 +0x7e8
+exit status 2

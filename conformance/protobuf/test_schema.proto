@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package cel.conformance.fixture;
+
+message TestSchema {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_READY = 1;
+  }
+
+  message Nested {
+    string value = 1;
+  }
+
+  int32 signed_value = 1;
+  uint64 unsigned_value = 2;
+  float float_value = 3;
+  Nested nested = 4;
+  repeated int32 values = 5;
+  map<string, int32> counts = 6;
+  optional string optional_value = 7;
+
+  oneof choice {
+    string name = 8;
+    int32 code = 9;
+  }
+
+  Status status = 10;
+}

@@ -1,0 +1,57 @@
+x86_64
+1/54 root.test_0...OK
+2/54 program.test.strong enums preserve identity in checked and unchecked programs...OK
+3/54 program.test.strong enum constructors enforce input types and signed 32 bit bounds...OK
+4/54 program.test.enum constants cannot impersonate primitive message or unregistered types...OK
+5/54 program.test.strong enum declarations collections and namespace resolution retain their types...OK
+6/54 program.test.protobuf construction retains message types field defaults and presence...OK
+7/54 program.test.protobuf messages are not maps and reject unknown or mistyped fields...OK
+8/54 program.test.registered proto3 messages preserve maps lists oneofs and optional presence...OK
+9/54 program.test.descriptor and protobuf limits reject malformed external data...OK
+10/54 program.test.protobuf well-known values follow CEL unboxing and null semantics...OK
+11/54 program.test.temporal policies preserve nanoseconds arithmetic and canonical types...OK
+12/54 program.test.timestamp selectors use explicit zones and reject filesystem paths...OK
+13/54 program.test.temporal boundaries report errors instead of overflowing...OK
+14/54 program.test.protobuf temporal fields box values and prune null collection entries...OK
+15/54 program.test.checked environments infer types and reject unreachable type errors...OK
+16/54 program.test.checked type values compare independently of their described types...OK
+17/54 program.test.checked collection inference unifies empty and nested lists...OK
+18/54 program.test.flat aggregate inference does not turn type variable links into nesting...OK
+19/54 program.test.failed aggregate joins do not retain speculative variable constraints...OK
+20/54 program.test.environment validation and inference budgets fail through the public API...OK
+21/54 program.test.environments resolve namespace prefixes and own constants...OK
+22/54 program.test.checked selection cannot be redirected by undeclared qualified bindings...OK
+23/54 program.test.evaluate request authorization with nested inputs and a reusable program...OK
+24/54 program.test.evaluate scalar arithmetic precedence and CEL numeric types...OK
+25/54 program.test.boolean ordering and exact numeric comparisons follow CEL...OK
+26/54 program.test.evaluate collections and string operations...OK
+27/54 program.test.quoted field selection supports punctuation without admitting quoted calls or identifiers...OK
+28/54 program.test.upstream string escapes conversions and numeric indexing...OK
+29/54 program.test.logical operators suppress errors only when the result is determined...OK
+30/54 program.test.evaluate collection macros with lexical scope...OK
+31/54 program.test.two variable comprehensions preserve keys scope and error semantics...OK
+32/54 program.test.RE2 matching supports Unicode flags classes anchors and embedded nul...OK
+33/54 program.test.regex errors remain evaluation errors and obey CEL logical suppression...OK
+34/54 program.test.reusable regex policies evaluate independent requests and dynamic patterns...OK
+35/54 program.test.regex caches and work obey explicit resource limits...OK
+36/54 program.test.regex programs support concurrent request evaluations...OK
+37/54 program.test.qualified names prefer the longest binding and respect local and absolute scope...OK
+38/54 program.test.type values preserve CEL types without becoming strings...OK
+39/54 program.test.invalid expressions and runtime faults return public errors...OK
+40/54 program.test.resource limits reject excessive work without trapping...OK
+41/54 program.test.collection equality obeys depth and cost budgets...OK
+42/54 program.test.comprehensions enforce collection and work limits even in logical branches...OK
+43/54 program.test.untrusted source never traps or leaks...OK
+44/54 program.test.dynamic RE2 inputs never trap or leak evaluation storage...OK
+45/54 program.test.checking and environment ownership clean up every Zig allocation failure...OK
+46/54 program.test.protobuf ownership cleans up after every Zig allocation failure...OK
+47/54 program.test.strong enum protobuf wire values retain identity across independent programs...OK
+48/54 program.test.strong enum policies share immutable descriptors across concurrent requests...OK
+49/54 program.test.strong enum ownership cleans up after every Zig allocation failure...OK
+50/54 program.test.strong enum conversion never traps on untrusted values and wire bytes...OK
+51/54 program.test.protobuf wire input never traps or escapes native evaluation storage...OK
+52/54 program.test.temporal parsing never traps on untrusted string values...OK
+53/54 program.test.checked source never traps or leaks...OK
+54/54 program.test.all allocation failures clean up through the public API...OK
+All 54 tests passed.
+6 fuzz tests found.

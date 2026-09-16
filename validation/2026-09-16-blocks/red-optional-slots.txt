@@ -1,0 +1,35 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+____________________________________________ test_block_slots_preserve_optional_values_without_compacting_indices ____________________________________________
+
+    def test_block_slots_preserve_optional_values_without_compacting_indices() -> None:
+>       assert Environment().compile("cel.block([?optional.of(1), 2], cel.index(0))").evaluate({}) == OptionalValue.of(1)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106b848e0>, source = 'cel.block([?optional.of(1), 2], cel.index(0))'
+environment = <cel.program.Environment object at 0x106b84850>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: InvalidSyntax
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_blocks.py::test_block_slots_preserve_optional_values_without_compacting_indices - cel.program.CompileError: InvalidSyntax
+1 failed, 7 deselected in 0.03s

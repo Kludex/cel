@@ -1,0 +1,5 @@
+- **P2 - Minimum glibc runtime is not exercised.** `.github/workflows/ci.yml:39` installs the repaired wheel on `ubuntu-latest`, not glibc 2.28. `validation/2026-09-15-linux/wheel-python-310.txt:2` uses glibc 2.31, while the exact 2.28 floor is covered only by `auditwheel`. Add a manylinux_2_28 container load/test to support the minimum-runtime claim.
+
+No concrete semantic or stable-ABI regression found in the reviewed code.
+
+Follow-up: AlmaLinux 8 core, Python, Node, and all six conformance audits subsequently ran on glibc 2.28. The CI exact-floor runtime job remains open.

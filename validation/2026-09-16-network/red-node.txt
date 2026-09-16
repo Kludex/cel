@@ -1,0 +1,2 @@
+bindings/typescript/test/network.test.ts(4,10): error TS2305: Module '"../index.js"' has no exported member 'CIDR'.
+bindings/typescript/test/network.test.ts(4,16): error TS2305: Module '"../index.js"' has no exported member 'IPAddress'.

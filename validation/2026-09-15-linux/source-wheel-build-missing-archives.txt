@@ -1,0 +1,69 @@
+Looking in links: /wheels
+Processing ./wheels/ziglang-0.16.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl
+Processing ./wheels/build-1.3.0-py3-none-any.whl
+Processing ./wheels/hatchling-1.29.0-py3-none-any.whl
+Processing ./wheels/auditwheel-6.5.0-py3-none-any.whl
+Processing ./wheels/pytest-9.0.2-py3-none-any.whl
+Processing ./wheels/pytest_cov-7.0.0-py3-none-any.whl
+Processing ./wheels/protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl
+Processing ./wheels/typing_extensions-4.15.0-py3-none-any.whl
+Processing ./wheels/packaging-26.3-py3-none-any.whl (from build==1.3.0)
+Processing ./wheels/pyproject_hooks-1.3.0-py3-none-any.whl (from build==1.3.0)
+Processing ./wheels/pathspec-1.1.1-py3-none-any.whl (from hatchling==1.29.0)
+Processing ./wheels/pluggy-1.6.0-py3-none-any.whl (from hatchling==1.29.0)
+Processing ./wheels/trove_classifiers-2026.6.1.19-py3-none-any.whl (from hatchling==1.29.0)
+Processing ./wheels/pyelftools-0.33-py3-none-any.whl (from auditwheel==6.5.0)
+Processing ./wheels/iniconfig-2.3.0-py3-none-any.whl (from pytest==9.0.2)
+Processing ./wheels/pygments-2.21.0-py3-none-any.whl (from pytest==9.0.2)
+Processing ./wheels/coverage-7.16.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (from coverage[toml]>=7.10.6->pytest-cov==7.0.0)
+Installing collected packages: trove-classifiers, ziglang, typing-extensions, pyproject_hooks, pygments, pyelftools, protobuf, pluggy, pathspec, packaging, iniconfig, coverage, pytest, hatchling, build, auditwheel, pytest-cov
+
+Successfully installed auditwheel-6.5.0 build-1.3.0 coverage-7.16.1 hatchling-1.29.0 iniconfig-2.3.0 packaging-26.3 pathspec-1.1.1 pluggy-1.6.0 protobuf-6.33.0 pyelftools-0.33 pygments-2.21.0 pyproject_hooks-1.3.0 pytest-9.0.2 pytest-cov-7.0.0 trove-classifiers-2026.6.1.19 typing-extensions-4.15.0 ziglang-0.16.0
+0.16.0
+* Getting build dependencies for wheel...
+* Building wheel...
+/tmp/build/cel_sdk-0.1.0a12/zig/build.zig.zon:8:20: error: unable to connect to server: NameServerFailure
+            .url = "https://codeload.github.com/google/re2/tar.gz/927f5d53caf8111721e734cf24724686bb745f55",
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/build/cel_sdk-0.1.0a12/zig/build.zig.zon:12:20: error: unable to connect to server: NameServerFailure
+            .url = "https://codeload.github.com/abseil/abseil-cpp/tar.gz/2065f4ded0558c6f89fee67c8e5228feb4eb960e",
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/build/cel_sdk-0.1.0a12/zig/build.zig.zon:16:20: error: unable to connect to server: NameServerFailure
+            .url = "https://codeload.github.com/protocolbuffers/protobuf/tar.gz/f377bfefc5e2cfab68b816903c25b23e091c439d",
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Traceback (most recent call last):
+  File "/tooling/pyproject_hooks/_in_process/_in_process.py", line 406, in <module>
+    main()
+    ~~~~^^
+  File "/tooling/pyproject_hooks/_in_process/_in_process.py", line 381, in main
+    json_out["return_val"] = hook(**hook_input["kwargs"])
+                             ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tooling/pyproject_hooks/_in_process/_in_process.py", line 286, in build_wheel
+    return _build_backend().build_wheel(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        wheel_directory, config_settings, metadata_directory
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/tooling/hatchling/build.py", line 58, in build_wheel
+    return os.path.basename(next(builder.build(directory=wheel_directory, versions=["standard"])))
+                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tooling/hatchling/builders/plugin/interface.py", line 149, in build
+    build_hook.initialize(version, build_data)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/build/cel_sdk-0.1.0a12/hatch_build.py", line 33, in initialize
+    subprocess.run(
+    ~~~~~~~~~~~~~~^
+        [
+        ^
+    ...<9 lines>...
+        check=True,
+        ^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tooling/ziglang/zig', 'build', 'python', '-Doptimize=ReleaseSafe', '-Dpython-include=/usr/local/include/python3.14', '--prefix', '/tmp/build/cel_sdk-0.1.0a12/src/cel/.cel-build-kjojfksc']' returned non-zero exit status 1.
+
+ERROR Backend subprocess exited when trying to invoke build_wheel

@@ -1,0 +1,24 @@
+Python 3.10.18 (main, Jul 23 2025, 18:23:55) [GCC 10.2.1 20210110]
+glibc 2.31
+Looking in links: /wheels
+Processing /dist/cel_sdk-0.1.0a13-cp310-abi3-manylinux_2_28_aarch64.whl
+Processing /wheels/pytest-9.0.2-py3-none-any.whl
+Processing /wheels/pytest_cov-7.0.0-py3-none-any.whl
+Processing /wheels/protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl
+Processing /wheels/iniconfig-2.3.0-py3-none-any.whl
+Processing /wheels/pygments-2.21.0-py3-none-any.whl
+Processing /wheels/tomli-2.4.1-py3-none-any.whl
+Processing /wheels/pluggy-1.6.0-py3-none-any.whl
+Processing /wheels/exceptiongroup-1.3.1-py3-none-any.whl
+Processing /wheels/packaging-26.3-py3-none-any.whl
+Processing /wheels/coverage-7.16.1-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl
+Processing /wheels/typing_extensions-4.15.0-py3-none-any.whl
+Installing collected packages: typing-extensions, tomli, pygments, protobuf, pluggy, packaging, iniconfig, coverage, exceptiongroup, cel-sdk, pytest, pytest-cov
+Successfully installed cel-sdk-0.1.0a13 coverage-7.16.1 exceptiongroup-1.3.1 iniconfig-2.3.0 packaging-26.3 pluggy-1.6.0 protobuf-6.33.0 pygments-2.21.0 pytest-9.0.2 pytest-cov-7.0.0 tomli-2.4.1 typing-extensions-4.15.0
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/tmp/site/cel/__init__.py", line 4, in <module>
+    from cel.program import (
+  File "/tmp/site/cel/program.py", line 3, in <module>
+    from cel import _native
+ImportError: /tmp/site/cel/_native.abi3.so: undefined symbol: Py_TYPE

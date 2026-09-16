@@ -1,0 +1,13 @@
+Using Python 3.12.7 environment at: /tmp/cel-linux-current/mac-3.12
+Resolved 1 package in 0.74ms
+Prepared 1 package in 0.10ms
+Uninstalled 1 package in 1ms
+Installed 1 package in 1ms
+ - cel-sdk==0.1.0a19 (from file:///tmp/cel-proto-encoders/macos/cel_sdk-0.1.0a19-cp310-abi3-macosx_26_0_arm64.whl)
+ + cel-sdk==0.1.0a20 (from file:///tmp/cel-network-macos/artifacts/cel_sdk-0.1.0a20-cp310-abi3-macosx_26_0_arm64.whl)
+/tmp/cel-linux-current/mac-3.12/lib/python3.12/site-packages/cel/__init__.py
+ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]
+__main__.py: error: unrecognized arguments: --cov --cov-report=term-missing
+  inifile: /private/tmp/cel-network-macos/source/bindings/python/pyproject.toml
+  rootdir: /private/tmp/cel-network-macos/source/bindings/python
+

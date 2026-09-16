@@ -1,0 +1,5 @@
+- **P1 - Protobuf equality bypasses work accounting** - `src/eval.zig:1053-1065` charges one step before calling unmetered `MessageDifferencer::Equals` in `src/protobuf.cc:1053-1057`. Quadratic `distinct()` can therefore perform repeated full-message scans while remaining within `max_steps`, creating a CPU exhaustion path for large protobuf lists. Charge message comparison work or meter it inside the protobuf layer.
+
+- **P2 - Checked sorting rejects protobuf scalar wrappers** - `src/checker.zig:1044-1050` treats `wrapper(int)` and other wrapper terms as non-comparable, although runtime `sortList()` adapts them to sortable primitives. Checked expressions such as `[google.protobuf.Int64Value{value: 2}, google.protobuf.Int64Value{value: 1}].sort()` fail while unchecked evaluation succeeds. Apply `numericPrimitive()` before `comparable()` checks.
+
+No edits or test runs performed.

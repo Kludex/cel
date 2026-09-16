@@ -1,0 +1,8 @@
+Build Summary: 5/5 steps succeeded
+conformance success
++- install cel-conformance success
+   +- compile exe cel-conformance ReleaseSafe aarch64-linux-gnu success 10s MaxRSS:523M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe aarch64-linux-gnu cached 58ms MaxRSS:35M
+      +- compile lib cel_native ReleaseSafe aarch64-linux-gnu (reused)
+

@@ -1,0 +1,14 @@
+Looking in links: /wheels
+Processing ./wheels/patchelf-0.18.0.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl
+Installing collected packages: patchelf
+Successfully installed patchelf-0.18.0.0
+INFO:auditwheel.main_repair:Repairing cel_sdk-0.1.0a12-cp310-abi3-linux_aarch64.whl
+usage: python -m auditwheel [-h] [-V] [-v] command ...
+python -m auditwheel: error: cannot repair "/dist/cel_sdk-0.1.0a12-cp310-abi3-linux_aarch64.whl" to "manylinux_2_28_aarch64" ABI because of the presence of too-recent versioned symbols. You'll need to compile the wheel on an older toolchain.
+INFO:auditwheel.main_repair:Repairing cel_sdk-0.1.0a13-cp310-abi3-linux_aarch64.whl
+INFO:auditwheel.wheeltools:Previous filename tags: linux_aarch64
+INFO:auditwheel.wheeltools:New filename tags: manylinux_2_28_aarch64
+INFO:auditwheel.wheeltools:Previous WHEEL info tags: cp310-abi3-linux_aarch64
+INFO:auditwheel.wheeltools:New WHEEL info tags: cp310-abi3-manylinux_2_28_aarch64
+INFO:auditwheel.main_repair:
+Fixed-up wheel written to /dist/manylinux/cel_sdk-0.1.0a13-cp310-abi3-manylinux_2_28_aarch64.whl

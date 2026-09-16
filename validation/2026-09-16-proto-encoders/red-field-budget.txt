@@ -1,0 +1,12 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.protobuf extension lookup charges the qualified field name' failed:
+       expected error.CostLimitExceeded, found .{ .bool = false }
+failed command: ./.zig-cache/o/65f2f7a2903d952a774598a55b593581/test --cache-dir=./.zig-cache --seed=0x971cd78d --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/ea501539d90e69e3ac4e7c7b6a1a4a4f/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x971cd78d -Zff59eecc141e5c8b test -Dtest-filter=extension lookup charges -j4

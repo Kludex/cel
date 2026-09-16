@@ -1,0 +1,5 @@
+same(dyn(1), 'x'): result=true error=<nil>
+same(1, 'x'): check error ERROR: <input>:1:5: found no matching overload for 'same' applied to '(int, string)'
+ | same(1, 'x')
+ | ....^
+same(dyn(1), dyn('x')): result=true error=<nil>

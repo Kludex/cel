@@ -1,0 +1,54 @@
+conformance
++- install cel-conformance
+   +- compile exe cel-conformance ReleaseSafe native-native 1 errors
+conformance/zig_codec.zig:160:12: error: switch must handle all possibilities
+    return switch (input) {
+           ^~~~~~
+src/value.zig:24:5: note: unhandled enumeration value: 'ip'
+    ip: *const network.IP,
+    ^~
+src/value.zig:25:5: note: unhandled enumeration value: 'cidr'
+    cidr: *const network.CIDR,
+    ^~~~
+src/value.zig:8:19: note: enum '@typeInfo(value.Value).@"union".tag_type.?' declared here
+pub const Value = union(enum) {
+                  ^~~~~
+referenced by:
+    execute: conformance/zig.zig:255:37
+    run: conformance/zig.zig:68:32
+    5 reference(s) hidden; use '-freference-trace=7' to see all references
+error: 1 compilation errors
+failed command: /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig build-exe -fno-error-tracing -OReleaseSafe -target native-native -mcpu baseline --dep cel --dep fixtures -Mroot=/Users/marcelotryle/dev/pydantic/cel/conformance/zig.zig .zig-cache/o/68ef145903b658073ba0cfdb405a9ea3/libcel_native.a -OReleaseSafe -target native-native -mcpu baseline -I /Users/marcelotryle/dev/pydantic/cel/src -I .zig-cache/o/2fb5824d4233e9fe32370ab196a5b16d -Mcel=/Users/marcelotryle/dev/pydantic/cel/src/root.zig -OReleaseSafe -target native-native -mcpu baseline -Mfixtures=/Users/marcelotryle/dev/pydantic/cel/conformance/fixtures.zig -framework CoreFoundation -lc++ -lc --cache-dir .zig-cache --global-cache-dir /Users/marcelotryle/.cache/zig --name cel-conformance --zig-lib-dir /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+conformance-test
++- run test
+   +- compile test ReleaseSafe native-native 1 errors
+conformance/zig_codec.zig:160:12: error: switch must handle all possibilities
+    return switch (input) {
+           ^~~~~~
+src/value.zig:24:5: note: unhandled enumeration value: 'ip'
+    ip: *const network.IP,
+    ^~
+src/value.zig:25:5: note: unhandled enumeration value: 'cidr'
+    cidr: *const network.CIDR,
+    ^~~~
+src/value.zig:8:19: note: enum '@typeInfo(value.Value).@"union".tag_type.?' declared here
+pub const Value = union(enum) {
+                  ^~~~~
+referenced by:
+    execute: conformance/zig.zig:255:37
+    run: conformance/zig.zig:68:32
+    3 reference(s) hidden; use '-freference-trace=5' to see all references
+error: 1 compilation errors
+failed command: /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig test -fno-error-tracing -OReleaseSafe -target native-native -mcpu baseline --dep cel --dep fixtures -Mroot=/Users/marcelotryle/dev/pydantic/cel/conformance/zig.zig .zig-cache/o/68ef145903b658073ba0cfdb405a9ea3/libcel_native.a -OReleaseSafe -target native-native -mcpu baseline -I /Users/marcelotryle/dev/pydantic/cel/src -I .zig-cache/o/2fb5824d4233e9fe32370ab196a5b16d -Mcel=/Users/marcelotryle/dev/pydantic/cel/src/root.zig -OReleaseSafe -target native-native -mcpu baseline -Mfixtures=/Users/marcelotryle/dev/pydantic/cel/conformance/fixtures.zig -framework CoreFoundation -lc++ -lc --cache-dir .zig-cache --global-cache-dir /Users/marcelotryle/.cache/zig --name test --zig-lib-dir /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/8 steps succeeded (2 failed)
+conformance transitive failure
++- install cel-conformance transitive failure
+   +- compile exe cel-conformance ReleaseSafe native-native 1 errors
+conformance-test transitive failure
++- run test transitive failure
+   +- compile test ReleaseSafe native-native 1 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/ea501539d90e69e3ac4e7c7b6a1a4a4f/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0x78958e95 -Z7b96a4b8ef8c2e0f conformance conformance-test -Dconformance=true -Doptimize=ReleaseSafe -j4

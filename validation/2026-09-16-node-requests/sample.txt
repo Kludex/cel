@@ -1,0 +1,9 @@
+Sampling process 93613 for 5 seconds with 1 millisecond of run time between samples
+Sampling completed, processing symbols...
+Sample analysis of process 93613 written to file validation/2026-09-16-node-requests/before.sample.txt
+Sampling process 7526 for 5 seconds with 1 millisecond of run time between samples
+Sampling completed, processing symbols...
+Sample analysis of process 7526 written to file validation/2026-09-16-node-requests/after.sample.txt
+Sampling process 22105 for 5 seconds with 1 millisecond of run time between samples
+Sampling completed, processing symbols...
+Sample analysis of process 22105 written to file validation/2026-09-16-node-requests/after-all.sample.txt

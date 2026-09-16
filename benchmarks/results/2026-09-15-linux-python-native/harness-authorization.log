@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/repo/benchmarks/python.py", line 277, in <module>
+    main()
+    ~~~~^^
+  File "/repo/benchmarks/python.py", line 222, in main
+    decisions = verify(workloads, programs, evaluate)
+  File "/repo/benchmarks/python.py", line 127, in verify
+    actual = evaluate(program, case["bindings"])
+  File "/repo/benchmarks/python.py", line 94, in evaluate
+    return program.evaluate(rust_cel.Context(variables=bindings))
+           ^^^^^^^^^^^^^^^^
+AttributeError: 'builtins.Program' object has no attribute 'evaluate'

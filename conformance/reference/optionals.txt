@@ -1,0 +1,16 @@
+[1][?0.5] => unsupported index value 0.5 in list / unsupported index value 0.5 in list
+[1][?0.0] => optional(1) / <nil>
+[1][?1u] => optional.none() / <nil>
+{}[?null] invalid qualifier type: types.Null
+optional.of([1])[0.0] => optional(1) / <nil>
+optional.ofNonZeroValue(0.0/0.0).hasValue() => true / <nil>
+optional.none()[1 / 0] => optional.none() / <nil>
+optional.none()[?1 / 0] => optional.none() / <nil>
+optional.of({'x':optional.none()}).x.hasValue() => true / <nil>
+optional.ofNonZeroValue(optional.none()).hasValue() => true / <nil>
+optional.ofNonZeroValue(timestamp(0)).hasValue() => true / <nil>
+optional.ofNonZeroValue(timestamp('0001-01-01T00:00:00Z')).hasValue() => false / <nil>
+{?1/0:optional.none()} => division by zero / division by zero
+optional.of(optional.of({'x':1})).x => optional.none() / <nil>
+optional.of(1).or(1) => optional(1) / <nil>
+optional.of(1).orValue(optional.none()) => 1 / <nil>

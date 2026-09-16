@@ -1,0 +1,33 @@
+{
+  "files": [
+    {"file": "/private/tmp/cel-eval-linux/source/src/format.cc", "percent_covered": "88.89", "covered_lines": "8", "total_lines": "9"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/temporal.cc", "percent_covered": "83.22", "covered_lines": "119", "total_lines": "143"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/protobuf.cc", "percent_covered": "82.51", "covered_lines": "703", "total_lines": "852"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/checker.zig", "percent_covered": "99.37", "covered_lines": "792", "total_lines": "797"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/program.zig", "percent_covered": "98.23", "covered_lines": "1774", "total_lines": "1806"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/network.zig", "percent_covered": "100.00", "covered_lines": "149", "total_lines": "149"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/re2.cc", "percent_covered": "82.86", "covered_lines": "29", "total_lines": "35"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/proto.zig", "percent_covered": "97.24", "covered_lines": "211", "total_lines": "217"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/network_functions.zig", "percent_covered": "100.00", "covered_lines": "47", "total_lines": "47"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/value.zig", "percent_covered": "92.31", "covered_lines": "108", "total_lines": "117"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/string_format.zig", "percent_covered": "97.85", "covered_lines": "182", "total_lines": "186"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/temporal.zig", "percent_covered": "95.24", "covered_lines": "40", "total_lines": "42"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/eval.zig", "percent_covered": "99.06", "covered_lines": "950", "total_lines": "959"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/strings.zig", "percent_covered": "98.15", "covered_lines": "159", "total_lines": "162"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/root.zig", "percent_covered": "100.00", "covered_lines": "2", "total_lines": "2"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/functions.zig", "percent_covered": "96.00", "covered_lines": "24", "total_lines": "25"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/syntax.zig", "percent_covered": "99.25", "covered_lines": "399", "total_lines": "402"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/names.zig", "percent_covered": "100.00", "covered_lines": "29", "total_lines": "29"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/types.zig", "percent_covered": "96.51", "covered_lines": "83", "total_lines": "86"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/encoders.zig", "percent_covered": "100.00", "covered_lines": "58", "total_lines": "58"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/regex.zig", "percent_covered": "91.89", "covered_lines": "34", "total_lines": "37"},
+    {"file": "/private/tmp/cel-eval-linux/source/src/math.zig", "percent_covered": "94.12", "covered_lines": "48", "total_lines": "51"}
+  ],
+  "percent_covered": "95.77",
+  "covered_lines": 5948,
+  "total_lines": 6211,
+  "percent_low": 25,
+  "percent_high": 75,
+  "command": "cel-conformance",
+  "date": "2026-09-16 09:24:47"
+}

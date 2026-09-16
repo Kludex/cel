@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.indexed dependency graphs resolve values or bounded cycle errors" (714c65a7e14af6ce)
+Runs: 0 -> 100039
+Unique runs: 0 -> 15
+Coverage: 0/15662 -> 789/15662 (5.04%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

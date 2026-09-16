@@ -1,0 +1,75 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_____________________________________________ test_callbacks_remain_thread_local_when_host_code_releases_the_gil _____________________________________________
+
+    def test_callbacks_remain_thread_local_when_host_code_releases_the_gil() -> None:
+        entered = (Event(), Event())
+        released = (Event(), Event())
+    
+        def gate(value: int) -> int:
+            entered[value].set()
+            assert released[value].wait(10)
+            return value
+    
+        integer = CELType("int")
+        environment = Environment(variables={"value": integer}, functions=(
+            Function("gate", (integer,), integer, gate),
+            Function("identity", (integer,), integer, lambda value: value),
+        ))
+        program = environment.compile("gate(value) + identity(value)")
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            first = executor.submit(program, {"value": 0})
+            assert entered[0].wait(10)
+            second = executor.submit(program, {"value": 1})
+            try:
+                assert entered[1].wait(10)
+                released[0].set()
+                assert first.result(timeout=10) == 0
+            finally:
+                released[0].set()
+                released[1].set()
+>           assert second.result(timeout=10) == 2
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_functions.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.14.6-macos-aarch64-none/lib/python3.14/concurrent/futures/_base.py:454: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.14.6-macos-aarch64-none/lib/python3.14/concurrent/futures/_base.py:396: in __get_result
+    raise self._exception
+../../../.local/share/uv/python/cpython-3.14.6-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.14.6-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+bindings/python/src/cel/program.py:52: in __call__
+    return self.evaluate(bindings)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x106e7be20>, bindings = {'value': 1}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+        )
+E       RuntimeError: function callback environment is inactive
+
+bindings/python/src/cel/program.py:36: RuntimeError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_functions.py::test_callbacks_remain_thread_local_when_host_code_releases_the_gil - RuntimeError: function callback enviro...
+1 failed, 22 deselected in 0.04s

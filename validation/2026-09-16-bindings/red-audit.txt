@@ -1,0 +1,94 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+________________________________________________ test_pinned_bindings_extension_runs_through_each_sdk[python] ________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-953/test_pinned_bindings_extension0')
+engine = 'python'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_bindings_extension_runs_through_each_sdk(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "bindings_ext")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry]})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=8 passed=0 failed=0 unsupported=8
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=8 passed=0 failed=0 unsupported=8
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...ted=8\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=8 passed=0 failed=0 unsupported=8\n', stderr='').returncode
+
+conformance/test_bindings.py:28: AssertionError
+_________________________________________________ test_pinned_bindings_extension_runs_through_each_sdk[node] _________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-953/test_pinned_bindings_extension1')
+engine = 'node'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_bindings_extension_runs_through_each_sdk(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "bindings_ext")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry]})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=8 passed=0 failed=0 unsupported=8
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=8 passed=0 failed=0 unsupported=8
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...ted=8\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=8 passed=0 failed=0 unsupported=8\n', stderr='').returncode
+
+conformance/test_bindings.py:28: AssertionError
+_________________________________________________ test_pinned_bindings_extension_runs_through_each_sdk[zig] __________________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-953/test_pinned_bindings_extension2')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_pinned_bindings_extension_runs_through_each_sdk(tmp_path: Path, engine: str) -> None:
+        manifest = json.loads((ROOT / "testdata" / "manifest.json").read_text())
+        entry = next(item for item in manifest["files"] if item["name"] == "bindings_ext")
+        (tmp_path / entry["output"]).write_bytes((ROOT / "testdata" / entry["output"]).read_bytes())
+        (tmp_path / "manifest.json").write_text(
+            json.dumps({"source": manifest["source"], "summary": {"tests": entry["tests"]}, "files": [entry]})
+        )
+        for mode in ("full", "evaluation"):
+            output = tmp_path / f"{mode}.json"
+            process = subprocess.run(
+                [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", mode,
+                 "--corpus", str(tmp_path), "--report", str(output)],
+                capture_output=True, text=True, timeout=30,
+            )
+>           assert process.returncode == 0, process.stdout + process.stderr
+E           AssertionError: total: total=8 passed=0 failed=0 unsupported=8
+E             core: total=0 passed=0 failed=0 unsupported=0
+E             extension: total=8 passed=0 failed=0 unsupported=8
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...ted=8\ncore: total=0 passed=0 failed=0 unsupported=0\nextension: total=8 passed=0 failed=0 unsupported=8\n', stderr='').returncode
+
+conformance/test_bindings.py:28: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_pinned_bindings_extension_runs_through_each_sdk[python] - AssertionError: total: total=8 passed=0 failed=0 unsupported=8
+FAILED bindings/python::test_pinned_bindings_extension_runs_through_each_sdk[node] - AssertionError: total: total=8 passed=0 failed=0 unsupported=8
+FAILED bindings/python::test_pinned_bindings_extension_runs_through_each_sdk[zig] - AssertionError: total: total=8 passed=0 failed=0 unsupported=8
+3 failed in 0.30s

@@ -1,0 +1,20 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87
+  return new EvaluationError({code, message, node})
+         ^
+
+EvaluationError: found no matching overload for 'OptionalNamespace.ofNonZeroValue(dyn)'
+
+>    1 | optional.ofNonZeroValue(request.?principal.orValue(null)).optMap(p, p.?active.orValue(false) && p.?roles.orValue([]).exists(r, r == 'admin')).orValue(false) && !resource.?deleted.orValue(false)
+         ^
+    at TypeChecker.evaluationError [as createError] (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/errors.js:87:10)
+    at Object.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:590:19)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at Object.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/operators.js:575:32)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:161:17)
+    at TypeChecker.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/type-checker.js:27:39)
+    at ensureOptionalType (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/optional.js:94:26)
+    at Object.typeCheck (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/optional.js:154:19)
+    at ASTNode.check (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@marcbachmann/cel-js/lib/parser.js:160:44)
+
+Node.js v24.14.1

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 277, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 222, in main
+    decisions = verify(workloads, programs, evaluate)
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 127, in verify
+    actual = evaluate(program, case["bindings"])
+  File "/Users/marcelotryle/dev/pydantic/cel/benchmarks/python.py", line 75, in evaluate
+    return program.evaluate(bindings)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/marcelotryle/dev/pydantic/cel/bindings/python/src/cel/program.py", line 37, in evaluate
+    return _native.evaluate(
+           ~~~~~~~~~~~~~~~~^
+        self._handle,
+        ^^^^^^^^^^^^^
+    ...<11 lines>...
+        OptionalValue,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+cel.program.EvaluationError: NoMatchingOverload

@@ -1,0 +1,109 @@
+FFF                                                                                                                                                    [100%]
+========================================================================== FAILURES ==========================================================================
+________________________________________ test_upstream_function_declarations_and_generic_results_are_checked[python] _________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-889/test_upstream_function_declara0')
+engine = 'python'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_upstream_function_declarations_and_generic_results_are_checked(tmp_path: Path, engine: str) -> None:
+        original = json.loads((ROOT / "testdata" / "type_deduction.json").read_text())
+        tests = [case for section in original["section"] for case in section["test"]
+                 if any("function" in declaration for declaration in case.get("typeEnv", []))]
+        assert len(tests) == 5
+        data = json.dumps({"section": [{"name": "functions", "test": tests}]}).encode()
+        (tmp_path / "functions.json").write_bytes(data)
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": {"fixture": "pinned type_deduction function cases"},
+            "summary": {"tests": len(tests)},
+            "files": [{"name": "function_types", "kind": "core", "output": "functions.json",
+                       "tests": len(tests), "outputSha256": hashlib.sha256(data).hexdigest()}],
+        }))
+        report = tmp_path / "report.json"
+        process = subprocess.run(
+            [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", "full",
+             "--corpus", str(tmp_path), "--report", str(report)],
+            capture_output=True, text=True, timeout=30,
+        )
+>       assert process.returncode == 0, process.stdout + process.stderr
+E       AssertionError: total: total=5 passed=0 failed=0 unsupported=5
+E         core: total=5 passed=0 failed=0 unsupported=5
+E         extension: total=0 passed=0 failed=0 unsupported=0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...ted=5\ncore: total=5 passed=0 failed=0 unsupported=5\nextension: total=0 passed=0 failed=0 unsupported=0\n', stderr='').returncode
+
+conformance/test_functions.py:34: AssertionError
+_________________________________________ test_upstream_function_declarations_and_generic_results_are_checked[node] __________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-889/test_upstream_function_declara1')
+engine = 'node'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_upstream_function_declarations_and_generic_results_are_checked(tmp_path: Path, engine: str) -> None:
+        original = json.loads((ROOT / "testdata" / "type_deduction.json").read_text())
+        tests = [case for section in original["section"] for case in section["test"]
+                 if any("function" in declaration for declaration in case.get("typeEnv", []))]
+        assert len(tests) == 5
+        data = json.dumps({"section": [{"name": "functions", "test": tests}]}).encode()
+        (tmp_path / "functions.json").write_bytes(data)
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": {"fixture": "pinned type_deduction function cases"},
+            "summary": {"tests": len(tests)},
+            "files": [{"name": "function_types", "kind": "core", "output": "functions.json",
+                       "tests": len(tests), "outputSha256": hashlib.sha256(data).hexdigest()}],
+        }))
+        report = tmp_path / "report.json"
+        process = subprocess.run(
+            [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", "full",
+             "--corpus", str(tmp_path), "--report", str(report)],
+            capture_output=True, text=True, timeout=30,
+        )
+>       assert process.returncode == 0, process.stdout + process.stderr
+E       AssertionError: total: total=5 passed=0 failed=0 unsupported=5
+E         core: total=5 passed=0 failed=0 unsupported=5
+E         extension: total=0 passed=0 failed=0 unsupported=0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...ted=5\ncore: total=5 passed=0 failed=0 unsupported=5\nextension: total=0 passed=0 failed=0 unsupported=0\n', stderr='').returncode
+
+conformance/test_functions.py:34: AssertionError
+__________________________________________ test_upstream_function_declarations_and_generic_results_are_checked[zig] __________________________________________
+
+tmp_path = PosixPath('/private/var/folders/q1/wn12m6td0tx0dy1s84xzrxbm0000gn/T/pytest-of-marcelotryle/pytest-889/test_upstream_function_declara2')
+engine = 'zig'
+
+    @pytest.mark.parametrize("engine", ["python", "node", "zig"])
+    def test_upstream_function_declarations_and_generic_results_are_checked(tmp_path: Path, engine: str) -> None:
+        original = json.loads((ROOT / "testdata" / "type_deduction.json").read_text())
+        tests = [case for section in original["section"] for case in section["test"]
+                 if any("function" in declaration for declaration in case.get("typeEnv", []))]
+        assert len(tests) == 5
+        data = json.dumps({"section": [{"name": "functions", "test": tests}]}).encode()
+        (tmp_path / "functions.json").write_bytes(data)
+        (tmp_path / "manifest.json").write_text(json.dumps({
+            "source": {"fixture": "pinned type_deduction function cases"},
+            "summary": {"tests": len(tests)},
+            "files": [{"name": "function_types", "kind": "core", "output": "functions.json",
+                       "tests": len(tests), "outputSha256": hashlib.sha256(data).hexdigest()}],
+        }))
+        report = tmp_path / "report.json"
+        process = subprocess.run(
+            [sys.executable, str(ROOT / "run.py"), "--engine", engine, "--mode", "full",
+             "--corpus", str(tmp_path), "--report", str(report)],
+            capture_output=True, text=True, timeout=30,
+        )
+>       assert process.returncode == 0, process.stdout + process.stderr
+E       AssertionError: total: total=5 passed=0 failed=0 unsupported=5
+E         core: total=5 passed=0 failed=0 unsupported=5
+E         extension: total=0 passed=0 failed=0 unsupported=0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/Users/marcelotryle/dev/pydantic/cel/bindings/python/.venv/bin/python', '/Users/marcelotryle/d...ted=5\ncore: total=5 passed=0 failed=0 unsupported=5\nextension: total=0 passed=0 failed=0 unsupported=0\n', stderr='').returncode
+
+conformance/test_functions.py:34: AssertionError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python::test_upstream_function_declarations_and_generic_results_are_checked[python] - AssertionError: total: total=5 passed=0 failed=0 unsu...
+FAILED bindings/python::test_upstream_function_declarations_and_generic_results_are_checked[node] - AssertionError: total: total=5 passed=0 failed=0 unsupp...
+FAILED bindings/python::test_upstream_function_declarations_and_generic_results_are_checked[zig] - AssertionError: total: total=5 passed=0 failed=0 unsuppo...
+3 failed in 0.29s

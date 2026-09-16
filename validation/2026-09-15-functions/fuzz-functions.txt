@@ -1,0 +1,9 @@
+======= FUZZING REPORT =======
+Step: run test
+Fuzz test: "program.test.custom function source and runtime values stay bounded" (412fc0fcd0d2b0a3)
+Runs: 0 -> 106127
+Unique runs: 0 -> 383
+Coverage: 0/13824 -> 1677/13824 (12.13%)
+------------------------------
+Values are accumulated across multiple runs when preserving the cache.
+==============================

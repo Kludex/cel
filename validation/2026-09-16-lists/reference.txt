@@ -1,0 +1,35 @@
+## Conclusion
+
+CEL-Go list-extension semantics are captured in `conformance/reference/lists.go` with reproducible output in `conformance/reference/lists.txt`. No timing or performance conclusions were made.
+
+## Method
+
+Reference: CEL-Go commit `16c2ebb13679d18704cee890f3fdc861fe2ca7b1`, Go `1.26.0`, macOS arm64.
+
+```sh
+(cd /tmp/cel-go-reference && \
+  go run "$OLDPWD/conformance/reference/lists.go") \
+  > conformance/reference/lists.txt
+```
+
+A second run matched byte-for-byte.
+
+## Results
+
+- Mixed `int`/`uint`/`double` values or keys compile through `dyn`, then fail with `list elements must have the same type`.
+- Dynamic singleton list/map values and singleton unorderable `sortBy` keys fail as non-comparable. Dynamic empty lists succeed without validating an element.
+- `[NaN].sort()` succeeds. `[2.0, NaN, 1.0].sort()` returns `[2, NaN, 1]` without error.
+- Equal-key ordering is unstable for 24 elements. `v % 3` reordered members within each key group. All-identical keys happened to retain order.
+- Nested numeric aliases collapse under `distinct()`. Nested NaNs remain distinct. Optional none values collapse, wrapped numeric aliases collapse, and wrapped NaNs remain distinct.
+- `sortBy` evaluates its receiver once and each key once. Empty input evaluates no keys. A key error on the third element stops evaluation after three calls.
+- Macro variables shadow outer and nested variables correctly.
+- Non-identifiers, scalar/map receivers, and wrong arities fail compilation.
+- `list(dyn)` checks as `dyn`; `[].sort()` checks as `list(int)`; mixed literals check as `dyn`; `list(list(int))` is rejected.
+
+## Cause
+
+`sortBy` expands to a bind plus one map pass. Sorting uses unstable `sort.Slice`. Comparator errors from NaN are discarded, producing successful but incompletely sorted output - likely a CEL-Go reference bug. Empty-list `list(int)` inference appears overload-order-dependent and should be treated as unspecified.
+
+## Next step
+
+Add public cases for mixed-type rejection, unorderable singletons, distinct equality, receiver/key counts, and error short-circuiting. For equal keys, assert permutation and key ordering rather than exact tie order. Do not copy the silent NaN behavior without an explicit compatibility decision.

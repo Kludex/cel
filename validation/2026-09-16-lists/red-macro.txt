@@ -1,0 +1,14 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_________________________________________________ test_sort_by_macro_rejects_invalid_receivers_and_bindings __________________________________________________
+
+    def test_sort_by_macro_rejects_invalid_receivers_and_bindings() -> None:
+        for source in ("1.sortBy(x, x)", "{'x': 1}.sortBy(x, x)", "[1].sortBy(1, 1)", "[1].sortBy(x.y, 1)"):
+>           with pytest.raises(CompileError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE CompileError
+
+bindings/python/tests/test_lists.py:38: Failed
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_lists.py::test_sort_by_macro_rejects_invalid_receivers_and_bindings - Failed: DID NOT RAISE CompileError
+1 failed, 3 deselected in 0.02s

@@ -1,0 +1,419 @@
+v22.14.0
+glibc 2.31
+TAP version 13
+# Subtest: nested evaluations keep outer input and result storage independent
+ok 1 - nested evaluations keep outer input and result storage independent
+  ---
+  duration_ms: 8.232333
+  ...
+# Subtest: strong proto2 enums preserve types, conversions, defaults, and wire values
+ok 2 - strong proto2 enums preserve types, conversions, defaults, and wire values
+  ---
+  duration_ms: 7.302083
+  ...
+# Subtest: strong proto3 enums preserve types, conversions, defaults, and wire values
+ok 3 - strong proto3 enums preserve types, conversions, defaults, and wire values
+  ---
+  duration_ms: 5.147917
+  ...
+# Subtest: legacy enums remain integers by default
+ok 4 - legacy enums remain integers by default
+  ---
+  duration_ms: 2.350583
+  ...
+# Subtest: enum declarations, constants, and nested inputs preserve ownership
+ok 5 - enum declarations, constants, and nested inputs preserve ownership
+  ---
+  duration_ms: 2.298417
+  ...
+# Subtest: EnumValue validates wrapper and spoofed native inputs
+ok 6 - EnumValue validates wrapper and spoofed native inputs
+  ---
+  duration_ms: 1.128417
+  ...
+# Subtest: enum constants cannot claim primitive, message, or unregistered types
+ok 7 - enum constants cannot claim primitive, message, or unregistered types
+  ---
+  duration_ms: 0.220541
+  ...
+# Subtest: enum ranges, wrong overloads, map keys, and strongEnums type are rejected
+ok 8 - enum ranges, wrong overloads, map keys, and strongEnums type are rejected
+  ---
+  duration_ms: 3.212584
+  ...
+# Subtest: custom functions support global, receiver, and scalar overloads
+ok 9 - custom functions support global, receiver, and scalar overloads
+  ---
+  duration_ms: 2.174792
+  ...
+# Subtest: generic custom functions preserve type metadata
+ok 10 - generic custom functions preserve type metadata
+  ---
+  duration_ms: 0.212958
+  ...
+# Subtest: custom function failures preserve CEL and JavaScript errors
+ok 11 - custom function failures preserve CEL and JavaScript errors
+  ---
+  duration_ms: 0.471667
+  ...
+# Subtest: checked generic return contracts reject mismatched callback values
+ok 12 - checked generic return contracts reject mismatched callback values
+  ---
+  duration_ms: 0.098833
+  ...
+# Subtest: host exception identity is preserved even with native-looking error codes
+ok 13 - host exception identity is preserved even with native-looking error codes
+  ---
+  duration_ms: 0.235458
+  ...
+# Subtest: environment errors preserve host identity with compile-looking codes
+ok 14 - environment errors preserve host identity with compile-looking codes
+  ---
+  duration_ms: 0.072083
+  ...
+# Subtest: function declarations accept precisely typed host callbacks
+ok 15 - function declarations accept precisely typed host callbacks
+  ---
+  duration_ms: 0.073959
+  ...
+# Subtest: callbacks are reentrant and environment snapshots cannot be retargeted
+ok 16 - callbacks are reentrant and environment snapshots cannot be retargeted
+  ---
+  duration_ms: 2.1965
+  ...
+# Subtest: callbacks own converted message and enum values for the duration of the call
+ok 17 - callbacks own converted message and enum values for the duration of the call
+  ---
+  duration_ms: 0.6175
+  ...
+# Subtest: callback results obey conversion limits
+ok 18 - callback results obey conversion limits
+  ---
+  duration_ms: 3.633375
+  ...
+# Subtest: function and type constructors reject invalid declarations
+ok 19 - function and type constructors reject invalid declarations
+  ---
+  duration_ms: 0.216833
+  ...
+# Subtest: function declaration limits are enforced
+ok 20 - function declaration limits are enforced
+  ---
+  duration_ms: 53.820875
+  ...
+# Subtest: list extensions evaluate a complete collection policy
+ok 21 - list extensions evaluate a complete collection policy
+  ---
+  duration_ms: 1.948791
+  ...
+# Subtest: sortBy scopes its variable and evaluates receiver and keys once
+ok 22 - sortBy scopes its variable and evaluates receiver and keys once
+  ---
+  duration_ms: 0.2715
+  ...
+# Subtest: list extensions preserve nested equality and reject invalid boundaries
+ok 23 - list extensions preserve nested equality and reject invalid boundaries
+  ---
+  duration_ms: 0.381667
+  ...
+# Subtest: typed map outputs are valid inputs without assertions or casts
+ok 24 - typed map outputs are valid inputs without assertions or casts
+  ---
+  duration_ms: 0.6025
+  ...
+# Subtest: native maps preserve CEL key types and nested maps
+ok 25 - native maps preserve CEL key types and nested maps
+  ---
+  duration_ms: 0.788791
+  ...
+# Subtest: native maps accept integer boundaries and keep bool distinct from integers
+ok 26 - native maps accept integer boundaries and keep bool distinct from integers
+  ---
+  duration_ms: 0.097792
+  ...
+# Subtest: native maps reject invalid and CEL-equivalent duplicate keys
+ok 27 - native maps reject invalid and CEL-equivalent duplicate keys
+  ---
+  duration_ms: 0.525833
+  ...
+# Subtest: native map conversion uses captured intrinsics
+ok 28 - native map conversion uses captured intrinsics
+  ---
+  duration_ms: 0.131833
+  ...
+# Subtest: map brands and limits do not depend on mutable prototypes
+ok 29 - map brands and limits do not depend on mutable prototypes
+  ---
+  duration_ms: 35.380375
+  ...
+# Subtest: proxies cannot disguise map brands or wrapper keys
+ok 30 - proxies cannot disguise map brands or wrapper keys
+  ---
+  duration_ms: 0.314416
+  ...
+# Subtest: proxy rejection does not execute wrapper prototype traps
+ok 31 - proxy rejection does not execute wrapper prototype traps
+  ---
+  duration_ms: 0.162958
+  ...
+# Subtest: map snapshot descriptors ignore inherited accessors
+ok 32 - map snapshot descriptors ignore inherited accessors
+  ---
+  duration_ms: 0.156333
+  ...
+# Subtest: map snapshots do not invoke inherited array setters
+ok 33 - map snapshots do not invoke inherited array setters
+  ---
+  duration_ms: 0.102792
+  ...
+# Subtest: native maps snapshot entries before converting values
+ok 34 - native maps snapshot entries before converting values
+  ---
+  duration_ms: 0.109209
+  ...
+# Subtest: native map results and environment constants own their data
+ok 35 - native map results and environment constants own their data
+  ---
+  duration_ms: 0.21675
+  ...
+# Subtest: native maps detect cycles but allow shared noncyclic values
+ok 36 - native maps detect cycles but allow shared noncyclic values
+  ---
+  duration_ms: 0.101625
+  ...
+# Subtest: nested native map evaluations keep results independent
+ok 37 - nested native map evaluations keep results independent
+  ---
+  duration_ms: 0.102042
+  ...
+# Subtest: object and native maps charge the same key-value budget
+ok 38 - object and native maps charge the same key-value budget
+  ---
+  duration_ms: 41.294791
+  ...
+# Subtest: native maps preserve collection, depth, and byte limits
+ok 39 - native maps preserve collection, depth, and byte limits
+  ---
+  duration_ms: 30.027167
+  ...
+# Subtest: math policies preserve numeric result types and permission decisions
+ok 40 - math policies preserve numeric result types and permission decisions
+  ---
+  duration_ms: 2.180125
+  ...
+# Subtest: math rounding, predicates and errors retain CEL behavior
+ok 41 - math rounding, predicates and errors retain CEL behavior
+  ---
+  duration_ms: 0.480083
+  ...
+# Subtest: math namespaces remain independent of variables and respect function overrides
+ok 42 - math namespaces remain independent of variables and respect function overrides
+  ---
+  duration_ms: 0.204375
+  ...
+# Subtest: OptionalValue constructors preserve presence
+ok 43 - OptionalValue constructors preserve presence
+  ---
+  duration_ms: 1.230125
+  ...
+# Subtest: optional operations and static types cross the native boundary
+ok 44 - optional operations and static types cross the native boundary
+  ---
+  duration_ms: 1.172416
+  ...
+# Subtest: nested optionals and present null remain distinct
+ok 45 - nested optionals and present null remain distinct
+  ---
+  duration_ms: 0.084875
+  ...
+# Subtest: optional constants own recursive payloads
+ok 46 - optional constants own recursive payloads
+  ---
+  duration_ms: 0.087417
+  ...
+# Subtest: callbacks accept and return optional values
+ok 47 - callbacks accept and return optional values
+  ---
+  duration_ms: 0.208875
+  ...
+# Subtest: native conversion validates spoofed OptionalValue metadata
+ok 48 - native conversion validates spoofed OptionalValue metadata
+  ---
+  duration_ms: 0.089875
+  ...
+# Subtest: optional conversion enforces cycles, depth, bytes, and value budgets
+ok 49 - optional conversion enforces cycles, depth, bytes, and value budgets
+  ---
+  duration_ms: 14.141375
+  ...
+# Subtest: optional payloads support enum, proto, temporal, and type values
+ok 50 - optional payloads support enum, proto, temporal, and type values
+  ---
+  duration_ms: 0.676875
+  ...
+# Subtest: optional wrappers reject unsupported payloads
+ok 51 - optional wrappers reject unsupported payloads
+  ---
+  duration_ms: 0.073125
+  ...
+# Subtest: Program compiles once and evaluates native bindings
+ok 52 - Program compiles once and evaluates native bindings
+  ---
+  duration_ms: 0.640625
+  ...
+# Subtest: values cross the native boundary without JSON conversion
+ok 53 - values cross the native boundary without JSON conversion
+  ---
+  duration_ms: 0.887208
+  ...
+# Subtest: type values round trip and macros preserve native data
+ok 54 - type values round trip and macros preserve native data
+  ---
+  duration_ms: 0.299458
+  ...
+# Subtest: regex policies use RE2 and defer pattern errors until evaluation
+ok 55 - regex policies use RE2 and defer pattern errors until evaluation
+  ---
+  duration_ms: 0.349833
+  ...
+# Subtest: environments own declarations and check complete policies
+ok 56 - environments own declarations and check complete policies
+  ---
+  duration_ms: 3.353792
+  ...
+# Subtest: byte inputs are captured before later getters run
+ok 57 - byte inputs are captured before later getters run
+  ---
+  duration_ms: 0.165625
+  ...
+# Subtest: negative zero remains a double and wrappers validate inputs
+ok 58 - negative zero remains a double and wrappers validate inputs
+  ---
+  duration_ms: 0.11325
+  ...
+# Subtest: compile and evaluation failures have distinct typed codes
+ok 59 - compile and evaluation failures have distinct typed codes
+  ---
+  duration_ms: 0.317083
+  ...
+# Subtest: invalid JavaScript inputs are rejected
+ok 60 - invalid JavaScript inputs are rejected
+  ---
+  duration_ms: 3.807583
+  ...
+# Subtest: native conversion uses captured intrinsics and accepts numeric wrapper subclasses
+ok 61 - native conversion uses captured intrinsics and accepts numeric wrapper subclasses
+  ---
+  duration_ms: 0.156
+  ...
+# Subtest: binding names and maps use own enumerable string properties
+ok 62 - binding names and maps use own enumerable string properties
+  ---
+  duration_ms: 0.074875
+  ...
+# Subtest: native programs can be reclaimed by garbage collection
+ok 63 - native programs can be reclaimed by garbage collection
+  ---
+  duration_ms: 2.469833
+  ...
+# Subtest: plain objects and native maps bypass mutable optional instance checks
+ok 64 - plain objects and native maps bypass mutable optional instance checks
+  ---
+  duration_ms: 1.103542
+  ...
+# Subtest: optional subclasses and reentrant getters preserve value conversion order
+ok 65 - optional subclasses and reentrant getters preserve value conversion order
+  ---
+  duration_ms: 0.182459
+  ...
+# Subtest: enumerable key snapshots retain order and ignore later additions
+ok 66 - enumerable key snapshots retain order and ignore later additions
+  ---
+  duration_ms: 0.104583
+  ...
+# Subtest: enumerable symbol errors follow earlier string-keyed getter effects
+ok 67 - enumerable symbol errors follow earlier string-keyed getter effects
+  ---
+  duration_ms: 0.263042
+  ...
+# Subtest: symbol key snapshots do not invoke inherited array setters
+ok 68 - symbol key snapshots do not invoke inherited array setters
+  ---
+  duration_ms: 0.119875
+  ...
+# Subtest: property enumeration uses captured intrinsics for values and environments
+ok 69 - property enumeration uses captured intrinsics for values and environments
+  ---
+  duration_ms: 0.975541
+  ...
+# Subtest: protobuf messages preserve descriptors, wire data, defaults, and presence
+ok 70 - protobuf messages preserve descriptors, wire data, defaults, and presence
+  ---
+  duration_ms: 2.1965
+  ...
+# Subtest: protobuf boundary errors preserve failure phases
+ok 71 - protobuf boundary errors preserve failure phases
+  ---
+  duration_ms: 0.34325
+  ...
+# Subtest: messages copy their byte inputs and programs retain descriptor ownership
+ok 72 - messages copy their byte inputs and programs retain descriptor ownership
+  ---
+  duration_ms: 2.528041
+  ...
+# Subtest: strings and keys preserve code points across inline and allocated conversion
+ok 73 - strings and keys preserve code points across inline and allocated conversion
+  ---
+  duration_ms: 2.574375
+  ...
+# Subtest: lone surrogates are rejected rather than replaced in source and activations
+ok 74 - lone surrogates are rejected rather than replaced in source and activations
+  ---
+  duration_ms: 1.251958
+  ...
+# Subtest: UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters
+ok 75 - UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters
+  ---
+  duration_ms: 21.947542
+  ...
+# Subtest: public string conversion agrees with lossless Node Unicode round trips
+ok 76 - public string conversion agrees with lossless Node Unicode round trips
+  ---
+  duration_ms: 3.360583
+  ...
+# Subtest: temporal values preserve nanoseconds and static types
+ok 77 - temporal values preserve nanoseconds and static types
+  ---
+  duration_ms: 2.028958
+  ...
+# Subtest: temporal ranges and timezone inputs reject invalid data
+ok 78 - temporal ranges and timezone inputs reject invalid data
+  ---
+  duration_ms: 0.433167
+  ...
+(node:14) ExperimentalWarning: glob is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+1..78
+# tests 78
+# suites 0
+# pass 78
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 860.666792
+# start of coverage report
+# -------------------------------------------------------------------
+# file               | line % | branch % | funcs % | uncovered lines
+# -------------------------------------------------------------------
+# tmp                |        |          |         | 
+#  installed         |        |          |         | 
+#   node_modules     |        |          |         | 
+#    @pydantic       |        |          |         | 
+#     cel            |        |          |         | 
+#      dist          |        |          |         | 
+#       index.js     | 100.00 |   100.00 |  100.00 | 
+# -------------------------------------------------------------------
+# all files          | 100.00 |   100.00 |  100.00 | 
+# -------------------------------------------------------------------
+# end of coverage report

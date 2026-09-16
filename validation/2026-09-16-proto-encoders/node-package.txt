@@ -1,0 +1,25 @@
+npm notice
+npm notice 📦  @pydantic/cel@0.1.0-alpha.19
+npm notice Tarball Contents
+npm notice 1.1kB LICENSE
+npm notice 25.2kB README.md
+npm notice 7.0MB cel.node
+npm notice 4.6kB dist/index.d.ts
+npm notice 11.4kB dist/index.js
+npm notice 11.4kB licenses/ABSEIL-LICENSE
+npm notice 16.7kB licenses/LLVM-LICENSE
+npm notice 1.7kB licenses/PROTOBUF-LICENSE
+npm notice 1.6kB licenses/RE2-LICENSE
+npm notice 1.1kB licenses/UTF8-RANGE-LICENSE
+npm notice 1.0kB package.json
+npm notice Tarball Details
+npm notice name: @pydantic/cel
+npm notice version: 0.1.0-alpha.19
+npm notice filename: pydantic-cel-0.1.0-alpha.19.tgz
+npm notice package size: 2.4 MB
+npm notice unpacked size: 7.1 MB
+npm notice shasum: 22b9cc0b75efab13813958881f50b0e2039a1276
+npm notice integrity: sha512-cPRqKbquDNN2Z[...]ybn8A6L6M6qfg==
+npm notice total files: 11
+npm notice
+pydantic-cel-0.1.0-alpha.19.tgz

@@ -1,0 +1,120 @@
+{
+  "name":  "bindings_ext",
+  "description":  "Tests for the bindings extension library.",
+  "section":  [
+    {
+      "name":  "bind",
+      "test":  [
+        {
+          "name":  "boolean_literal",
+          "expr":  "cel.bind(t, true, t)",
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "string_concat",
+          "expr":  "cel.bind(msg, \"hello\", msg + msg + msg)",
+          "value":  {
+            "stringValue":  "hellohellohello"
+          }
+        },
+        {
+          "name":  "bind_nested",
+          "expr":  "cel.bind(t1, true, cel.bind(t2, true, t1 && t2))",
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "macro_exists",
+          "expr":  "cel.bind(valid_elems, [1, 2, 3], [3, 4, 5].exists(e, e in valid_elems))",
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "macro_not_exists",
+          "expr":  "cel.bind(valid_elems, [1, 2, 3], ![4, 5].exists(e, e in valid_elems))",
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "shadowing",
+          "expr":  "cel.bind(x, 0, x == 0)",
+          "typeEnv":  [
+            {
+              "name":  "x",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "bindings":  {
+            "x":  {
+              "value":  {
+                "int64Value":  "1"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "shadowing_namespace_resolution",
+          "expr":  "cel.bind(x, 0, x == 0)",
+          "typeEnv":  [
+            {
+              "name":  "com.example.x",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.x":  {
+              "value":  {
+                "int64Value":  "1"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        },
+        {
+          "name":  "shadowing_namespace_resolution_selector",
+          "expr":  "cel.bind(x, {'y': 0}, x.y == 0)",
+          "typeEnv":  [
+            {
+              "name":  "com.example.x.y",
+              "ident":  {
+                "type":  {
+                  "primitive":  "INT64"
+                }
+              }
+            }
+          ],
+          "container":  "com.example",
+          "bindings":  {
+            "com.example.x.y":  {
+              "value":  {
+                "int64Value":  "1"
+              }
+            }
+          },
+          "value":  {
+            "boolValue":  true
+          }
+        }
+      ]
+    }
+  ]
+}

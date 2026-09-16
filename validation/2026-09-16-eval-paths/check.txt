@@ -1,0 +1,38 @@
+All checks passed!
+54 files already formatted
+Success: no issues found in 48 source files
+
+> @pydantic/cel@0.1.0-alpha.21 check
+> tsc -p tsconfig.json --noEmit && oxlint index.ts test build.mjs && oxfmt --check index.ts test build.mjs
+
+
+  ! eslint-plugin-unicorn(no-new-array): Do not use `new Array(singleArgument)`.
+     ,-[test/plain-data.test.ts:184:29]
+ 183 |   let lastRead = false;
+ 184 |   const values: unknown[] = new Array(100_000).fill(0);
+     :                             ^^^^^^^^^^^^^^^^^^
+ 185 |   Object.defineProperty(values, 99_999, {
+     `----
+  help: It's not clear whether the argument is meant to be the length of the array or the only element. If the argument is the array's length, consider using `Array.from({ length: n })`. If the argument is the only element, use `[element]`.
+
+  ! eslint-plugin-unicorn(no-new-array): Do not use `new Array(singleArgument)`.
+     ,-[test/plain-data.test.ts:208:17]
+ 207 | 
+ 208 |   const exact = new Array(99_999).fill(true);
+     :                 ^^^^^^^^^^^^^^^^^
+ 209 |   assert.equal(new Program("list.size()").evaluate({ list: exact }), 99_999n);
+     `----
+  help: It's not clear whether the argument is meant to be the length of the array or the only element. If the argument is the array's length, consider using `Array.from({ length: n })`. If the argument is the only element, use `[element]`.
+
+Found 2 warnings and 0 errors.
+Finished in 3ms on 20 files with 88 rules using 16 threads.
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 1ms on 20 files using 16 threads.
+Found 0 warnings and 0 errors.
+Finished in 2ms on 5 files with 88 rules using 16 threads.
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 1ms on 5 files using 16 threads.

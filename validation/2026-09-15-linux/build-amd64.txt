@@ -1,0 +1,8 @@
+Build Summary: 5/5 steps succeeded
+test-install success
++- install test success
+   +- compile test ReleaseSafe x86_64-linux-gnu cached 40ms MaxRSS:35M
+      +- WriteFile cached
+      +- compile lib cel_native ReleaseSafe x86_64-linux-gnu cached 57ms MaxRSS:35M
+      +- compile lib cel_native ReleaseSafe x86_64-linux-gnu (reused)
+

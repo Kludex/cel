@@ -1,0 +1,30 @@
+## Conclusion
+
+CEL-Go binding semantics are confirmed at the pinned commit. No performance timing was performed.
+
+## Method
+
+- CEL-Go `16c2ebb13679d18704cee890f3fdc861fe2ca7b1`
+- Go `1.26.0`, macOS arm64
+- Public `ext.Bindings()`, compile, program, and repeated `Eval` APIs
+- Command: `(cd /tmp/cel-go-reference && go run "$PWD/conformance/reference/bindings.go")`
+- A second run matched byte-for-byte.
+
+## Results
+
+- Unused initializers skip values, division-by-zero, missing-key receivers, and `types.NewErr` callbacks. All callback counts remained zero.
+- Repeated value and CEL-error reads initialize once per `Eval`. Caches reset between calls: `tick()` ran once in each evaluation.
+- Missing-key and callback errors are also memoized under logical suppression. Used errors propagate.
+- Initializers capture the outer scope before body shadowing: `[11, 10]`; nested shadowing produced `[12, 10]`. Binding and comprehension scopes composed correctly.
+- Literal and select binding names fail during parsing. `.x` is accepted, but `cel.bind(.x, 1, .x)` returns the absolute activation value `10`.
+- Wrong arities do not expand the macro. `.cel.bind` and `other.bind` are ordinary unresolved calls.
+- A variable named `cel` does not block macro expansion.
+- The macro wins over a custom `cel.bind` family. `.cel.bind(1,2,3)` bypasses the macro and invokes the custom family, returning `106`.
+
+## Cause
+
+Results are established by returned values, errors, and callback/get-receiver counts, including repeated evaluations.
+
+## Next step
+
+Use the persisted evidence in `conformance/reference/bindings.go` and `conformance/reference/bindings.txt` for parent-owned engine tests.

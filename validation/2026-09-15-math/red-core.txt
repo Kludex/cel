@@ -1,0 +1,11 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.math extension policies preserve numeric types and bitwise permission decisions' failed without output
+failed command: ./.zig-cache/o/031154149df6a774a1aa59d7c07ed660/test --cache-dir=./.zig-cache --seed=0xf3c6207f --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/36572acba243105f72fa4aa07095e694/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0xf3c6207f -Z06d7550fc7062ef2 test -Dtest-filter=math extension policies -j4

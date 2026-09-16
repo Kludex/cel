@@ -1,0 +1,22 @@
+file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/parser.js:474
+    throw new ParseSyntaxError(failedExpectations.map((e) => e.expectation), remainder.slice(0, 1), runtime.getLocation(parse$source, input, remainder, remainder));
+          ^
+
+syntax error: <input>:1:9: found . but expecting end of input
+    at parse (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/parser.js:474:11)
+    at Module.parse (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/node_modules/@bufbuild/cel/dist/esm/parse.js:23:20)
+    at Object.compile (file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:131:66)
+    at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:251:53
+    at Array.map (<anonymous>)
+    at file:///Users/marcelotryle/dev/pydantic/cel/benchmarks/typescript.mjs:251:28 {
+  rawMessage: 'found . but expecting end of input',
+  location: {
+    source: undefined,
+    start: { offset: 8, line: 1, column: 9 },
+    end: { offset: 8, line: 1, column: 9 }
+  },
+  expected: [ { type: 'end', value: 'end of input' } ],
+  found: '.'
+}
+
+Node.js v24.14.1

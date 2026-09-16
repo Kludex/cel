@@ -1,0 +1,227 @@
+✔ nested evaluations keep outer input and result storage independent (10.651167ms)
+✔ local bindings evaluate complete policies and preserve lexical scope (3.296542ms)
+✔ local initializer values and CEL errors are cached only for one evaluation (0.188625ms)
+✔ cached empty values and absolute names preserve their meaning (0.250792ms)
+✔ bind expansion uses the exact namespace before custom function lookup (0.173459ms)
+✔ local initialization preserves host errors and reentrant result storage (4.892166ms)
+✔ indexed blocks preserve heterogeneous slot types and lazy memoization (3.818292ms)
+✔ block scope and iterator handles cannot be redirected by use-site bindings (0.404333ms)
+✔ block syntax and lazy dependency errors preserve host exception behavior (0.222833ms)
+✔ strong proto2 enums preserve types, conversions, defaults, and wire values (7.5405ms)
+✔ strong proto3 enums preserve types, conversions, defaults, and wire values (4.682542ms)
+✔ legacy enums remain integers by default (3.746ms)
+✔ enum declarations, constants, and nested inputs preserve ownership (3.230959ms)
+✔ EnumValue validates wrapper and spoofed native inputs (1.249917ms)
+✔ enum constants cannot claim primitive, message, or unregistered types (0.206833ms)
+✔ enum ranges, wrong overloads, map keys, and strongEnums type are rejected (2.349667ms)
+✔ custom functions support global, receiver, and scalar overloads (2.094625ms)
+✔ generic custom functions preserve type metadata (0.192458ms)
+✔ custom function failures preserve CEL and JavaScript errors (0.431166ms)
+✔ checked generic return contracts reject mismatched callback values (0.096791ms)
+✔ host exception identity is preserved even with native-looking error codes (0.181333ms)
+✔ environment errors preserve host identity with compile-looking codes (0.087167ms)
+✔ function declarations accept precisely typed host callbacks (0.077166ms)
+✔ callbacks are reentrant and environment snapshots cannot be retargeted (5.575334ms)
+✔ callbacks own converted message and enum values for the duration of the call (1.132416ms)
+✔ callback results obey conversion limits (2.973666ms)
+✔ function and type constructors reject invalid declarations (0.177292ms)
+✔ function declaration limits are enforced (33.982916ms)
+✔ list extensions evaluate a complete collection policy (5.249833ms)
+✔ sortBy scopes its variable and evaluates receiver and keys once (0.300667ms)
+✔ list extensions preserve nested equality and reject invalid boundaries (0.511459ms)
+✔ typed map outputs are valid inputs without assertions or casts (0.656917ms)
+✔ native maps preserve CEL key types and nested maps (0.748625ms)
+✔ native maps accept integer boundaries and keep bool distinct from integers (0.097791ms)
+✔ native maps reject invalid and CEL-equivalent duplicate keys (0.442375ms)
+✔ native map conversion uses captured intrinsics (0.142041ms)
+✖ map brands and limits do not depend on mutable prototypes (0.546459ms)
+✔ proxies cannot disguise map brands or wrapper keys (0.264083ms)
+✖ proxy rejection does not execute wrapper prototype traps (0.104667ms)
+✔ map snapshot descriptors ignore inherited accessors (0.133209ms)
+✖ map snapshots do not invoke inherited array setters (1.238167ms)
+✔ native maps snapshot entries before converting values (0.151041ms)
+✔ native map results and environment constants own their data (0.165583ms)
+✔ native maps detect cycles but allow shared noncyclic values (0.092458ms)
+✔ nested native map evaluations keep results independent (0.109958ms)
+✔ object and native maps charge the same key-value budget (42.287292ms)
+✔ native maps preserve collection, depth, and byte limits (20.360209ms)
+✔ math policies preserve numeric result types and permission decisions (2.233542ms)
+✔ math rounding, predicates and errors retain CEL behavior (0.358917ms)
+✔ math namespaces remain independent of variables and respect function overrides (0.176333ms)
+✔ network values preserve canonical addresses, host bits and nominal types (1.572708ms)
+✔ network parsing rejects zones and all mapped IPv6 representations (0.409542ms)
+✔ network constants callbacks and nested results survive collection (3.833416ms)
+✔ OptionalValue constructors preserve presence (1.106208ms)
+✔ optional operations and static types cross the native boundary (1.636583ms)
+✔ nested optionals and present null remain distinct (0.101917ms)
+✔ optional constants own recursive payloads (0.09275ms)
+✔ callbacks accept and return optional values (0.178584ms)
+✔ native conversion validates spoofed OptionalValue metadata (0.101792ms)
+✔ optional conversion enforces cycles, depth, bytes, and value budgets (19.5455ms)
+✔ optional payloads support enum, proto, temporal, and type values (0.77875ms)
+✔ optional wrappers reject unsupported payloads (0.098ms)
+✔ plain request bindings convert getters exactly once in enumeration order (1.253541ms)
+✔ unsupported values after plain data preserve earlier getter effects and error identity (0.34525ms)
+✔ plain data keeps exact numeric, string, and byte semantics (0.412042ms)
+✔ plain data mixed with wrapper classes and native maps converts consistently (0.946333ms)
+✔ plain data enforces cycle, depth, collection, and byte limits (71.568125ms)
+✔ Program compiles once and evaluates native bindings (0.7665ms)
+✔ values cross the native boundary without JSON conversion (0.89275ms)
+✔ type values round trip and macros preserve native data (0.272334ms)
+✔ regex policies use RE2 and defer pattern errors until evaluation (0.41175ms)
+✔ environments own declarations and check complete policies (7.587333ms)
+✖ byte inputs are captured before later getters run (0.65775ms)
+✔ negative zero remains a double and wrappers validate inputs (0.124584ms)
+✔ compile and evaluation failures have distinct typed codes (0.215666ms)
+✔ invalid JavaScript inputs are rejected (4.947833ms)
+✔ native conversion uses captured intrinsics and accepts numeric wrapper subclasses (0.279625ms)
+✔ binding names and maps use own enumerable string properties (0.101167ms)
+✔ native programs can be reclaimed by garbage collection (3.802833ms)
+✔ plain objects and native maps bypass mutable optional instance checks (2.433625ms)
+✔ optional subclasses and reentrant getters preserve value conversion order (0.216833ms)
+✔ enumerable key snapshots retain order and ignore later additions (0.1225ms)
+✔ enumerable symbol errors follow earlier string-keyed getter effects (0.238458ms)
+✖ symbol key snapshots do not invoke inherited array setters (0.452125ms)
+✔ property enumeration uses captured intrinsics for values and environments (0.934208ms)
+✔ Base64 operations preserve binary inputs, padding and URL alphabets (3.211375ms)
+✔ protobuf helpers preserve descriptor presence and defaults (6.648875ms)
+✔ protobuf messages preserve descriptors, wire data, defaults, and presence (3.002ms)
+✔ protobuf boundary errors preserve failure phases (0.3205ms)
+✔ messages copy their byte inputs and programs retain descriptor ownership (4.903541ms)
+✔ complete text policies normalize names labels and formatted revisions (1.678167ms)
+✔ Unicode string operations index code points rather than UTF-16 units (0.731292ms)
+✔ quoting formatting and error boundaries preserve CEL values (0.506791ms)
+✔ strings and keys preserve code points across inline and allocated conversion (3.053917ms)
+✔ lone surrogates are rejected rather than replaced in source and activations (1.3835ms)
+✔ UTF-8 byte budgets stay exact for ASCII, multibyte, and supplementary characters (19.246667ms)
+✔ public string conversion agrees with lossless Node Unicode round trips (3.577666ms)
+✔ temporal values preserve nanoseconds and static types (2.422083ms)
+✔ temporal ranges and timezone inputs reject invalid data (0.305917ms)
+ℹ tests 99
+ℹ suites 0
+ℹ pass 94
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 471.678167
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/map.test.js:122:1
+✖ map brands and limits do not depend on mutable prototypes (0.546459ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + {}
+  - Map(1) {
+  -   1n => 'one'
+  - }
+  
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:126:16)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {},
+    expected: Map(1) { 1n => 'one' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at bindings/typescript/dist/test/map.test.js:146:1
+✖ proxy rejection does not execute wrapper prototype traps (0.104667ms)
+  AssertionError [ERR_ASSERTION]: The error is expected to be an instance of "TypeError". Received "Error"
+  
+  Error message:
+  
+  prototype trap ran
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:156:16)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: prototype trap ran
+        at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:148:20)
+        at Test.runInAsyncScope (node:async_hooks:228:14)
+        at Test.run (node:internal/test_runner/test:1118:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+        at Test.postRun (node:internal/test_runner/test:1247:19)
+        at Test.run (node:internal/test_runner/test:1175:12)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:787:7),
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at bindings/typescript/dist/test/map.test.js:178:1
+✖ map snapshots do not invoke inherited array setters (1.238167ms)
+  Error: Node-API call failed
+      at Program.evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/index.js:486:27)
+      at evaluate (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:6:38)
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/map.test.js:196:18)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'NodeAPIError'
+  }
+
+test at bindings/typescript/dist/test/program.test.js:87:1
+✖ byte inputs are captured before later getters run (0.65775ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    Buffer(3) [Uint8Array] [
+  +   9,
+  +   9,
+  +   9
+  -   1,
+  -   2,
+  -   3
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/program.test.js:96:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: <Buffer 09 09 09>,
+    expected: <Buffer 01 02 03>,
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at bindings/typescript/dist/test/properties.test.js:91:1
+✖ symbol key snapshots do not invoke inherited array setters (0.452125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/properties.test.js:117:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

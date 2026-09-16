@@ -1,0 +1,7 @@
+Build Summary: 4/4 steps succeeded
+test-compile success
++- compile test ReleaseSafe aarch64-linux-gnu success 25s MaxRSS:583M
+   +- WriteFile cached
+   +- compile lib cel_native ReleaseSafe aarch64-linux-gnu cached 138ms MaxRSS:35M
+   +- compile lib cel_native ReleaseSafe aarch64-linux-gnu (reused)
+

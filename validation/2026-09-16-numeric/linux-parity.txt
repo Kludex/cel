@@ -1,0 +1,81 @@
+python-full.json vs report.json: PASS
+  fullConformance: equal
+  implementation: equal
+  mode: equal
+  omittedChecks: equal
+  results: equal
+  schemaVersion: equal
+  source: equal
+  sourceGaps: equal
+  successfullyChecked: equal
+  summary: equal
+  implementation: 'python-public-api'
+  total: {"failed": 3, "passed": 2505, "total": 2508, "unsupported": 0}
+node-full.json vs report-node.json: PASS
+  fullConformance: equal
+  implementation: equal
+  mode: equal
+  omittedChecks: equal
+  results: equal
+  schemaVersion: equal
+  source: equal
+  sourceGaps: equal
+  successfullyChecked: equal
+  summary: equal
+  implementation: 'node-public-api'
+  total: {"failed": 3, "passed": 2505, "total": 2508, "unsupported": 0}
+zig-full.json vs report-zig.json: PASS
+  fullConformance: equal
+  implementation: equal
+  mode: equal
+  omittedChecks: equal
+  results: equal
+  schemaVersion: equal
+  source: equal
+  sourceGaps: equal
+  successfullyChecked: equal
+  summary: equal
+  implementation: 'zig-public-api'
+  total: {"failed": 3, "passed": 2505, "total": 2508, "unsupported": 0}
+python-evaluation.json vs evaluation-python.json: PASS
+  fullConformance: equal
+  implementation: equal
+  mode: equal
+  omittedChecks: equal
+  results: equal
+  schemaVersion: equal
+  source: equal
+  sourceGaps: equal
+  successfullyChecked: equal
+  summary: equal
+  implementation: 'python-public-api'
+  total: {"failed": 2, "passed": 2481, "total": 2508, "unsupported": 25}
+node-evaluation.json vs evaluation-node.json: PASS
+  fullConformance: equal
+  implementation: equal
+  mode: equal
+  omittedChecks: equal
+  results: equal
+  schemaVersion: equal
+  source: equal
+  sourceGaps: equal
+  successfullyChecked: equal
+  summary: equal
+  implementation: 'node-public-api'
+  total: {"failed": 2, "passed": 2481, "total": 2508, "unsupported": 25}
+zig-evaluation.json vs evaluation-zig.json: PASS
+  fullConformance: equal
+  implementation: equal
+  mode: equal
+  omittedChecks: equal
+  results: equal
+  schemaVersion: equal
+  source: equal
+  sourceGaps: equal
+  successfullyChecked: equal
+  summary: equal
+  implementation: 'zig-public-api'
+  total: {"failed": 2, "passed": 2481, "total": 2508, "unsupported": 25}
+All six reports equal, including every top-level field and implementation label: True
+
+exit=0

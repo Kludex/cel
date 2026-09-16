@@ -1,0 +1,6 @@
+total: total=2508 passed=2100 failed=4 unsupported=404
+core: total=1905 passed=1901 failed=4 unsupported=0
+extension: total=603 passed=199 failed=0 unsupported=404
+total: total=2508 passed=2075 failed=4 unsupported=429
+core: total=1905 passed=1876 failed=4 unsupported=25
+extension: total=603 passed=199 failed=0 unsupported=404

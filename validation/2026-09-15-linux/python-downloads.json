@@ -1,0 +1,19 @@
+[
+  {
+    "key": "cpython-3.10.20-linux-aarch64-gnu",
+    "version": "3.10.20",
+    "version_parts": {
+      "major": 3,
+      "minor": 10,
+      "patch": 20
+    },
+    "path": null,
+    "symlink": null,
+    "url": "https://releases.astral.sh/github/python-build-standalone/releases/download/20260728/cpython-3.10.20%2B20260728-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz",
+    "os": "linux",
+    "variant": "default",
+    "implementation": "cpython",
+    "arch": "aarch64",
+    "libc": "gnu"
+  }
+]

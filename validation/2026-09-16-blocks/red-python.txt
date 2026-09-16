@@ -1,0 +1,200 @@
+FFFFFF                                                                                                                                                 [100%]
+========================================================================== FAILURES ==========================================================================
+_______________________________________________ test_indexed_blocks_infer_heterogeneous_slots_and_reuse_values _______________________________________________
+
+    def test_indexed_blocks_infer_heterogeneous_slots_and_reuse_values() -> None:
+        source = "cel.block([1, 'ok', [cel.index(0)], cel.index(0) + 2], [cel.index(1), cel.index(2), cel.index(3)])"
+>       for program in (Program(source), Environment().compile(source)):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1092706d0>
+source = "cel.block([1, 'ok', [cel.index(0)], cel.index(0) + 2], [cel.index(1), cel.index(2), cel.index(3)])"
+environment = <cel.program.Environment object at 0x109270610>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+_________________________________________________ test_block_slots_are_lazy_and_cache_cel_errors_per_request _________________________________________________
+
+    def test_block_slots_are_lazy_and_cache_cel_errors_per_request() -> None:
+        calls = 0
+    
+        def tick() -> int:
+            nonlocal calls
+            calls += 1
+            return calls
+    
+        environment = Environment(functions=(Function("tick", (), CELType("int"), tick),))
+>       assert environment.compile("cel.block([tick(), 1/0], true)").evaluate({}) is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1092711e0>, source = 'cel.block([tick(), 1/0], true)', environment = <cel.program.Environment object at 0x109271750>
+check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+__________________________________________________ test_slots_capture_declaration_scope_not_their_use_site ___________________________________________________
+
+    def test_slots_capture_declaration_scope_not_their_use_site() -> None:
+        environment = Environment(variables={"x": CELType("int")})
+>       assert environment.compile("cel.block([x+1], [2].map(x, cel.index(0)))").evaluate({"x": 10}) == [11]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1092e6b30>, source = 'cel.block([x+1], [2].map(x, cel.index(0)))'
+environment = <cel.program.Environment object at 0x1092e6da0>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+__________________________________________ test_iterator_handles_are_lexical_and_cannot_be_supplied_by_activations ___________________________________________
+
+    def test_iterator_handles_are_lexical_and_cannot_be_supplied_by_activations() -> None:
+        source = (
+            "[1,2].map(cel.iterVar(0,0), [3].map(cel.iterVar(1,0), cel.iterVar(0,0)+cel.iterVar(1,0)))"
+        )
+>       assert Environment().compile(source).evaluate({}) == [[4], [5]]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1092e7910>, source = '[1,2].map(cel.iterVar(0,0), [3].map(cel.iterVar(1,0), cel.iterVar(0,0)+cel.iterVar(1,0)))'
+environment = <cel.program.Environment object at 0x1092e7e50>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: InvalidSyntax
+
+bindings/python/src/cel/program.py:33: CompileError
+______________________________________________ test_block_indices_reject_invalid_dependencies_even_when_unused _______________________________________________
+
+    def test_block_indices_reject_invalid_dependencies_even_when_unused() -> None:
+        for source in (
+            "cel.index(0)", "cel.index(-1)", "cel.index(0u)", "cel.index(0.0)",
+            "cel.block([1], cel.index(1))", "cel.block([cel.index(0)], true)",
+            "cel.block([cel.index(1), 2], true)", "cel.block([1], cel.index(1-1))",
+            "cel.block([?optional.of(1)], true)", "cel.block(values, true)",
+            "cel.block([1], cel.block([cel.index(0)], true))",
+        ):
+>           with pytest.raises(CompileError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE CompileError
+
+bindings/python/tests/test_blocks.py:68: Failed
+_____________________________________________ test_block_caches_survive_reentry_and_callbacks_releasing_the_gil ______________________________________________
+
+    def test_block_caches_survive_reentry_and_callbacks_releasing_the_gil() -> None:
+        barrier = Barrier(2)
+        identity = Program("cel.block([value], [cel.index(0), cel.index(0)])")
+    
+        def pause(value: int) -> int:
+            assert identity.evaluate({"value": value}) == [value, value]
+            barrier.wait(timeout=5)
+            return value
+    
+        environment = Environment(variables={"value": CELType("int")}, functions=(
+            Function("pause", (CELType("int"),), CELType("int"), pause),
+        ))
+>       program = environment.compile("cel.block([pause(value)], cel.index(0)+cel.index(0))")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_blocks.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1092e7a30>, source = 'cel.block([pause(value)], cel.index(0)+cel.index(0))'
+environment = <cel.program.Environment object at 0x1092e7c40>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_blocks.py::test_indexed_blocks_infer_heterogeneous_slots_and_reuse_values - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_blocks.py::test_block_slots_are_lazy_and_cache_cel_errors_per_request - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_blocks.py::test_slots_capture_declaration_scope_not_their_use_site - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_blocks.py::test_iterator_handles_are_lexical_and_cannot_be_supplied_by_activations - cel.program.CompileError: InvalidSyntax
+FAILED bindings/python/tests/test_blocks.py::test_block_indices_reject_invalid_dependencies_even_when_unused - Failed: DID NOT RAISE CompileError
+FAILED bindings/python/tests/test_blocks.py::test_block_caches_survive_reentry_and_callbacks_releasing_the_gil - cel.program.CompileError: UndeclaredReference
+6 failed in 0.04s

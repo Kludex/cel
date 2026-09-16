@@ -1,0 +1,60 @@
+✔ plain request bindings convert getters exactly once in enumeration order (1.347666ms)
+✔ unsupported values after plain data preserve earlier getter effects and error identity (0.359125ms)
+✔ plain data keeps exact numeric, string, and byte semantics (1.139625ms)
+✔ plain data mixed with wrapper classes and native maps converts consistently (2.861333ms)
+✔ reentrant evaluations during deferred conversion keep outer plain data intact (7.913875ms)
+✖ deferred maps snapshot entries before later plain getters run (0.451417ms)
+✖ collection budgets stop plain traversal before reading every element (8.408208ms)
+✔ plain data enforces cycle, depth, collection, and byte limits (54.128083ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 6
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 143.87175
+
+✖ failing tests:
+
+test at bindings/typescript/dist/test/plain-data.test.js:141:1
+✖ deferred maps snapshot entries before later plain getters run (0.451417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/plain-data.test.js:151:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at bindings/typescript/dist/test/plain-data.test.js:162:1
+✖ collection budgets stop plain traversal before reading every element (8.408208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///Users/marcelotryle/dev/pydantic/cel/bindings/typescript/dist/test/plain-data.test.js:173:12)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

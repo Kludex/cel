@@ -1,0 +1,40 @@
+F                                                                                                                                                      [100%]
+========================================================================== FAILURES ==========================================================================
+_______________________________________________________ test_initializers_capture_outer_lexical_scope ________________________________________________________
+
+    def test_initializers_capture_outer_lexical_scope() -> None:
+        source = "cel.bind(x, 10, [1,2].map(y, cel.bind(z, x+y, cel.bind(x, 100, z+z))))"
+        assert Environment().compile(source).evaluate({}) == [22, 24]
+        environment = Environment(container="policy", variables={"policy.x.y": CELType("int")})
+        assert environment.compile("cel.bind(x, {'y': 1}, x.y + .policy.x.y)").evaluate({"policy.x.y": 9}) == 10
+        assert Program("cel.bind(x, x + 1, x)").evaluate({"x": 3}) == 4
+>       assert Environment(variables={"x": CELType("int")}).compile("cel.bind(.x, 1/0, .x)").evaluate({"x": 3}) == 3
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_bindings.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10ac287f0>, source = 'cel.bind(.x, 1/0, .x)', environment = <cel.program.Environment object at 0x10ac2b310>
+check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: InvalidSyntax
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_bindings.py::test_initializers_capture_outer_lexical_scope - cel.program.CompileError: InvalidSyntax
+1 failed, 6 deselected in 0.03s

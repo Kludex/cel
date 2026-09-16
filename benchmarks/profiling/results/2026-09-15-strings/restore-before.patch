@@ -1,0 +1,118 @@
+--- a/src/node.zig
++++ b/src/node.zig
+@@ -88,15 +88,18 @@
+     try check(env, c.napi_typeof(env, input, &value_type));
+     if (value_type != c.napi_string) return failType(env, "source must be a string");
+ 
+-    var source_arena = std.heap.ArenaAllocator.init(gpa);
+-    defer source_arena.deinit();
+-    const source = readJavaScriptString(env, source_arena.allocator(), input, (cel.Limits{}).max_source_bytes) catch |err| switch (err) {
+-        error.StringLimitExceeded => return throwCore(env, "CEL_COMPILE_", error.SourceLimitExceeded),
+-        else => |other| return other,
+-    };
++    var source_len: usize = 0;
++    try check(env, c.napi_get_value_string_utf8(env, input, null, 0, &source_len));
++    if (source_len > (cel.Limits{}).max_source_bytes) {
++        return throwCore(env, "CEL_COMPILE_", error.SourceLimitExceeded);
++    }
++    const source = try gpa.alloc(u8, source_len + 1);
++    defer gpa.free(source);
++    var written: usize = 0;
++    try check(env, c.napi_get_value_string_utf8(env, input, source.ptr, source.len, &written));
+ 
+     const handle = try gpa.create(ProgramHandle);
+-    const compiled = if (checked) config.compile(gpa, source, .{}) else config.parse(gpa, source, .{});
++    const compiled = if (checked) config.compile(gpa, source[0..written], .{}) else config.parse(gpa, source[0..written], .{});
+     handle.program = compiled catch |err| {
+         gpa.destroy(handle);
+         return throwCore(env, "CEL_COMPILE_", err);
+@@ -249,13 +252,19 @@
+     try check(env, c.napi_get_value_external(env, argv[0], &pointer));
+     const handle: *const ProgramHandle = @ptrCast(@alignCast(pointer orelse return failType(env, "invalid Program handle")));
+ 
++    for (argv[2..6]) |constructor| {
++        var value_type: c.napi_valuetype = undefined;
++        try check(env, c.napi_typeof(env, constructor, &value_type));
++        if (value_type != c.napi_function) {
++            return failType(env, "UInt, Double, CELType, and EnumValue must be constructors");
++        }
++    }
++
+     var arena_state = std.heap.ArenaAllocator.init(gpa);
+     defer arena_state.deinit();
+-    var stack = std.heap.stackFallback(4096, arena_state.allocator());
+-    const arena = stack.get();
+     var converter = Converter{
+         .env = env,
+-        .arena = arena,
++        .arena = arena_state.allocator(),
+         .uint_type = argv[2],
+         .double_type = argv[3],
+         .cel_type = argv[4],
+@@ -266,42 +275,10 @@
+         .timestamp_type = argv[9],
+     };
+     const bindings = try converter.bindings(argv[1]);
+-    const result = handle.program.evaluate(arena, bindings) catch |err| {
++    const result = handle.program.evaluate(arena_state.allocator(), bindings) catch |err| {
+         return throwCore(env, "CEL_EVALUATE_", err);
+     };
+     return converter.toJavaScript(result, 0);
+-}
+-
+-fn readJavaScriptString(env: c.napi_env, arena: std.mem.Allocator, input: c.napi_value, max_bytes: usize) (NapiError || error{StringLimitExceeded})![]const u8 {
+-    var buffer: [64]u8 = undefined;
+-    var written: usize = 0;
+-    const status = c.napi_get_value_string_utf8(env, input, &buffer, buffer.len, &written);
+-    if (status == c.napi_string_expected) return failType(env, "expected a string");
+-    try check(env, status);
+-    // UTF-8 truncation may leave up to three spare bytes before the terminator.
+-    const result = if (written < buffer.len - 4) blk: {
+-        if (written > max_bytes) return error.StringLimitExceeded;
+-        break :blk try arena.dupe(u8, buffer[0..written]);
+-    } else blk: {
+-        var length: usize = 0;
+-        try check(env, c.napi_get_value_string_utf16(env, input, null, 0, &length));
+-        if (length > max_bytes) return error.StringLimitExceeded;
+-        try check(env, c.napi_get_value_string_utf8(env, input, null, 0, &length));
+-        if (length > max_bytes) return error.StringLimitExceeded;
+-        const bytes = try arena.alloc(u8, length + 1);
+-        try check(env, c.napi_get_value_string_utf8(env, input, bytes.ptr, bytes.len, &written));
+-        break :blk bytes[0..written];
+-    };
+-    // Node replaces lone surrogates with U+FFFD, so those outputs need a lossless check.
+-    if (std.mem.indexOf(u8, result, "\xef\xbf\xbd") != null) {
+-        var inline_units: [64]u16 = undefined;
+-        const units = if (result.len < inline_units.len) &inline_units else try arena.alloc(u16, result.len + 1);
+-        try check(env, c.napi_get_value_string_utf16(env, input, units.ptr, units.len, &written));
+-        for (units[0..written]) |*unit| unit.* = std.mem.nativeToLittle(u16, unit.*);
+-        var iterator = std.unicode.Utf16LeIterator.init(units[0..written]);
+-        while (iterator.nextCodepoint() catch return failType(env, "strings must not contain unpaired UTF-16 surrogates")) |_| {}
+-    }
+-    return result;
+ }
+ 
+ const Converter = struct {
+@@ -622,12 +599,16 @@
+     }
+ 
+     fn readString(self: *Converter, input: c.napi_value) NapiError![]const u8 {
+-        const result = readJavaScriptString(self.env, self.arena, input, max_input_bytes - self.input_bytes) catch |err| switch (err) {
+-            error.StringLimitExceeded => return failRange(self.env, "input exceeds byte limit"),
+-            else => |other| return other,
+-        };
+-        try self.chargeBytes(result.len);
+-        return result;
++        var value_type: c.napi_valuetype = undefined;
++        try check(self.env, c.napi_typeof(self.env, input, &value_type));
++        if (value_type != c.napi_string) return failType(self.env, "object keys must be strings");
++        var len: usize = 0;
++        try check(self.env, c.napi_get_value_string_utf8(self.env, input, null, 0, &len));
++        try self.chargeBytes(len);
++        const out = try self.arena.alloc(u8, len + 1);
++        var written: usize = 0;
++        try check(self.env, c.napi_get_value_string_utf8(self.env, input, out.ptr, out.len, &written));
++        return out[0..written];
+     }
+ 
+     fn chargeBytes(self: *Converter, len: usize) NapiError!void {

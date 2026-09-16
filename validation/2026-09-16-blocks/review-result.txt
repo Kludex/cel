@@ -1,0 +1,1 @@
+No findings. Nested block capture, lazy forward/cyclic references, request-local caches, private alias isolation, resource limits, and `cel.bind`/comprehension interactions appear correct.

@@ -1,0 +1,14 @@
+Python 3.10.18 (main, Jul 23 2025, 18:23:55) [GCC 10.2.1 20210110]
+glibc 2.31
+Looking in links: /wheels
+Processing /dist/cel_sdk-0.1.0a12-cp310-abi3-linux_aarch64.whl
+Processing /wheels/typing_extensions-4.15.0-py3-none-any.whl
+Installing collected packages: typing-extensions, cel-sdk
+Successfully installed cel-sdk-0.1.0a12 typing-extensions-4.15.0
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/tmp/site/cel/__init__.py", line 4, in <module>
+    from cel.program import (
+  File "/tmp/site/cel/program.py", line 3, in <module>
+    from cel import _native
+ImportError: /lib/aarch64-linux-gnu/libc.so.6: version `GLIBC_2.32' not found (required by /tmp/site/cel/_native.abi3.so)

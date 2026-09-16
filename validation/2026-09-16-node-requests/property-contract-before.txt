@@ -1,0 +1,11 @@
+✔ enumerable key snapshots retain order and ignore later additions (1.130417ms)
+✔ enumerable symbol errors follow earlier string-keyed getter effects (0.24275ms)
+✔ property enumeration uses captured intrinsics for values and environments (0.964042ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.291833

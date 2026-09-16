@@ -1,0 +1,47 @@
+{
+  "collected_at_utc": "2026-09-15T23:09:15Z",
+  "package": {
+    "name": "python-cel",
+    "version": "0.1.1",
+    "pypi_json_url": "https://pypi.org/pypi/python-cel/0.1.1/json",
+    "pypi_json_sha256": "aad3f63dcd8c2e22f2e3a785130e504c6ac5da3d65c824d0bf4d7273f8cf63a2",
+    "requires_python": ">=3.10, <4.0",
+    "release_file_count": 1,
+    "release_files": [
+      {
+        "filename": "python_cel-0.1.1-cp39-abi3-manylinux_2_34_x86_64.whl",
+        "packagetype": "bdist_wheel",
+        "size": 1307190,
+        "sha256": "f7ffaa78a0e6482b83a8d8545453b600d32cdffb3005284be11aa82c97c15dcc",
+        "upload_time_iso_8601": "2025-03-27T00:29:23.292609Z",
+        "yanked": false,
+        "tag": "cp39-abi3-manylinux_2_34_x86_64"
+      }
+    ],
+    "source_distribution_available": false,
+    "repository_url": "https://gitlab.com/emergentmethods/python-cel",
+    "repository_head_result": "HTTP 403 after redirect to https://gitlab.com/users/sign_in",
+    "wheel_api": {
+      "metadata_description": "Program.execute(Context)",
+      "stub": "Program.execute(Context)",
+      "runtime_public_program_methods": [
+        "execute"
+      ],
+      "runtime_has_evaluate": false
+    }
+  },
+  "container": {
+    "requested_image": "python@sha256:810da6270e43d30a1f3e0e1eabbeb6fbd9d78ad9dd2e754d5297a3d6cb42df46",
+    "local_image_id": "sha256:9b84b0c75adf7a34fb1b00b406a50dc9f7bebd3bfbe3e7fd9ff168a6f9d0dfb9",
+    "platform": "linux/amd64",
+    "python": "3.14.7",
+    "network_for_download": "bridge",
+    "network_for_install_and_evaluation": "none",
+    "emulated": true
+  },
+  "inputs": {
+    "benchmarks/python.py": "6c7b6594d75ce117893c64964e11497f1e4eeeb7ef319092c5e2840948729e4f",
+    "benchmarks/workloads.json": "be8d8ba2e50c812f566056723519d03a0d6ee9a8e5d1f57e6e25180d8e1c3be8",
+    "probe.py": "899c4d62a4ddd008328e1d07bfcdff57835e31ceddfc92a1abdfcf15b9aad12b"
+  }
+}

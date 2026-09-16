@@ -1,0 +1,328 @@
+//! Bounded CEL string formatting. Values are already materialized by the evaluator.
+
+const std = @import("std");
+const errors = @import("errors.zig");
+const value = @import("value.zig");
+const EvalError = errors.EvalError;
+const Entry = value.Entry;
+const Value = value.Value;
+
+const default_precision: usize = 6;
+
+/// Format materialized CEL values using the strings extension format syntax.
+pub fn format(
+    arena: std.mem.Allocator,
+    template: []const u8,
+    arguments: []const Value,
+    remaining: *usize,
+    max_output: usize,
+    max_depth: usize,
+    max_collection: usize,
+) EvalError!Value {
+    const storage = try arena.alloc(u8, max_output);
+    var context = Context{
+        .arena = arena,
+        .output = storage,
+        .remaining = remaining,
+        .max_depth = max_depth,
+        .max_collection = max_collection,
+    };
+
+    var template_index: usize = 0;
+    var argument_index: usize = 0;
+    while (template_index < template.len) {
+        const percent = std.mem.findScalarPos(u8, template, template_index, '%') orelse template.len;
+        try context.append(template[template_index..percent]);
+        if (percent == template.len) break;
+        if (percent + 1 < template.len and template[percent + 1] == '%') {
+            try context.charge(1);
+            try context.append("%");
+            template_index = percent + 2;
+            continue;
+        }
+        if (argument_index >= arguments.len or percent + 1 >= template.len) return error.InvalidArgument;
+
+        var clause_index = percent + 1;
+        var precision = default_precision;
+        if (template[clause_index] == '.') {
+            clause_index += 1;
+            if (clause_index >= template.len or
+                !std.ascii.isDigit(template[clause_index])) return error.InvalidArgument;
+            precision = 0;
+            while (clause_index < template.len and std.ascii.isDigit(template[clause_index])) : (clause_index += 1) {
+                try context.charge(1);
+                const digit = template[clause_index] - '0';
+                if (precision > (max_output -| digit) / 10) return error.CollectionLimitExceeded;
+                precision = precision * 10 + digit;
+                if (precision > max_output) return error.CollectionLimitExceeded;
+            }
+            if (clause_index >= template.len) return error.InvalidArgument;
+        }
+
+        try context.charge(clause_index - percent + 1);
+        try context.writeClause(template[clause_index], arguments[argument_index], precision);
+        argument_index += 1;
+        template_index = clause_index + 1;
+    }
+    if (argument_index != arguments.len) return error.InvalidArgument;
+    return .{ .string = storage[0..context.length] };
+}
+
+const Context = struct {
+    arena: std.mem.Allocator,
+    output: []u8,
+    length: usize = 0,
+    remaining: *usize,
+    max_depth: usize,
+    max_collection: usize,
+
+    fn charge(self: *Context, amount: usize) EvalError!void {
+        if (amount > self.remaining.*) return error.CostLimitExceeded;
+        self.remaining.* -= amount;
+    }
+
+    fn append(self: *Context, bytes: []const u8) EvalError!void {
+        if (bytes.len > self.output.len - self.length) return error.CollectionLimitExceeded;
+        try self.charge(bytes.len);
+        @memcpy(self.output[self.length..][0..bytes.len], bytes);
+        self.length += bytes.len;
+    }
+
+    fn writeClause(self: *Context, clause: u8, argument: Value, precision: usize) EvalError!void {
+        switch (clause) {
+            's' => try self.writeValue(argument, 0),
+            'd' => switch (argument) {
+                .int => |number| try self.writeInt(number, 10, .lower),
+                .uint => |number| try self.writeInt(number, 10, .lower),
+                .double => |number| try self.writeFloat(number, .decimal, null),
+                else => return error.InvalidArgument,
+            },
+            'b' => switch (argument) {
+                .bool => |boolean| try self.append(if (boolean) "1" else "0"),
+                .int => |number| try self.writeInt(number, 2, .lower),
+                .uint => |number| try self.writeInt(number, 2, .lower),
+                else => return error.InvalidArgument,
+            },
+            'o' => switch (argument) {
+                .int => |number| try self.writeInt(number, 8, .lower),
+                .uint => |number| try self.writeInt(number, 8, .lower),
+                else => return error.InvalidArgument,
+            },
+            'x', 'X' => try self.writeHex(argument, clause == 'X'),
+            'f', 'e' => {
+                const number: f64 = switch (argument) {
+                    .int => |integer| @floatFromInt(integer),
+                    .uint => |integer| @floatFromInt(integer),
+                    .double => |double| double,
+                    else => return error.InvalidArgument,
+                };
+                try self.writeFloat(number, if (clause == 'f') .decimal else .scientific, precision);
+            },
+            else => return error.InvalidArgument,
+        }
+    }
+
+    fn writeValue(self: *Context, item: Value, depth: usize) EvalError!void {
+        try self.charge(1);
+        switch (item) {
+            .null => try self.append("null"),
+            .bool => |boolean| try self.append(if (boolean) "true" else "false"),
+            .int => |number| try self.writeInt(number, 10, .lower),
+            .uint => |number| try self.writeInt(number, 10, .lower),
+            .double => |number| try self.writeFloat(number, .decimal, null),
+            .string => |text| try self.append(text),
+            .bytes => |bytes| try self.append(bytes),
+            .type_value => |type_name| try self.append(type_name),
+            .timestamp => |timestamp| try self.append(try timestamp.format(self.arena)),
+            .duration => |duration| try self.append(try duration.format(self.arena)),
+            .list => |items| try self.writeList(items, depth),
+            .map => |entries| try self.writeMap(entries, depth),
+            .message, .enum_value, .optional => return error.InvalidArgument,
+        }
+    }
+
+    fn writeList(self: *Context, items: []const Value, depth: usize) EvalError!void {
+        if (depth >= self.max_depth) return error.DepthLimitExceeded;
+        if (items.len > self.max_collection) return error.CollectionLimitExceeded;
+        try self.append("[");
+        for (items, 0..) |item, index| {
+            if (index != 0) try self.append(", ");
+            try self.writeValue(item, depth + 1);
+        }
+        try self.append("]");
+    }
+
+    fn writeMap(self: *Context, entries: []const Entry, depth: usize) EvalError!void {
+        if (depth >= self.max_depth) return error.DepthLimitExceeded;
+        if (entries.len > self.max_collection) return error.CollectionLimitExceeded;
+
+        const indices = try self.arena.alloc(usize, entries.len);
+        var key_bytes: usize = 0;
+        for (entries, 0..) |entry, index| {
+            switch (entry.key) {
+                .bool, .int, .uint, .string => {},
+                else => return error.InvalidArgument,
+            }
+            indices[index] = index;
+            key_bytes +|= keyLength(entry.key);
+        }
+        const levels = if (entries.len < 2) 1 else std.math.log2_int(usize, entries.len) + 1;
+        try self.charge(key_bytes *| levels);
+        const Ordering = struct {
+            entries: []const Entry,
+
+            fn lessThan(ordering: @This(), a: usize, b: usize) bool {
+                var a_buffer: [65]u8 = undefined;
+                var b_buffer: [65]u8 = undefined;
+                const a_text = keyText(ordering.entries[a].key, &a_buffer);
+                const b_text = keyText(ordering.entries[b].key, &b_buffer);
+                const result = std.mem.order(u8, a_text, b_text);
+                return result == .lt or (result == .eq and a < b);
+            }
+        };
+        std.sort.heap(usize, indices, Ordering{ .entries = entries }, Ordering.lessThan);
+
+        try self.append("{");
+        for (indices, 0..) |index, output_index| {
+            if (output_index != 0) try self.append(", ");
+            try self.writeValue(entries[index].key, depth + 1);
+            try self.append(": ");
+            try self.writeValue(entries[index].value, depth + 1);
+        }
+        try self.append("}");
+    }
+
+    fn writeInt(self: *Context, number: anytype, base: u8, case: std.fmt.Case) EvalError!void {
+        var buffer: [65]u8 = undefined;
+        const end = std.fmt.printInt(&buffer, number, base, case, .{});
+        try self.append(buffer[0..end]);
+    }
+
+    fn writeHex(self: *Context, item: Value, upper: bool) EvalError!void {
+        switch (item) {
+            .int => |number| try self.writeInt(number, 16, if (upper) .upper else .lower),
+            .uint => |number| try self.writeInt(number, 16, if (upper) .upper else .lower),
+            .string, .bytes => {
+                const bytes = if (item == .string) item.string else item.bytes;
+                if (bytes.len > (self.output.len - self.length) / 2) return error.CollectionLimitExceeded;
+                try self.charge(bytes.len * 2);
+                const alphabet = if (upper) "0123456789ABCDEF" else "0123456789abcdef";
+                for (bytes) |byte| {
+                    self.output[self.length] = alphabet[byte >> 4];
+                    self.output[self.length + 1] = alphabet[byte & 0x0f];
+                    self.length += 2;
+                }
+            },
+            else => return error.InvalidArgument,
+        }
+    }
+
+    fn writeFloat(self: *Context, number: f64, mode: std.fmt.Number.Mode, precision: ?usize) EvalError!void {
+        if (std.math.isNan(number)) return self.append("NaN");
+        if (std.math.isInf(number)) return self.append(if (number < 0) "-Infinity" else "Infinity");
+        if (precision) |digits| {
+            const overhead: usize = if (mode == .scientific) 8 else 2;
+            if (digits > self.output.len -| overhead) return error.CollectionLimitExceeded;
+        }
+        try self.charge(1);
+
+        const start = self.length;
+        var writer: std.Io.Writer = .fixed(self.output[start..]);
+        writer.printFloat(number, .{ .mode = mode, .precision = precision }) catch return error.CollectionLimitExceeded;
+        self.length += writer.end;
+        if (precision) |digits| {
+            if (shouldRoundTieDown(number, mode, digits)) decrementLastDigit(self.output[start..self.length]);
+        }
+        if (mode == .scientific) try self.normalizeExponent(start);
+        try self.charge(self.length - start);
+    }
+
+    fn normalizeExponent(self: *Context, start: usize) EvalError!void {
+        const formatted = self.output[start..self.length];
+        const relative_e = std.mem.lastIndexOfScalar(u8, formatted, 'e') orelse return;
+        const exponent = start + relative_e + 1;
+        const negative = exponent < self.length and self.output[exponent] == '-';
+        const digits_start = exponent + @intFromBool(negative);
+        const digits = self.length - digits_start;
+        const inserted: usize = @intFromBool(!negative) + @as(usize, @intFromBool(digits < 2));
+        if (inserted > self.output.len - self.length) return error.CollectionLimitExceeded;
+        std.mem.copyBackwards(
+            u8,
+            self.output[digits_start + inserted .. self.length + inserted],
+            self.output[digits_start..self.length],
+        );
+        var position = digits_start;
+        if (!negative) {
+            self.output[position] = '+';
+            position += 1;
+        }
+        if (digits < 2) self.output[position] = '0';
+        self.length += inserted;
+    }
+};
+
+fn keyLength(key: Value) usize {
+    return switch (key) {
+        .string => |text| text.len,
+        .bool => |boolean| if (boolean) 4 else 5,
+        .int, .uint => 20,
+        else => 0,
+    };
+}
+
+fn keyText(key: Value, buffer: *[65]u8) []const u8 {
+    return switch (key) {
+        .string => |text| text,
+        .bool => |boolean| if (boolean) "true" else "false",
+        .int => |number| buffer[0..std.fmt.printInt(buffer, number, 10, .lower, .{})],
+        .uint => |number| buffer[0..std.fmt.printInt(buffer, number, 10, .lower, .{})],
+        else => "",
+    };
+}
+
+fn shouldRoundTieDown(number: f64, mode: std.fmt.Number.Mode, precision: usize) bool {
+    var buffer: [std.fmt.float.bufferSize(.decimal, f64)]u8 = undefined;
+    const decimal = std.fmt.float.render(&buffer, @abs(number), .{ .mode = .decimal }) catch return false;
+
+    var integer_digits: usize = 0;
+    var first_significant: ?usize = null;
+    var digit_index: usize = 0;
+    for (decimal) |byte| {
+        if (byte == '.') {
+            integer_digits = digit_index;
+        } else if (std.ascii.isDigit(byte)) {
+            if (first_significant == null and byte != '0') first_significant = digit_index;
+            digit_index += 1;
+        }
+    }
+    if (std.mem.indexOfScalar(u8, decimal, '.') == null) integer_digits = digit_index;
+    const discarded = if (mode == .scientific)
+        std.math.add(usize, first_significant orelse return false, precision +| 1) catch return false
+    else
+        std.math.add(usize, integer_digits, precision) catch return false;
+
+    var retained: u8 = '0';
+    var found = false;
+    digit_index = 0;
+    for (decimal) |byte| {
+        if (!std.ascii.isDigit(byte)) continue;
+        if (digit_index + 1 == discarded) retained = byte;
+        if (digit_index == discarded) {
+            if (byte != '5') return false;
+            found = true;
+        } else if (digit_index > discarded and byte != '0') return false;
+        digit_index += 1;
+    }
+    return found and (retained - '0') % 2 == 0;
+}
+
+fn decrementLastDigit(formatted: []u8) void {
+    var end = std.mem.lastIndexOfScalar(u8, formatted, 'e') orelse formatted.len;
+    while (end > 0) {
+        end -= 1;
+        if (formatted[end] >= '0' and formatted[end] <= '9') {
+            formatted[end] -= 1;
+            return;
+        }
+    }
+}

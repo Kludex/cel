@@ -1,0 +1,11 @@
+test
++- run test 1 pass, 1 fail (2 total)
+error: 'program.test.large typed map constants retain distinct boolean and integer keys within linear budgets' failed without output
+failed command: ./.zig-cache/o/f420490361374666746d6a2f058cb387/test --cache-dir=./.zig-cache --seed=0xac3fa98a --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 1/2 tests passed (1 failed)
+test transitive failure
++- run test 1 pass, 1 fail (2 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/0330c0a727b9d42872570a72e144564d/build /opt/homebrew/Cellar/zig/0.16.0_1/bin/zig /opt/homebrew/Cellar/zig/0.16.0_1/lib/zig /Users/marcelotryle/dev/pydantic/cel .zig-cache /Users/marcelotryle/.cache/zig --seed 0xac3fa98a -Z6b6298373838f88d test -Dtest-filter=large typed map constants -j4

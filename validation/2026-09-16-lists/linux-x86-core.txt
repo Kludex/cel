@@ -1,0 +1,97 @@
+1/95 root.test_0...OK
+2/95 program.test.list extension policies preserve ordering types and nested equality...OK
+3/95 program.test.large distinct lists preserve numeric aliases and unequal hash collisions...OK
+4/95 program.test.list equality adapts nested protobuf wrappers...OK
+5/95 program.test.list extensions enforce collection depth and comparison budgets...OK
+6/95 program.test.protobuf collection equality charges field and unknown byte work...OK
+7/95 program.test.list extension allocations clean up through the public API...OK
+8/95 program.test.distinct numeric hashing agrees with public CEL value equality...OK
+9/95 program.test.list extension runtime sorting preserves values and never mutates inputs...OK
+10/95 program.test.math extension policies preserve numeric types and bitwise permission decisions...OK
+11/95 program.test.math extrema infer dynamic results when a dynamic argument may win...OK
+12/95 program.test.math bit shifts use fixed width logical semantics without undefined behavior...OK
+13/95 program.test.math extrema and rounding retain NaN and signed zero rules...OK
+14/95 program.test.math evaluation obeys work and collection limits before scanning inputs...OK
+15/95 program.test.math variadic allocation failures clean up...OK
+16/95 program.test.math shifts and extrema stay bounded for untrusted runtime values...OK
+17/95 program.test.optional policies distinguish absent null and present values...OK
+18/95 program.test.optional access and entries preserve presence and laziness...OK
+19/95 program.test.optional zero values and list helpers follow the value domain...OK
+20/95 program.test.optional checking rejects invalid initializers and checks unreachable defaults...OK
+21/95 program.test.optional indexes do not turn invalid keys into absence...OK
+22/95 program.test.optional constants and callbacks own their data and obey limits...OK
+23/95 program.test.optional allocation failures release compile and evaluation storage...OK
+24/95 program.test.optional macros evaluate their receiver once and obey lexical scope...OK
+25/95 program.test.optional callback signatures preserve types and reject nullable overlaps...OK
+26/95 program.test.custom functions evaluate complete checked and unchecked policies...OK
+27/95 program.test.custom generic functions instantiate fresh parameters and abstract result types...OK
+28/95 program.test.custom overloads resolve members and validate runtime signatures...OK
+29/95 program.test.checked generic callbacks cannot return a different inferred type...OK
+30/95 program.test.custom overload backtracking restores empty collection constraints...OK
+31/95 program.test.custom callbacks receive public message values and support more than four arguments...OK
+32/95 program.test.function declarations and costs reject invalid or excessive work...OK
+33/95 program.test.function signatures and callback allocations clean up on every failure...OK
+34/95 program.test.alpha equivalent and erased generic overloads are rejected...OK
+35/95 program.test.dynamic arguments erase generic runtime constraints...OK
+36/95 program.test.custom callback collections obey configured size limits...OK
+37/95 program.test.optional source and activations stay bounded...OK
+38/95 program.test.custom function source and runtime values stay bounded...OK
+39/95 program.test.strong enums preserve identity in checked and unchecked programs...OK
+40/95 program.test.strong enum constructors enforce input types and signed 32 bit bounds...OK
+41/95 program.test.enum constants cannot impersonate primitive message or unregistered types...OK
+42/95 program.test.strong enum declarations collections and namespace resolution retain their types...OK
+43/95 program.test.protobuf construction retains message types field defaults and presence...OK
+44/95 program.test.protobuf messages are not maps and reject unknown or mistyped fields...OK
+45/95 program.test.registered proto3 messages preserve maps lists oneofs and optional presence...OK
+46/95 program.test.descriptor and protobuf limits reject malformed external data...OK
+47/95 program.test.protobuf well-known values follow CEL unboxing and null semantics...OK
+48/95 program.test.temporal policies preserve nanoseconds arithmetic and canonical types...OK
+49/95 program.test.timestamp selectors use explicit zones and reject filesystem paths...OK
+50/95 program.test.temporal boundaries report errors instead of overflowing...OK
+51/95 program.test.protobuf temporal fields box values and prune null collection entries...OK
+52/95 program.test.checked environments infer types and reject unreachable type errors...OK
+53/95 program.test.checked type values compare independently of their described types...OK
+54/95 program.test.checked collection inference unifies empty and nested lists...OK
+55/95 program.test.flat aggregate inference does not turn type variable links into nesting...OK
+56/95 program.test.failed aggregate joins do not retain speculative variable constraints...OK
+57/95 program.test.environment validation and inference budgets fail through the public API...OK
+58/95 program.test.environments resolve namespace prefixes and own constants...OK
+59/95 program.test.checked selection cannot be redirected by undeclared qualified bindings...OK
+60/95 program.test.evaluate request authorization with nested inputs and a reusable program...OK
+61/95 program.test.evaluate scalar arithmetic precedence and CEL numeric types...OK
+62/95 program.test.boolean ordering and exact numeric comparisons follow CEL...OK
+63/95 program.test.evaluate collections and string operations...OK
+64/95 program.test.quoted field selection supports punctuation without admitting quoted calls or identifiers...OK
+65/95 program.test.upstream string escapes conversions and numeric indexing...OK
+66/95 program.test.logical operators suppress errors only when the result is determined...OK
+67/95 program.test.evaluate collection macros with lexical scope...OK
+68/95 program.test.two variable comprehensions preserve keys scope and error semantics...OK
+69/95 program.test.RE2 matching supports Unicode flags classes anchors and embedded nul...OK
+70/95 program.test.regex errors remain evaluation errors and obey CEL logical suppression...OK
+71/95 program.test.reusable regex policies evaluate independent requests and dynamic patterns...OK
+72/95 program.test.regex caches and work obey explicit resource limits...OK
+73/95 program.test.regex programs support concurrent request evaluations...OK
+74/95 program.test.qualified names prefer the longest binding and respect local and absolute scope...OK
+75/95 program.test.type values preserve CEL types without becoming strings...OK
+76/95 program.test.invalid expressions and runtime faults return public errors...OK
+77/95 program.test.resource limits reject excessive work without trapping...OK
+78/95 program.test.collection equality obeys depth and cost budgets...OK
+79/95 program.test.comprehensions enforce collection and work limits even in logical branches...OK
+80/95 program.test.untrusted source never traps or leaks...OK
+81/95 program.test.dynamic RE2 inputs never trap or leak evaluation storage...OK
+82/95 program.test.checking and environment ownership clean up every Zig allocation failure...OK
+83/95 program.test.protobuf ownership cleans up after every Zig allocation failure...OK
+84/95 program.test.strong enum protobuf wire values retain identity across independent programs...OK
+85/95 program.test.strong enum policies share immutable descriptors across concurrent requests...OK
+86/95 program.test.strong enum ownership cleans up after every Zig allocation failure...OK
+87/95 program.test.strong enum conversion never traps on untrusted values and wire bytes...OK
+88/95 program.test.protobuf wire input never traps or escapes native evaluation storage...OK
+89/95 program.test.temporal parsing never traps on untrusted string values...OK
+90/95 program.test.checked source never traps or leaks...OK
+91/95 program.test.map constants reject duplicate CEL keys including signed and unsigned aliases...OK
+92/95 program.test.map key validation cleans up on every allocation failure...OK
+93/95 program.test.typed map key validation agrees with public CEL equality...OK
+94/95 program.test.large typed map constants retain distinct boolean and integer keys within linear budgets...OK
+95/95 program.test.all allocation failures clean up through the public API...OK
+All 95 tests passed.
+12 fuzz tests found.

@@ -1,0 +1,211 @@
+FFFFFF                                                                                                                                                 [100%]
+========================================================================== FAILURES ==========================================================================
+_______________________________________________ test_base64_functions_preserve_binary_values_and_static_types ________________________________________________
+
+    def test_base64_functions_preserve_binary_values_and_static_types() -> None:
+        environment = Environment(variables={"data": CELType("bytes")})
+>       program = environment.compile("base64.decode(base64.encode(data))")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_encoders.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x1092eb520>, source = 'base64.decode(base64.encode(data))'
+environment = <cel.program.Environment object at 0x108851240>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+_________________________________________ test_base64_rejects_malformed_input_and_preserves_go_padding_compatibility _________________________________________
+
+    def test_base64_rejects_malformed_input_and_preserves_go_padding_compatibility() -> None:
+        for text in ("a", "a===", "aGV sbG8=", "aGV\tsbG8=", "aGVsbG8===", "a=GVsbG8", "____"):
+            with pytest.raises(EvaluationError):
+                Program("base64.decode(text)").evaluate({"text": text})
+        for text in ("Zh==", "Zh"):
+>           assert Program("base64.decode(text)").evaluate({"text": text}) == b"f"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_encoders.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10937e080>, bindings = {'text': 'Zh=='}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: UndeclaredReference
+
+bindings/python/src/cel/program.py:37: EvaluationError
+_________________________________________ test_base64_matches_independent_python_codec_for_generated_binary_payloads _________________________________________
+
+    def test_base64_matches_independent_python_codec_for_generated_binary_payloads() -> None:
+        random_values = random.Random(1729)
+        encode = Program("base64.encode(data)")
+        decode = Program("base64.decode(text)")
+        for size in range(128):
+            data = random_values.randbytes(size)
+            expected = base64.b64encode(data).decode("ascii")
+>           assert encode.evaluate({"data": data}) == expected
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_encoders.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10939b700>, bindings = {'data': b''}
+
+    def evaluate(self, bindings: dict[str, Value]) -> Value:
+        environment = self._environment
+>       return _native.evaluate(
+            self._handle,
+            bindings,
+            None if environment is None else environment._handle,
+            () if environment is None else environment._callbacks,
+            UInt,
+            CELType,
+            EnumValue,
+            Message,
+            Duration,
+            Timestamp,
+            CELMap,
+            EvaluationError,
+            OptionalValue,
+        )
+E       cel.program.EvaluationError: UndeclaredReference
+
+bindings/python/src/cel/program.py:37: EvaluationError
+___________________________________________ test_proto_helpers_reuse_descriptor_presence_defaults_and_field_types ____________________________________________
+
+    def test_proto_helpers_reuse_descriptor_presence_defaults_and_field_types() -> None:
+        environment = Environment(descriptors=DESCRIPTORS, container="cel.expr.conformance.proto2")
+>       program = environment.compile(
+            "cel.bind(msg, TestAllTypes{`cel.expr.conformance.proto2.int32_ext`: 42}, "
+            "proto.hasExt(msg, cel.expr.conformance.proto2.int32_ext) && "
+            "proto.getExt(msg, cel.expr.conformance.proto2.int32_ext) == 42 && "
+            "!proto.hasExt(msg, cel.expr.conformance.proto2.repeated_test_all_types) && "
+            "proto.getExt(msg, cel.expr.conformance.proto2.repeated_test_all_types) == [])"
+        )
+
+bindings/python/tests/test_proto_helpers.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10937c5b0>
+source = 'cel.bind(msg, TestAllTypes{`cel.expr.conformance.proto2.int32_ext`: 42}, proto.hasExt(msg, cel.expr.conformance.proto...mance.proto2.repeated_test_all_types) && proto.getExt(msg, cel.expr.conformance.proto2.repeated_test_all_types) == [])'
+environment = <cel.program.Environment object at 0x10937f310>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+_____________________________________________ test_proto_helper_extension_names_are_syntax_not_activation_values _____________________________________________
+
+    def test_proto_helper_extension_names_are_syntax_not_activation_values() -> None:
+        environment = Environment(descriptors=DESCRIPTORS, container="cel.expr.conformance.proto2")
+>       program = environment.compile("proto.getExt(TestAllTypes{}, cel.expr.conformance.proto2.int32_ext)")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_proto_helpers.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10939bd00>, source = 'proto.getExt(TestAllTypes{}, cel.expr.conformance.proto2.int32_ext)'
+environment = <cel.program.Environment object at 0x10909b700>, check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+_____________________________________________ test_proto_helper_macro_selection_also_works_on_qualified_map_keys _____________________________________________
+
+    def test_proto_helper_macro_selection_also_works_on_qualified_map_keys() -> None:
+>       assert Environment().compile("proto.getExt({'a.b': 3}, a.b)").evaluate({}) == 3
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bindings/python/tests/test_proto_helpers.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bindings/python/src/cel/program.py:111: in compile
+    return Program(source, environment=self, check=check)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cel.program.Program object at 0x10939b2e0>, source = "proto.getExt({'a.b': 3}, a.b)", environment = <cel.program.Environment object at 0x10939bb80>
+check = True
+
+    def __init__(self, source: str, *, environment: Environment | None = None, check: bool = False) -> None:
+        if type(check) is not bool:
+            raise TypeError("check must be a bool")
+        self._environment = environment
+        try:
+            if environment is None and not check:
+                self._handle = _native.compile(source)
+            else:
+                self._handle = _native.compile_in(None if environment is None else environment._handle, source, check)
+        except ValueError as exc:
+>           raise CompileError(str(exc)) from None
+E           cel.program.CompileError: UndeclaredReference
+
+bindings/python/src/cel/program.py:33: CompileError
+================================================================== short test summary info ===================================================================
+FAILED bindings/python/tests/test_encoders.py::test_base64_functions_preserve_binary_values_and_static_types - cel.program.CompileError: UndeclaredReference
+FAILED bindings/python/tests/test_encoders.py::test_base64_rejects_malformed_input_and_preserves_go_padding_compatibility - cel.program.EvaluationError: Un...
+FAILED bindings/python/tests/test_encoders.py::test_base64_matches_independent_python_codec_for_generated_binary_payloads - cel.program.EvaluationError: Un...
+FAILED bindings/python/tests/test_proto_helpers.py::test_proto_helpers_reuse_descriptor_presence_defaults_and_field_types - cel.program.CompileError: Undec...
+FAILED bindings/python/tests/test_proto_helpers.py::test_proto_helper_extension_names_are_syntax_not_activation_values - cel.program.CompileError: Undeclar...
+FAILED bindings/python/tests/test_proto_helpers.py::test_proto_helper_macro_selection_also_works_on_qualified_map_keys - cel.program.CompileError: Undeclar...
+6 failed in 0.04s

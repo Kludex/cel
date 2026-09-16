@@ -1,0 +1,142 @@
+ldd (GNU libc) 2.28
+1/137 root.test_0...OK
+2/137 program.test.protobuf helper policies use descriptor fields and syntactic extension names...OK
+3/137 program.test.protobuf extension lookup charges the qualified field name...OK
+4/137 program.test.Base64 conversion obeys output and work limits...OK
+5/137 program.test.protobuf helpers and Base64 release every failing Zig allocation...OK
+6/137 program.test.Base64 untrusted text returns decoded bytes or an encoding error...OK
+7/137 program.test.Base64 binary activations round trip without trapping...OK
+8/137 program.test.string extension policies preserve Unicode and formatting semantics...OK
+9/137 program.test.string extension output and search costs stay bounded...OK
+10/137 program.test.borrowed string extension results obey output limits...OK
+11/137 program.test.string extension allocation failures release all temporary storage...OK
+12/137 program.test.Unicode string transformations round trip through public evaluation...OK
+13/137 program.test.formatted untrusted bytes always produce valid UTF-8...OK
+14/137 program.test.indexed blocks preserve lazy dependencies and lexical iterator handles...OK
+15/137 program.test.indexed block allocation and dependency work obey resource limits...OK
+16/137 program.test.indexed block ownership cleans up after every allocation failure...OK
+17/137 program.test.indexed dependency graphs resolve values or bounded cycle errors...OK
+18/137 program.test.indexed block caches remain request local for untrusted scalar activations...OK
+19/137 program.test.local bindings preserve lazy lexical scope through the public API...OK
+20/137 program.test.local bindings skip unused work but cannot suppress resource errors...OK
+21/137 program.test.local binding ownership cleans up after every allocation failure...OK
+22/137 program.test.local binding caches remain scoped for untrusted scalar activations...OK
+23/137 program.test.list extension policies preserve ordering types and nested equality...OK
+24/137 program.test.large distinct lists preserve numeric aliases and unequal hash collisions...OK
+25/137 program.test.list equality adapts nested protobuf wrappers...OK
+26/137 program.test.list extensions enforce collection depth and comparison budgets...OK
+27/137 program.test.protobuf collection equality charges field and unknown byte work...OK
+28/137 program.test.list extension allocations clean up through the public API...OK
+29/137 program.test.distinct numeric hashing agrees with public CEL value equality...OK
+30/137 program.test.list extension runtime sorting preserves values and never mutates inputs...OK
+31/137 program.test.math extension policies preserve numeric types and bitwise permission decisions...OK
+32/137 program.test.math extrema infer dynamic results when a dynamic argument may win...OK
+33/137 program.test.math bit shifts use fixed width logical semantics without undefined behavior...OK
+34/137 program.test.math extrema and rounding retain NaN and signed zero rules...OK
+35/137 program.test.math evaluation obeys work and collection limits before scanning inputs...OK
+36/137 program.test.math variadic allocation failures clean up...OK
+37/137 program.test.math shifts and extrema stay bounded for untrusted runtime values...OK
+38/137 program.test.optional policies distinguish absent null and present values...OK
+39/137 program.test.optional access and entries preserve presence and laziness...OK
+40/137 program.test.optional zero values and list helpers follow the value domain...OK
+41/137 program.test.optional checking rejects invalid initializers and checks unreachable defaults...OK
+42/137 program.test.optional indexes do not turn invalid keys into absence...OK
+43/137 program.test.optional constants and callbacks own their data and obey limits...OK
+44/137 program.test.optional allocation failures release compile and evaluation storage...OK
+45/137 program.test.optional macros evaluate their receiver once and obey lexical scope...OK
+46/137 program.test.optional callback signatures preserve types and reject nullable overlaps...OK
+47/137 program.test.custom functions evaluate complete checked and unchecked policies...OK
+48/137 program.test.custom generic functions instantiate fresh parameters and abstract result types...OK
+49/137 program.test.custom overloads resolve members and validate runtime signatures...OK
+50/137 program.test.checked generic callbacks cannot return a different inferred type...OK
+51/137 program.test.custom overload backtracking restores empty collection constraints...OK
+52/137 program.test.custom callbacks receive public message values and support more than four arguments...OK
+53/137 program.test.function declarations and costs reject invalid or excessive work...OK
+54/137 program.test.function signatures and callback allocations clean up on every failure...OK
+55/137 program.test.alpha equivalent and erased generic overloads are rejected...OK
+56/137 program.test.dynamic arguments erase generic runtime constraints...OK
+57/137 program.test.custom callback collections obey configured size limits...OK
+58/137 program.test.optional source and activations stay bounded...OK
+59/137 program.test.custom function source and runtime values stay bounded...OK
+60/137 program.test.strong enums preserve identity in checked and unchecked programs...OK
+61/137 program.test.strong enum constructors enforce input types and signed 32 bit bounds...OK
+62/137 program.test.enum constants cannot impersonate primitive message or unregistered types...OK
+63/137 program.test.strong enum declarations collections and namespace resolution retain their types...OK
+64/137 program.test.protobuf construction retains message types field defaults and presence...OK
+65/137 program.test.protobuf messages are not maps and reject unknown or mistyped fields...OK
+66/137 program.test.registered proto3 messages preserve maps lists oneofs and optional presence...OK
+67/137 program.test.descriptor and protobuf limits reject malformed external data...OK
+68/137 program.test.protobuf well-known values follow CEL unboxing and null semantics...OK
+69/137 program.test.temporal policies preserve nanoseconds arithmetic and canonical types...OK
+70/137 program.test.timestamp selectors use explicit zones and reject filesystem paths...OK
+71/137 program.test.temporal boundaries report errors instead of overflowing...OK
+72/137 program.test.protobuf temporal fields box values and prune null collection entries...OK
+73/137 program.test.checked environments infer types and reject unreachable type errors...OK
+74/137 program.test.checked type values compare independently of their described types...OK
+75/137 program.test.checked collection inference unifies empty and nested lists...OK
+76/137 program.test.flat aggregate inference does not turn type variable links into nesting...OK
+77/137 program.test.failed aggregate joins do not retain speculative variable constraints...OK
+78/137 program.test.environment validation and inference budgets fail through the public API...OK
+79/137 program.test.environments resolve namespace prefixes and own constants...OK
+80/137 program.test.checked selection cannot be redirected by undeclared qualified bindings...OK
+81/137 program.test.evaluate request authorization with nested inputs and a reusable program...OK
+82/137 program.test.evaluate scalar arithmetic precedence and CEL numeric types...OK
+83/137 program.test.boolean ordering and mixed numeric comparisons follow CEL...OK
+84/137 program.test.evaluate collections and string operations...OK
+85/137 program.test.quoted field selection supports punctuation without admitting quoted calls or identifiers...OK
+86/137 program.test.upstream string escapes conversions and numeric indexing...OK
+87/137 program.test.logical operators suppress errors only when the result is determined...OK
+88/137 program.test.evaluate collection macros with lexical scope...OK
+89/137 program.test.two variable comprehensions preserve keys scope and error semantics...OK
+90/137 program.test.RE2 matching supports Unicode flags classes anchors and embedded nul...OK
+91/137 program.test.regex errors remain evaluation errors and obey CEL logical suppression...OK
+92/137 program.test.reusable regex policies evaluate independent requests and dynamic patterns...OK
+93/137 program.test.regex caches and work obey explicit resource limits...OK
+94/137 program.test.regex programs support concurrent request evaluations...OK
+95/137 program.test.qualified names prefer the longest binding and respect local and absolute scope...OK
+96/137 program.test.qualified resolution stays exact when only constants or containers are dotted...OK
+97/137 program.test.type values preserve CEL types without becoming strings...OK
+98/137 program.test.invalid expressions and runtime faults return public errors...OK
+99/137 program.test.resource limits reject excessive work without trapping...OK
+100/137 program.test.collection equality obeys depth and cost budgets...OK
+101/137 program.test.comprehensions enforce collection and work limits even in logical branches...OK
+102/137 program.test.untrusted source never traps or leaks...OK
+103/137 program.test.dynamic RE2 inputs never trap or leak evaluation storage...OK
+104/137 program.test.checking and environment ownership clean up every Zig allocation failure...OK
+105/137 program.test.protobuf ownership cleans up after every Zig allocation failure...OK
+106/137 program.test.strong enum protobuf wire values retain identity across independent programs...OK
+107/137 program.test.strong enum policies share immutable descriptors across concurrent requests...OK
+108/137 program.test.strong enum ownership cleans up after every Zig allocation failure...OK
+109/137 program.test.strong enum conversion never traps on untrusted values and wire bytes...OK
+110/137 program.test.protobuf wire input never traps or escapes native evaluation storage...OK
+111/137 program.test.temporal parsing never traps on untrusted string values...OK
+112/137 program.test.checked source never traps or leaks...OK
+113/137 program.test.map constants reject duplicate CEL keys including signed and unsigned aliases...OK
+114/137 program.test.map key validation cleans up on every allocation failure...OK
+115/137 program.test.typed map key validation agrees with public CEL equality...OK
+116/137 program.test.large typed map constants retain distinct boolean and integer keys within linear budgets...OK
+117/137 program.test.all allocation failures clean up through the public API...OK
+118/137 program.test.Program and Environment expose network constructors and methods...OK
+119/137 program.test.checked network declarations retain nominal abstract types...OK
+120/137 program.test.network names honor containers absolute names and custom precedence...OK
+121/137 program.test.network errors obey CEL lazy boolean evaluation...OK
+122/137 program.test.network equality and distinct preserve value identity...OK
+123/137 program.test.mapped IPv6 forms are rejected including hexadecimal corpus cases...OK
+124/137 program.test.raw invalid network metadata is rejected by public boundaries...OK
+125/137 program.test.nested raw network metadata is validated before escaping evaluation...OK
+126/137 program.test.network formatting reports validation and allocation failures...OK
+127/137 program.test.network evaluation obeys input output and work limits...OK
+128/137 program.test.network allocation failures release public Program and format storage...OK
+129/137 program.test.network text parsing stays consistent through public Programs...OK
+130/137 program.test.network IP and CIDR math matches an independent byte-mask oracle...OK
+131/137 program.test.runtime signature checks cover network wrapper type and map parameters...OK
+132/137 program.test.optional list indexes and network deduplication reach every runtime branch...OK
+133/137 program.test.declared constants and checked macros cover every value family...OK
+134/137 program.test.temporal selectors format sanitizing and checked container quoting cover remaining branches...OK
+135/137 program.test.mixed numeric comparison follows the reference clamp-then-double algorithm...OK
+136/137 network.test.network parsing rejects numeric zones and oversized CIDR input...OK
+137/137 network.test.network values parse format classify and contain...OK
+All 137 tests passed.
+21 fuzz tests found.
+
+exit=0

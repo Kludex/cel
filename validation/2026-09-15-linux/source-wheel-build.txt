@@ -1,0 +1,18 @@
+0.16.0
+* Getting build dependencies for wheel...
+* Building wheel...
+Successfully built cel_sdk-0.1.0a12-cp310-abi3-linux_aarch64.whl
+INFO:auditwheel.wheel_abi:setting libc to glibc
+
+cel_sdk-0.1.0a12-cp310-abi3-linux_aarch64.whl is consistent with the
+following platform tag: "manylinux_2_36_aarch64".
+
+The wheel references external versioned symbols in these
+system-provided shared libraries: libm.so.6 with versions
+{'GLIBC_2.17'}, libc.so.6 with versions {'GLIBC_2.34', 'GLIBC_2.33',
+'GLIBC_2.27', 'GLIBC_2.32', 'GLIBC_2.17', 'GLIBC_2.36', 'GLIBC_2.28'}
+
+This constrains the platform tag to "manylinux_2_36_aarch64". In order
+to achieve a more compatible tag, you would need to recompile a new
+wheel from source on a system with earlier versions of these
+libraries, such as a recent manylinux image.

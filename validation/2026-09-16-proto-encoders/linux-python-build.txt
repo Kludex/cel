@@ -1,0 +1,11 @@
+* Getting build dependencies for wheel...
+* Building wheel...
+Successfully built cel_sdk-0.1.0a19-cp310-abi3-linux_aarch64.whl
+INFO:auditwheel.main_repair:Repairing cel_sdk-0.1.0a19-cp310-abi3-linux_aarch64.whl
+INFO:auditwheel.wheeltools:Previous filename tags: linux_aarch64
+INFO:auditwheel.wheeltools:New filename tags: manylinux_2_28_aarch64
+INFO:auditwheel.wheeltools:Previous WHEEL info tags: cp310-abi3-linux_aarch64
+INFO:auditwheel.wheeltools:New WHEEL info tags: cp310-abi3-manylinux_2_28_aarch64
+INFO:auditwheel.main_repair:
+Fixed-up wheel written to /dist/manylinux/cel_sdk-0.1.0a19-cp310-abi3-manylinux_2_28_aarch64.whl
+[06:31:50] 💁 cel_sdk-0.1.0a19-cp310-abi3-manylinux_2_28_aarch64.whl: 1 extensions scanned; 0 ABI version mismatches and 0 ABI violations found               
