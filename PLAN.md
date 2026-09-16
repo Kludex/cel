@@ -37,6 +37,12 @@ Objective: a high-performance CEL engine in Zig, with Python and TypeScript SDKs
 - [ ] Verify current x86-64 binding packages, Windows, other supported runtime/platform combinations, portable distributions, browser support, examples, and every CI gate. Remote CI has not run.
 - [ ] Audit the original objective against current artifacts. Do not mark it complete while any required semantics, coverage, portability, or comparative-performance evidence remains missing.
 
+## Latest fast-path widening iteration
+
+- [x] `fast_plan.zig` now emits ordering, arithmetic, unary minus, `size()`, dynamic indexing, `in` against a string-literal list, and single-variable `all`/`exists`; the Zig test pins accept and reject lists. Both wrappers compile the new kinds with typed guards: integer-only ordering (string order differs in UTF-16), overflow- and zero-checked arithmetic helpers, own-key-only dynamic lookup, code-point `size()`, comprehension variables as scoped locals.
+- [x] Node paired: data validation 1,062 -> 161 ns (6.5x), cart 1,489 -> 297 ns (5.0x); both lead `cel-js` (590 and 1,296 ns). Four of twelve workloads compile; the mix is 1.22x. Python: data validation 1.6x, cart 1.07x (interpreter-bound).
+- [x] 140 Zig, 140 Python, 111 Node tests; 100% wrapper coverage on both; six audits unchanged.
+
 ## Latest Python fast-path iteration
 
 - [x] `_native.fast_plan` exposes `Program.fastPlan`; `cel/plain.py` compiles the plan to straight-line Python with `type(...) is` guards, hoisted root reads, per-block object caching, and a `frozenset.isdisjoint` dotted-key check. `evaluate(bindings, plain_data=True)` falls back on any surprise; bool-where-int, int outside int64, lone surrogates, non-dict roots, and missing keys are all pinned.

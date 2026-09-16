@@ -671,34 +671,55 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return prototype === objectPrototype || prototype === null;
 }
 
-function planLiteral(node: PlanNode): PlainType | null {
-  return node[0] === "bool" || node[0] === "string" || node[0] === "int" ? node[0] : null;
-}
-
 /// Compile a `Program.fastPlan` JSON tree into JavaScript source that reads plain data directly.
 /// Every read is guarded; a guard failure throws `bailSignal` so the caller can fall back to the engine.
+type PlainScopeType = PlainType | "list" | "any";
+
 class PlainCompiler {
   private counter = 0;
-  readonly roots = new Set<string>();
+  /// Comprehension variables in scope, innermost last, mapped to the JavaScript local that holds them.
+  private readonly scopes: Map<string, string>[] = [];
 
-  emit(node: PlanNode, expected: PlainType): string | null {
+  emit(node: PlanNode, expected: PlainScopeType): string | null {
     const [kind] = node;
     if (kind === "bool" || kind === "string" || kind === "int") {
       if (kind !== expected) return null;
       return JSON.stringify(node[1]);
     }
+    // Only reads may be typed later at run time; every other node has a static type.
+    if (expected === "any" && kind !== "ident" && kind !== "select" && kind !== "index")
+      return null;
     if (kind === "ident") {
       const name = node[1] as string;
-      this.roots.add(name);
+      for (let index = this.scopes.length - 1; index >= 0; index -= 1) {
+        const local = this.scopes[index]!.get(name);
+        if (local !== undefined) return this.guard(local, expected);
+      }
       return this.guard(`b[${JSON.stringify(name)}]`, expected);
     }
-    if (kind === "select" || kind === "index") {
+    if (kind === "select") {
       const target = this.emit(node[1] as PlanNode, "object");
       if (target === null) return null;
       return this.guard(`(${target})[${JSON.stringify(node[2])}]`, expected);
     }
+    if (kind === "index") {
+      const keyNode = node[2] as PlanNode;
+      const keyType = inferPlainType(keyNode, this.scopes) ?? "string";
+      if (keyType === "string") {
+        const target = this.emit(node[1] as PlanNode, "object");
+        const key = this.emit(keyNode, "string");
+        if (target === null || key === null) return null;
+        // Plain objects only hold their own enumerable keys in CEL; a prototype hit is a miss.
+        return this.guard(`ownEntry(${target}, ${key})`, expected);
+      }
+      if (keyType !== "int") return null;
+      const target = this.emit(node[1] as PlanNode, "list");
+      const key = this.emit(keyNode, "int");
+      if (target === null || key === null) return null;
+      return this.guard(`listEntry(${target}, ${key})`, expected);
+    }
     if (kind === "?:") {
-      if (expected === "object") return null;
+      if (expected === "object" || expected === "list") return null;
       const condition = this.emit(node[1] as PlanNode, "bool");
       const yes = this.emit(node[2] as PlanNode, expected);
       const no = this.emit(node[3] as PlanNode, expected);
@@ -716,17 +737,74 @@ class PlainCompiler {
       if (expected !== "bool") return null;
       const leftNode = node[1] as PlanNode;
       const rightNode = node[2] as PlanNode;
-      const type = planLiteral(leftNode) ?? planLiteral(rightNode) ?? "string";
+      const type =
+        inferPlainType(leftNode, this.scopes) ?? inferPlainType(rightNode, this.scopes) ?? "string";
+      if (type === "object" || type === "list") return null;
       const left = this.emit(leftNode, type);
       const right = this.emit(rightNode, type);
       return left === null || right === null
         ? null
         : `(${left} ${kind === "==" ? "===" : "!=="} ${right})`;
     }
+    if (kind === "<" || kind === "<=" || kind === ">" || kind === ">=") {
+      // Only integers order the same way in JavaScript and CEL; strings would compare UTF-16 units.
+      if (expected !== "bool") return null;
+      const left = this.emit(node[1] as PlanNode, "int");
+      const right = this.emit(node[2] as PlanNode, "int");
+      return left === null || right === null ? null : `(${left} ${kind} ${right})`;
+    }
+    if (kind === "+" || kind === "-" || kind === "*" || kind === "/" || kind === "%") {
+      if (expected !== "int") return null;
+      const left = this.emit(node[1] as PlanNode, "int");
+      const right = this.emit(node[2] as PlanNode, "int");
+      if (left === null || right === null) return null;
+      const helper = { "+": "addInt", "-": "subInt", "*": "mulInt", "/": "divInt", "%": "remInt" }[
+        kind
+      ];
+      return `${helper}(${left}, ${right})`;
+    }
+    if (kind === "neg") {
+      if (expected !== "int") return null;
+      const operand = this.emit(node[1] as PlanNode, "int");
+      return operand === null ? null : `negInt(${operand})`;
+    }
     if (kind === "!") {
       if (expected !== "bool") return null;
       const operand = this.emit(node[1] as PlanNode, "bool");
       return operand === null ? null : `(!${operand})`;
+    }
+    if (kind === "size") {
+      if (expected !== "int") return null;
+      const inner = node[1] as PlanNode;
+      const innerType = inferPlainType(inner, this.scopes);
+      if (innerType === "string") {
+        const text = this.emit(inner, "string");
+        return text === null ? null : `stringSize(${text})`;
+      }
+      if (innerType !== null) return null;
+      // A read has no static type: `sizeOf` accepts a well-formed string or a plain list and bails otherwise.
+      const value = this.emit(inner, "any");
+      return value === null ? null : `sizeOf(${value})`;
+    }
+    if (kind === "in") {
+      if (expected !== "bool") return null;
+      const listNode = node[2] as PlanNode;
+      if (listNode[0] !== "list") return null;
+      const needle = this.emit(node[1] as PlanNode, "string");
+      if (needle === null) return null;
+      const members = listNode.slice(1) as string[];
+      return `(${members.map((member) => `${needle} === ${JSON.stringify(member)}`).join(" || ") || "false"})`;
+    }
+    if (kind === "all" || kind === "exists") {
+      if (expected !== "bool") return null;
+      const list = this.emit(node[1] as PlanNode, "list");
+      if (list === null) return null;
+      const local = `e${(this.counter += 1)}`;
+      this.scopes.push(new Map([[node[2] as string, local]]));
+      const predicate = this.emit(node[3] as PlanNode, "bool");
+      this.scopes.pop();
+      if (predicate === null) return null;
+      return `${list}.${kind === "all" ? "every" : "some"}((${local}) => ${predicate})`;
     }
     if (kind === "startsWith" || kind === "endsWith" || kind === "contains") {
       if (expected !== "bool") return null;
@@ -740,18 +818,92 @@ class PlainCompiler {
     return null;
   }
 
-  private guard(read: string, expected: PlainType): string {
+  private guard(read: string, expected: PlainScopeType): string {
     const name = `v${(this.counter += 1)}`;
+    if (expected === "any") return `(${name} = ${read})`;
     const check =
       expected === "object"
         ? `isPlainObject(${name})`
-        : expected === "int"
-          ? `typeof ${name} === "number" && isSafeInteger(${name})`
-          : expected === "string"
-            ? `typeof ${name} === "string" && wellFormed(${name})`
-            : `typeof ${name} === "boolean"`;
+        : expected === "list"
+          ? `isPlainList(${name})`
+          : expected === "int"
+            ? `typeof ${name} === "number" && isSafeInteger(${name})`
+            : expected === "string"
+              ? `typeof ${name} === "string" && wellFormed(${name})`
+              : `typeof ${name} === "boolean"`;
     return `((${name} = ${read}), ${check} ? ${name} : bail())`;
   }
+}
+
+/// Static type of a plan node when the node itself determines it; reads have none.
+function inferPlainType(
+  node: PlanNode,
+  scopes: readonly Map<string, string>[],
+): PlainScopeType | null {
+  const [kind] = node;
+  if (kind === "bool" || kind === "string" || kind === "int" || kind === "list") return kind;
+  if (["size", "+", "-", "*", "/", "%", "neg"].includes(kind)) return "int";
+  if (kind === "?:") {
+    return (
+      inferPlainType(node[2] as PlanNode, scopes) ?? inferPlainType(node[3] as PlanNode, scopes)
+    );
+  }
+  if (["==", "!=", "<", "<=", ">", ">=", "&&", "||", "!", "in", "all", "exists"].includes(kind))
+    return "bool";
+  if (kind === "startsWith" || kind === "endsWith" || kind === "contains") return "bool";
+  return null;
+}
+
+function isPlainList(value: unknown): value is unknown[] {
+  return arrayIsArray(value) && !isProxy(value);
+}
+
+const missingEntry = Symbol("cel.missing");
+const hasOwn = Object.hasOwn;
+
+function ownEntry(target: Record<string, unknown>, key: string): unknown {
+  return hasOwn(target, key) ? target[key] : missingEntry;
+}
+
+function listEntry(target: unknown[], index: number): unknown {
+  return index >= 0 && index < target.length ? target[index] : missingEntry;
+}
+
+/// CEL `size(string)` counts code points; the string was already checked to be well formed.
+function stringSize(text: string): number {
+  let count = 0;
+  for (let index = 0; index < text.length; index += 1) {
+    const code = text.charCodeAt(index);
+    if (code < 0xd800 || code > 0xdbff) count += 1;
+  }
+  return count;
+}
+
+function sizeOf(value: unknown): number {
+  if (typeof value === "string") return wellFormed(value) ? stringSize(value) : bail();
+  return isPlainList(value) ? value.length : bail();
+}
+
+function checkedInt(value: number): number {
+  return isSafeInteger(value) ? value : bail();
+}
+function addInt(a: number, b: number): number {
+  return checkedInt(a + b);
+}
+function subInt(a: number, b: number): number {
+  return checkedInt(a - b);
+}
+function mulInt(a: number, b: number): number {
+  return checkedInt(a * b);
+}
+function divInt(a: number, b: number): number {
+  return b === 0 ? bail() : checkedInt(Math.trunc(a / b));
+}
+function remInt(a: number, b: number): number {
+  return b === 0 ? bail() : checkedInt(a % b);
+}
+function negInt(a: number): number {
+  return checkedInt(-a);
 }
 
 const isSafeInteger = Number.isSafeInteger;
@@ -791,12 +943,8 @@ export function compilePlainDataPlan(
 
 /// The result type of a plan is the type of its root; conditionals take the type of their branches.
 function planResultType(node: PlanNode): PlainType | null {
-  const [kind] = node;
-  if (kind === "bool" || kind === "string") return kind;
-  if (kind === "?:")
-    return planResultType(node[2] as PlanNode) ?? planResultType(node[3] as PlanNode);
-  if (kind === "ident" || kind === "select" || kind === "index" || kind === "int") return null;
-  return "bool";
+  const type = inferPlainType(node, []);
+  return type === "bool" || type === "string" ? type : null;
 }
 
 function compileFastPath(plan: string | null): FastFunction | undefined {
@@ -814,15 +962,29 @@ function compileFastPath(plan: string | null): FastFunction | undefined {
   const source =
     `${declarations ? `${declarations};` : ""}
 ` + `return ${body};`;
+  const helpers = {
+    isPlainObject,
+    isPlainList,
+    isSafeInteger,
+    stringMethod,
+    stringSize,
+    sizeOf,
+    wellFormed,
+    ownEntry,
+    listEntry,
+    addInt,
+    subInt,
+    mulInt,
+    divInt,
+    remInt,
+    negInt,
+    bail,
+  };
   const factory = new Function(
-    "isPlainObject",
-    "isSafeInteger",
-    "stringMethod",
-    "wellFormed",
-    "bail",
+    ...Object.keys(helpers),
     `return function fastPath(b) {${source}};`,
-  ) as (...helpers: unknown[]) => FastFunction;
-  return factory(isPlainObject, isSafeInteger, stringMethod, wellFormed, bail);
+  ) as (...values: unknown[]) => FastFunction;
+  return factory(...Object.values(helpers));
 }
 
 const environmentHandles = new WeakMap<Environment, unknown>();

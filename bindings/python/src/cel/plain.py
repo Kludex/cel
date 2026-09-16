@@ -6,7 +6,7 @@ from typing import Any, cast
 
 from typing_extensions import Literal, TypeAlias
 
-PlainType: TypeAlias = Literal["bool", "string", "int", "object"]
+PlainType: TypeAlias = Literal["bool", "string", "int", "object", "list", "any"]
 Plan: TypeAlias = list[Any]
 FastFunction: TypeAlias = Callable[[dict[str, Any]], object]
 
@@ -15,6 +15,11 @@ BAIL = object()
 
 INT64_MIN = -(2**63)
 INT64_MAX = 2**63 - 1
+
+_ORDERING = ("<", "<=", ">", ">=")
+_ARITHMETIC = {"+": "_add", "-": "_sub", "*": "_mul", "/": "_div", "%": "_rem"}
+_PREDICATES = ("startsWith", "endsWith", "contains")
+_BOOLEAN_KINDS = ("==", "!=", "&&", "||", "!", "in", "all", "exists", *_ORDERING, *_PREDICATES)
 
 
 class _Bail(Exception):
@@ -35,15 +40,53 @@ def _well_formed(text: str) -> bool:
     return True
 
 
-def _result_type(node: Plan) -> PlainType | None:
+def _checked(value: int) -> int:
+    return value if INT64_MIN <= value <= INT64_MAX else cast(int, _bail())
+
+
+def _add(a: int, b: int) -> int:
+    return _checked(a + b)
+
+
+def _sub(a: int, b: int) -> int:
+    return _checked(a - b)
+
+
+def _mul(a: int, b: int) -> int:
+    return _checked(a * b)
+
+
+def _div(a: int, b: int) -> int:
+    if b == 0:
+        _bail()
+    quotient = abs(a) // abs(b)
+    return _checked(quotient if (a < 0) == (b < 0) else -quotient)
+
+
+def _rem(a: int, b: int) -> int:
+    if b == 0:
+        _bail()
+    return a - b * _div(a, b)
+
+
+def _size(value: object) -> int:
+    if type(value) is str:
+        return len(value) if _well_formed(value) else cast(int, _bail())
+    return len(value) if type(value) is list else cast(int, _bail())
+
+
+def _infer(node: Plan) -> PlainType | None:
+    """Static type of a plan node when the node itself determines it; reads have none."""
     kind = node[0]
-    if kind in ("bool", "string"):
+    if kind in ("bool", "string", "int", "list"):
         return cast(PlainType, kind)
+    if kind == "size" or kind == "neg" or kind in _ARITHMETIC:
+        return "int"
     if kind == "?:":
-        return _result_type(node[2]) or _result_type(node[3])
-    if kind in ("ident", "select", "index", "int"):
-        return None
-    return "bool"
+        return _infer(node[2]) or _infer(node[3])
+    if kind in _BOOLEAN_KINDS:
+        return "bool"
+    return None
 
 
 class _Compiler:
@@ -58,6 +101,8 @@ class _Compiler:
         self.objects: dict[tuple[str, str], str] = {}
         # Qualified names such as `request.method` that the engine would resolve as dotted binding keys.
         self.dotted: set[str] = set()
+        # Comprehension variables in scope, innermost last, mapped to the Python local that holds them.
+        self.scopes: list[dict[str, str]] = []
 
     def fresh(self) -> str:
         self.counter += 1
@@ -86,8 +131,12 @@ class _Compiler:
     def read(self, source: str, expected: PlainType, indent: str, *, checked_text: bool) -> str:
         name = self.fresh()
         self.lines.append(f"{indent}{name} = {source}")
+        if expected == "any":
+            return name
         if expected == "object":
             check = f"type({name}) is not dict"
+        elif expected == "list":
+            check = f"type({name}) is not list"
         elif expected == "string":
             # A lone surrogate can never equal a well-formed literal, so the encode check is only needed
             # when the string itself is compared with another read or returned.
@@ -99,25 +148,51 @@ class _Compiler:
         self.lines.append(f"{indent}if {check}: _bail()")
         return name
 
+    def local(self, name: str) -> str | None:
+        for scope in reversed(self.scopes):
+            if name in scope:
+                return scope[name]
+        return None
+
     def emit(self, node: Plan, expected: PlainType, indent: str, *, checked_text: bool = True) -> str | None:
         kind = node[0]
         if kind in ("bool", "string", "int"):
             return repr(node[1]) if kind == expected else None
+        if expected == "any" and kind not in ("ident", "select", "index"):
+            return None
         if kind == "ident":
+            local = self.local(node[1])
+            if local is not None:
+                return self.read(local, expected, indent, checked_text=checked_text)
             if expected == "object":
                 return self.root_object(node[1])
             return self.read(f"b.get({node[1]!r}, _MISSING)", expected, indent, checked_text=checked_text)
-        if kind in ("select", "index"):
-            if kind == "select":
-                qualified = _qualified_name(node)
-                if qualified is not None:
-                    self.dotted.add(qualified)
+        if kind == "select":
+            qualified = _qualified_name(node)
+            if qualified is not None and self.local(qualified.split(".", 1)[0]) is None:
+                self.dotted.add(qualified)
             target = self.emit(node[1], "object", indent)
             if target is None:
                 return None
             source = f"{target}.get({node[2]!r}, _MISSING)"
             if expected == "object":
                 return self.cached_object(f"{target}.{node[2]}", source, indent)
+            return self.read(source, expected, indent, checked_text=checked_text)
+        if kind == "index":
+            key_type = _infer(node[2]) or "string"
+            if key_type == "string":
+                target = self.emit(node[1], "object", indent)
+                key = self.emit(node[2], "string", indent, checked_text=False)
+                if target is None or key is None:
+                    return None
+                return self.read(f"{target}.get({key}, _MISSING)", expected, indent, checked_text=checked_text)
+            if key_type != "int":
+                return None
+            target = self.emit(node[1], "list", indent)
+            key = self.emit(node[2], "int", indent)
+            if target is None or key is None:
+                return None
+            source = f"{target}[{key}] if 0 <= {key} < len({target}) else _MISSING"
             return self.read(source, expected, indent, checked_text=checked_text)
         if kind in ("&&", "||"):
             if expected != "bool":
@@ -136,20 +211,79 @@ class _Compiler:
         if kind in ("==", "!="):
             if expected != "bool":
                 return None
-            kind_type = _literal_type(node[1]) or _literal_type(node[2]) or "string"
-            against_literal = kind_type == "string" and (_literal_type(node[1]) or _literal_type(node[2])) is not None
+            kind_type = _infer(node[1]) or _infer(node[2]) or "string"
+            if kind_type in ("object", "list", "any"):
+                return None
+            literal_side = _literal_type(node[1]) or _literal_type(node[2])
+            against_literal = kind_type == "string" and literal_side is not None
             left = self.emit(node[1], kind_type, indent, checked_text=not against_literal)
             right = self.emit(node[2], kind_type, indent, checked_text=not against_literal)
             if left is None or right is None:
                 return None
             return f"({left} {kind} {right})"
+        if kind in _ORDERING:
+            # Only integers order the same way here and in CEL; strings would need code-point order.
+            if expected != "bool":
+                return None
+            left = self.emit(node[1], "int", indent)
+            right = self.emit(node[2], "int", indent)
+            if left is None or right is None:
+                return None
+            return f"({left} {kind} {right})"
+        if kind in _ARITHMETIC:
+            if expected != "int":
+                return None
+            left = self.emit(node[1], "int", indent)
+            right = self.emit(node[2], "int", indent)
+            if left is None or right is None:
+                return None
+            return f"{_ARITHMETIC[kind]}({left}, {right})"
+        if kind == "neg":
+            if expected != "int":
+                return None
+            operand = self.emit(node[1], "int", indent)
+            return None if operand is None else f"_checked(-{operand})"
         if kind == "!":
             if expected != "bool":
                 return None
             operand = self.emit(node[1], "bool", indent)
             return None if operand is None else f"(not {operand})"
+        if kind == "size":
+            if expected != "int":
+                return None
+            inner_type = _infer(node[1])
+            if inner_type == "string":
+                text = self.emit(node[1], "string", indent)
+                return None if text is None else f"len({text})"
+            if inner_type is not None:
+                return None
+            value = self.emit(node[1], "any", indent)
+            return None if value is None else f"_size({value})"
+        if kind == "in":
+            if expected != "bool" or node[2][0] != "list":
+                return None
+            needle = self.emit(node[1], "string", indent, checked_text=False)
+            return None if needle is None else f"({needle} in {set(node[2][1:])!r})"
+        if kind in ("all", "exists"):
+            if expected != "bool":
+                return None
+            items = self.emit(node[1], "list", indent)
+            if items is None:
+                return None
+            result, element = self.fresh(), self.fresh()
+            self.lines.append(f"{indent}{result} = {kind == 'all'}")
+            self.lines.append(f"{indent}for {element} in {items}:")
+            self.scopes.append({node[2]: element})
+            predicate = self.emit(node[3], "bool", indent + "    ")
+            self.scopes.pop()
+            if predicate is None:
+                return None
+            self.lines.append(f"{indent}    if {'not ' if kind == 'all' else ''}{predicate}:")
+            self.lines.append(f"{indent}        {result} = {kind != 'all'}")
+            self.lines.append(f"{indent}        break")
+            return result
         if kind == "?:":
-            if expected == "object":
+            if expected in ("object", "list", "any"):
                 return None
             condition = self.emit(node[1], "bool", indent)
             if condition is None:
@@ -166,7 +300,7 @@ class _Compiler:
                 return None
             self.lines.append(f"{indent}    {result} = {no}")
             return result
-        if kind in ("startsWith", "endsWith", "contains"):
+        if kind in _PREDICATES:
             if expected != "bool":
                 return None
             # Predicates against a well-formed literal cannot be fooled by a lone surrogate either.
@@ -193,19 +327,19 @@ def _qualified_name(node: Plan) -> str | None:
 
 def _literal_type(node: Plan) -> PlainType | None:
     kind: str = node[0]
-    return kind if kind in ("bool", "string", "int") else None  # type: ignore[return-value]
+    return cast(PlainType, kind) if kind in ("bool", "string", "int") else None
 
 
 def compile_plain(plan: str | None) -> FastFunction | None:
     """Compile a `Program` plain-data plan into a Python function, or return None when it is refused.
 
-    The function returns the CEL result for plain dictionaries of dictionaries, strings, booleans, and
-    int64 integers, and `BAIL` when any value falls outside that shape.
+    The function returns the CEL result for plain dictionaries of dictionaries, lists, strings, booleans,
+    and int64 integers, and `BAIL` when any value falls outside that shape.
     """
     if plan is None:
         return None
     root: Plan = json.loads(plan)
-    result_type = _result_type(root)
+    result_type = _infer(root)
     if result_type not in ("bool", "string"):
         return None
     compiler = _Compiler()
@@ -228,6 +362,13 @@ def compile_plain(plan: str | None) -> FastFunction | None:
     namespace: dict[str, Any] = {
         "_bail": _bail,
         "_well_formed": _well_formed,
+        "_checked": _checked,
+        "_add": _add,
+        "_sub": _sub,
+        "_mul": _mul,
+        "_div": _div,
+        "_rem": _rem,
+        "_size": _size,
         "_MISSING": BAIL,
         "BAIL": BAIL,
         "_Bail": _Bail,

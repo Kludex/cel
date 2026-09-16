@@ -431,14 +431,14 @@ if (policy.evaluate(request, { plainData: true }) !== true) throw new Error("Une
 JS
 ```
 
-`evaluate(bindings, { plainData: true })` runs a JavaScript function compiled from the program when the program uses only string, boolean, and safe-integer literals, unquoted field selection, string-literal indexing such as `headers["x-canary"]`, `==`, `!=`, `&&`, `||`, `!`, `?:` with boolean or string branches, and the `startsWith`, `endsWith`, and `contains` string predicates. `hasFastPath` reports whether the program qualified. The default `evaluate(bindings)` path is unchanged.
+`evaluate(bindings, { plainData: true })` runs a JavaScript function compiled from the program when the program uses only string, boolean, and safe-integer literals, unquoted field selection, indexing, `==`, `!=`, integer ordering, integer arithmetic, `!`, unary minus, `?:` with boolean or string branches, `in` against a list literal, `size()`, single-variable `all` and `exists` over lists, and the `startsWith`, `endsWith`, and `contains` string predicates. `hasFastPath` reports whether the program qualified. The default `evaluate(bindings)` path is unchanged.
 
 The fast path reads properties directly from your objects. Any surprise sends the call to the native engine so the result is the same: a non-plain object, `Map`, array, or proxy where an object is expected; a non-string, non-boolean, non-safe-integer, or lone-surrogate string where a scalar is expected; a missing property; a dotted binding key; or a program compiled with an `Environment` that has a container, constants, functions, or descriptors.
 
 !!! warning "Three behaviors differ from the default path"
     The default path converts the whole activation before evaluating. The fast path reads only what the expression needs, so getters on unused properties do not run and invalid unused values are not errors; a property used twice is read twice rather than snapshotted; and non-enumerable own properties are visible. Plain data without accessors behaves identically. Keep the default path when your inputs have getters with side effects.
 
-On the authorization and routing benchmarks this is about 7x faster than the default path and 2.2-2.5x faster than `@marcbachmann/cel-js`; see [the measurements](../../benchmarks/results/2026-09-16-plain-fast-path/). Compilation happens on the first plain-data call (`new Function`, about 6 us), so programs that never opt in pay nothing.
+On the authorization, routing, data-validation, and cart benchmarks this is 5-7x faster than the default path and 2.2-4.4x faster than `@marcbachmann/cel-js`; see [the measurements](../../benchmarks/results/2026-09-16-plain-fast-path/). Compilation happens on the first plain-data call (`new Function`, about 6 us), so programs that never opt in pay nothing.
 
 ## Regular expressions
 

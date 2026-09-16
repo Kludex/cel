@@ -3229,6 +3229,9 @@ test "fast plans describe only the plain-data subset" {
         "a == 9007199254740991",
         "a.`b`.c == 1",
         "a ? 'x' : b['k'] == 'y' ? 'z' : 'w'",
+        "a.b < 3 && a.c >= 4 && a.d * 2 - 1 <= 9 && a.e / 2 % 3 > 0 && -a.f == 1",
+        "a.size() == 1 && xs[0] == 'a' && m[k] == 1",
+        "xs.all(x, x > 0) && xs.exists(x, x in ['a', 'b'])",
     }) |source| {
         var program = try Program.compile(std.testing.allocator, source, .{});
         defer program.deinit();
@@ -3236,23 +3239,24 @@ test "fast plans describe only the plain-data subset" {
         std.testing.allocator.free(supported);
     }
     for ([_][]const u8{
-        "a.b < 3",
-        "a + 1 == 2",
         "has(a.b)",
         "a.?b == 1",
-        "[1, 2].exists(x, x == 1)",
         "a.b == 1.5",
         "a.b == 9007199254740992",
         "a.b == -9007199254740992",
         "a.b == 1u",
         ".a.b == 1",
         "a.`b-c` == 1",
-        "a == -1",
-        "size(a) == 1",
         "a.b.matches('x')",
         "a.startsWith('x', 'y')",
-        "a[0] == 1",
-        "a[b] == 1",
+        "[1, 2].exists(x, x == 1)",
+        "xs.exists_one(x, x > 0)",
+        "xs.map(x, x)",
+        "m.all(k, v, k == 'a')",
+        "x in [1, 2]",
+        "x in ['a', ?y]",
+        "a.size(1) == 1",
+        "size(a) == 1",
         "a[?'k'] == 1",
         "timestamp('2024-01-01T00:00:00Z') == a",
         "a == b'x'",

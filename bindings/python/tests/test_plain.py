@@ -18,9 +18,9 @@ def test_plain_data_mode_agrees_with_the_engine_on_every_workload_decision() -> 
         for case in workload["cases"]:
             assert program.evaluate(case["bindings"], plain_data=True) == case["expected"], case["name"]
             assert program.evaluate(case["bindings"]) == case["expected"]
-    assert fast == 2
-    assert Program(WORKLOADS[0]["expression"]).has_fast_path
-    assert Program(WORKLOADS[3]["expression"]).has_fast_path
+    assert fast == 4
+    for index in (0, 1, 2, 3):
+        assert Program(WORKLOADS[index]["expression"]).has_fast_path, WORKLOADS[index]["name"]
 
 
 def test_plain_data_mode_bails_to_the_engine_on_every_type_or_shape_surprise() -> None:
@@ -93,9 +93,9 @@ def test_plain_data_mode_keeps_logical_semantics_and_string_results() -> None:
 
 
 def test_programs_outside_the_subset_report_no_fast_path_and_still_evaluate() -> None:
-    for source in ["a.b < 3", "has(a.b)", "a.`b-c` == 1", "size(a) == 1", "a == 1.5", "m[key] == 1", "flag ? 1 : 'x'"]:
+    for source in ["a.b < 'x'", "has(a.b)", "a.`b-c` == 1", "size(a) == 1", "a == 1.5", "flag ? 1 : 'x'"]:
         assert not Program(source).has_fast_path, source
-    assert Program("a.b < 3").evaluate({"a": {"b": 2}}, plain_data=True) is True
+    assert Program("size(a) == 1").evaluate({"a": [2]}, plain_data=True) is True
     assert not Environment(container="ns").compile("a.b == 1", check=False).has_fast_path
     assert not Environment(variables={"a": CELType("string")}).compile("a == 'x'").has_fast_path
 
@@ -107,7 +107,6 @@ def test_hand_built_plans_outside_the_vocabulary_are_refused() -> None:
         ["&&", ["ident", "a"], ["string", "x"]],
         ["!", ["string", "x"]],
         ["startsWith", ["ident", "a"], ["int", 1]],
-        ["==", ["&&", ["ident", "a"], ["ident", "b"]], ["ident", "c"]],
         ["int", 1],
         ["ident", "a"],
         ["?:", ["ident", "f"], ["ident", "a"], ["ident", "b"]],
@@ -117,6 +116,38 @@ def test_hand_built_plans_outside_the_vocabulary_are_refused() -> None:
         ["==", ["string", "x"], ["!", ["ident", "a"]]],
         ["==", ["string", "x"], ["contains", ["ident", "a"], ["string", "b"]]],
         ["==", ["select", ["size", ["ident", "a"]], "c"], ["string", "x"]],
+        ["<", ["nonsense"], ["int", 1]],
+        ["<", ["int", 1], ["nonsense"]],
+        ["==", ["int", 1], ["+", ["nonsense"], ["int", 1]]],
+        ["==", ["int", 1], ["+", ["int", 1], ["nonsense"]]],
+        ["==", ["int", 1], ["neg", ["nonsense"]]],
+        ["==", ["string", "x"], ["neg", ["ident", "a"]]],
+        ["==", ["string", "x"], ["+", ["ident", "a"], ["ident", "b"]]],
+        ["==", ["string", "x"], ["<", ["ident", "a"], ["ident", "b"]]],
+        ["==", ["string", "x"], ["in", ["ident", "a"], ["list", "x"]]],
+        ["in", ["nonsense"], ["list", "x"]],
+        ["in", ["ident", "a"], ["ident", "b"]],
+        ["==", ["string", "x"], ["all", ["ident", "xs"], "x", ["bool", True]]],
+        ["all", ["nonsense"], "x", ["bool", True]],
+        ["all", ["ident", "xs"], "x", ["nonsense"]],
+        ["==", ["string", "x"], ["size", ["ident", "a"]]],
+        ["==", ["int", 1], ["size", ["int", 1]]],
+        ["==", ["int", 1], ["size", ["nonsense"]]],
+        ["==", ["string", "s"], ["index", ["ident", "m"], ["nonsense"]]],
+        ["==", ["string", "s"], ["index", ["ident", "m"], ["bool", True]]],
+        ["==", ["string", "s"], ["index", ["nonsense"], ["string", "k"]]],
+        ["==", ["string", "s"], ["index", ["nonsense"], ["int", 0]]],
+        ["==", ["string", "s"], ["index", ["ident", "m"], ["+", ["nonsense"], ["int", 1]]]],
+        ["==", ["string", "s"], ["?:", ["nonsense"], ["string", "a"], ["string", "b"]]],
+        ["==", ["string", "s"], ["?:", ["ident", "f"], ["nonsense"], ["string", "b"]]],
+        ["==", ["string", "s"], ["?:", ["ident", "f"], ["string", "a"], ["nonsense"]]],
+        ["==", ["ident", "a"], ["list", "x"]],
+        ["&&", ["nonsense"], ["ident", "b"]],
+        ["==", ["string", "s"], ["&&", ["ident", "a"], ["ident", "b"]]],
+        ["&&", ["ident", "a"], ["nonsense"]],
+        ["!", ["nonsense"]],
+        ["startsWith", ["nonsense"], ["string", "x"]],
+        ["startsWith", ["ident", "a"], ["nonsense"]],
         ["contains", ["size", ["ident", "a"]], ["string", "x"]],
         ["contains", ["ident", "a"], ["size", ["ident", "b"]]],
         ["&&", ["size", ["ident", "a"]], ["ident", "b"]],
@@ -132,3 +163,63 @@ def test_hand_built_plans_outside_the_vocabulary_are_refused() -> None:
     compiled = compile_plain(json.dumps(["==", ["ident", "a"], ["int", 1]]))
     assert compiled is not None
     assert compiled({"a": 1}) is True and compiled({"a": 2}) is False
+    boolean_equality = compile_plain(json.dumps(["==", ["&&", ["ident", "a"], ["ident", "b"]], ["ident", "c"]]))
+    assert boolean_equality is not None and boolean_equality({"a": True, "b": False, "c": False}) is True
+    literal_size = compile_plain(json.dumps(["==", ["int", 3], ["size", ["string", "abc"]]]))
+    assert literal_size is not None and literal_size({}) is True
+    empty_in = compile_plain(json.dumps(["in", ["ident", "a"], ["list"]]))
+    assert empty_in is not None and empty_in({"a": "x"}) is False
+
+
+def test_plain_data_mode_compiles_ordering_arithmetic_size_membership_and_comprehensions() -> None:
+    program = Program(
+        "items.size() > 0 && items.size() <= 3 && items.all(i, i.qty > 0 && i.qty <= stock[i.sku] && "
+        "i.price * i.qty <= 1000) && tags[0] != '' && codes.all(c, c in ['A', 'B']) && name.size() >= 3"
+    )
+    assert program.has_fast_path
+    good: dict[str, Value] = {
+        "items": [{"sku": "x", "qty": 2, "price": 10}, {"sku": "y", "qty": 1, "price": 999}],
+        "stock": {"x": 5, "y": 1},
+        "tags": ["t"],
+        "codes": ["A"],
+        "name": "Bob",
+    }
+    assert program.evaluate(good, plain_data=True) is True
+    assert program.evaluate({**good, "codes": ["Z"]}, plain_data=True) is False
+    assert program.evaluate({**good, "items": [{"sku": "x", "qty": 9, "price": 10}]}, plain_data=True) is False
+    assert program.evaluate({**good, "name": "Bo"}, plain_data=True) is False
+    assert program.evaluate({**good, "name": "\U0001f600" * 3}, plain_data=True) is True
+    assert program.evaluate({**good, "items": []}, plain_data=True) is False
+    with pytest.raises(EvaluationError, match="NoSuchKey"):
+        program.evaluate({**good, "stock": {}}, plain_data=True)
+    with pytest.raises(EvaluationError, match="IndexOutOfBounds"):
+        program.evaluate({**good, "tags": []}, plain_data=True)
+    overflow = Program("a * b <= 1")
+    with pytest.raises(EvaluationError, match="Overflow"):
+        overflow.evaluate({"a": 2**62, "b": 4}, plain_data=True)
+    assert overflow.evaluate({"a": 3037000499, "b": 3037000499}, plain_data=True) is False
+    arithmetic = Program("a - b == -1 && a + b == 3 && b / a == 2 && b % a == 0 && -a == -1")
+    assert arithmetic.evaluate({"a": 1, "b": 2}, plain_data=True) is True
+    # CEL truncates toward zero; Python floors. Both engines must agree on negative operands.
+    truncating = Program("a / b == -2 && a % b == -1")
+    assert truncating.evaluate({"a": -7, "b": 3}, plain_data=True) is True
+    assert truncating.evaluate({"a": -7, "b": 3}) is True
+    with pytest.raises(EvaluationError, match="DivisionByZero"):
+        Program("a / b == 1").evaluate({"a": 1, "b": 0}, plain_data=True)
+    with pytest.raises(EvaluationError, match="DivisionByZero"):
+        Program("a % b == 1").evaluate({"a": 1, "b": 0}, plain_data=True)
+    assert Program("xs.exists(x, x == 'b')").evaluate({"xs": ["a", "b"]}, plain_data=True) is True
+    assert Program("xs.exists(x, x == 'z')").evaluate({"xs": ["a", "b"]}, plain_data=True) is False
+    assert Program("xs.all(x, x > 0)").evaluate({"xs": [1, 2], "x": -1}, plain_data=True) is True
+    with pytest.raises(EvaluationError, match="NoMatchingOverload"):
+        Program("xs.all(x, x > 0)").evaluate({"xs": [1, "two"]}, plain_data=True)
+    assert Program("m.all(k, k == 'a')").evaluate({"m": {"a": 1}}, plain_data=True) is True
+    assert Program("m[key] == 1").evaluate({"m": {"k": 1}, "key": "k"}, plain_data=True) is True
+    assert Program("m[0] == 1").evaluate({"m": [1]}, plain_data=True) is True
+    with pytest.raises(EvaluationError, match="NoSuchKey"):
+        Program("m[0] == 1").evaluate({"m": {"0": 1}}, plain_data=True)
+    with pytest.raises(UnicodeEncodeError):
+        Program("s.size() == 1").evaluate({"s": "\ud800"}, plain_data=True)
+    assert Program("s.size() == 1").evaluate({"s": {"k": 1}}, plain_data=True) is True
+    for source in ["xs.exists_one(x, x > 0)", "xs.map(x, x)", "a < 'b'", "a < 1.5", "xs.all(x, y, x > 0)"]:
+        assert not Program(source).has_fast_path, source
