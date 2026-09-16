@@ -18,6 +18,7 @@ async function loadEngine(engine) {
       "candidate-protobuf",
       "candidate-maps",
       "candidate-functions",
+      "candidate-plain",
     ].includes(engine)
   ) {
     let candidate;
@@ -94,7 +95,9 @@ async function loadEngine(engine) {
             ]),
           );
         }
-        return program.evaluate(bindings);
+        return engine === "candidate-plain"
+          ? program.evaluate(bindings, { plainData: true })
+          : program.evaluate(bindings);
       },
       version,
     };
@@ -220,12 +223,13 @@ if (
     "candidate-protobuf",
     "candidate-maps",
     "candidate-functions",
+    "candidate-plain",
     "bufbuild",
     "cel-js",
   ]).has(values.engine)
 ) {
   throw new Error(
-    "Pass a candidate engine (`candidate`, `candidate-checked`, `candidate-protobuf`, `candidate-maps`, `candidate-functions`), `bufbuild`, or `cel-js`.",
+    "Pass a candidate engine (`candidate`, `candidate-checked`, `candidate-protobuf`, `candidate-maps`, `candidate-functions`, `candidate-plain`), `bufbuild`, or `cel-js`.",
   );
 }
 const options = {

@@ -412,6 +412,34 @@ Malformed constructor strings raise `RangeError`; non-string arguments raise `Ty
 
 See the root [network reference](../../README.md#ip-addresses-and-network-prefixes) for methods and the pinned-corpus disagreements.
 
+## Plain-data fast path
+
+```sh
+node --input-type=module <<'JS'
+import { Program } from "./bindings/typescript/dist/index.js";
+
+const policy = new Program(
+  'request.method == "GET" && principal.authenticated && (principal.role == "admin" || resource.owner == principal.id)',
+);
+const request = {
+  request: { method: "GET" },
+  principal: { authenticated: true, role: "member", id: "user-42" },
+  resource: { owner: "user-42" },
+};
+if (!policy.hasFastPath) throw new Error("expected a compiled plain-data path");
+if (policy.evaluate(request, { plainData: true }) !== true) throw new Error("Unexpected decision");
+JS
+```
+
+`evaluate(bindings, { plainData: true })` runs a JavaScript function compiled from the program when the program uses only string, boolean, and safe-integer literals, unquoted field selection, `==`, `!=`, `&&`, `||`, `!`, and the `startsWith`, `endsWith`, and `contains` string predicates. `hasFastPath` reports whether the program qualified. The default `evaluate(bindings)` path is unchanged.
+
+The fast path reads properties directly from your objects. Any surprise sends the call to the native engine so the result is the same: a non-plain object, `Map`, array, or proxy where an object is expected; a non-string, non-boolean, non-safe-integer, or lone-surrogate string where a scalar is expected; a missing property; a dotted binding key; or a program compiled with an `Environment` that has a container, constants, functions, or descriptors.
+
+!!! warning "Three behaviors differ from the default path"
+    The default path converts the whole activation before evaluating. The fast path reads only what the expression needs, so getters on unused properties do not run and invalid unused values are not errors; a property used twice is read twice rather than snapshotted; and non-enumerable own properties are visible. Plain data without accessors behaves identically. Keep the default path when your inputs have getters with side effects.
+
+On the authorization benchmark this is about 7x faster than the default path and about 2.2x faster than `@marcbachmann/cel-js`; see [the measurements](../../benchmarks/results/2026-09-16-plain-fast-path/). Compilation happens on the first plain-data call (`new Function`, about 6 us), so programs that never opt in pay nothing.
+
 ## Regular expressions
 
 ```sh

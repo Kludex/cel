@@ -12,8 +12,10 @@ const { values } = parseArgs({
     workload: { type: "string" },
     workloads: { type: "string" },
     "after-workloads": { type: "string" },
+    "after-options": { type: "string" },
   },
 });
+const afterOptions = values["after-options"] ? JSON.parse(values["after-options"]) : undefined;
 if (!values.before || !values.after) throw new Error("Pass --before and --after SDK module paths");
 const iterations = Number(values.iterations);
 if (!Number.isSafeInteger(iterations) || iterations < 1) throw new Error("Invalid iteration count");
@@ -47,6 +49,7 @@ for (const name of ["before", "after"]) {
     programs: (name === "before" ? workloads : afterWorkloads).map(
       (workload) => new Program(workload.expression),
     ),
+    options: name === "after" ? afterOptions : undefined,
     totals: [],
   });
 }
@@ -58,7 +61,11 @@ for (let sample = -5; sample < 30; sample += 1) {
     for (let iteration = 0; iteration < iterations; iteration += 1) {
       for (let index = 0; index < workloads.length; index += 1) {
         for (const test of workloads[index].cases) {
-          if (engine.programs[index].evaluate(test.bindings) !== test.expected) {
+          const program = engine.programs[index];
+          const result = engine.options
+            ? program.evaluate(test.bindings, engine.options)
+            : program.evaluate(test.bindings);
+          if (result !== test.expected) {
             throw new Error(`Incorrect decision from ${engine.name}`);
           }
         }
@@ -98,6 +105,7 @@ process.stdout.write(
       platform: process.platform,
       architecture: process.arch,
       workloads: workloads.map((workload) => workload.name),
+      after_options: afterOptions ?? null,
       expressions: {
         before: workloads.map((workload) => workload.expression),
         after: afterWorkloads.map((workload) => workload.expression),

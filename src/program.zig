@@ -158,6 +158,14 @@ pub const Program = struct {
         return (Environment{}).parse(gpa, source, limits);
     }
 
+    /// Serialize the plain-data subset of this program as JSON for host-side compilation, or null when
+    /// any node falls outside that subset. The caller owns the returned bytes.
+    pub fn fastPlan(self: *const Program, gpa: std.mem.Allocator) error{OutOfMemory}!?[]u8 {
+        if (self.environment.container.len != 0 or self.environment.constants.len != 0 or
+            self.environment.functions.len != 0 or self.environment.registry != null) return null;
+        return @import("fast_plan.zig").emit(gpa, self.root);
+    }
+
     /// Release syntax and literals. No evaluation may still be using this program.
     pub fn deinit(self: *Program) void {
         self.regexes.deinit(self.arena.allocator());
@@ -3196,4 +3204,79 @@ test "protobuf repeated scalar reads wrapper boxing and message assignment reach
         const result = program.evaluate(arena.allocator(), &.{});
         try std.testing.expect(result == error.NoMatchingOverload or result == error.Overflow or result == error.InvalidArgument);
     }
+}
+
+test "fast plans describe only the plain-data subset" {
+    var authorization = try Program.compile(
+        std.testing.allocator,
+        "request.method == \"GET\" && request.path.startsWith(\"/v1/\") && principal.authenticated && (principal.role == \"admin\" || resource.owner == principal.id)",
+        .{},
+    );
+    defer authorization.deinit();
+    const plan = (try authorization.fastPlan(std.testing.allocator)).?;
+    defer std.testing.allocator.free(plan);
+    try std.testing.expectEqualStrings(
+        "[\"&&\",[\"&&\",[\"&&\",[\"==\",[\"select\",[\"ident\",\"request\"],\"method\"],[\"string\",\"GET\"]]," ++
+            "[\"startsWith\",[\"select\",[\"ident\",\"request\"],\"path\"],[\"string\",\"/v1/\"]]]," ++
+            "[\"select\",[\"ident\",\"principal\"],\"authenticated\"]]," ++
+            "[\"||\",[\"==\",[\"select\",[\"ident\",\"principal\"],\"role\"],[\"string\",\"admin\"]]," ++
+            "[\"==\",[\"select\",[\"ident\",\"resource\"],\"owner\"],[\"select\",[\"ident\",\"principal\"],\"id\"]]]]",
+        plan,
+    );
+    for ([_][]const u8{
+        "a.b != 3 && !c",
+        "x.y.z == true || q.contains('t') || q.endsWith('u')",
+        "a == 9007199254740991",
+        "a.`b`.c == 1",
+    }) |source| {
+        var program = try Program.compile(std.testing.allocator, source, .{});
+        defer program.deinit();
+        const supported = (try program.fastPlan(std.testing.allocator)) orelse return error.TestUnexpectedResult;
+        std.testing.allocator.free(supported);
+    }
+    for ([_][]const u8{
+        "a.b < 3",
+        "a + 1 == 2",
+        "has(a.b)",
+        "a.?b == 1",
+        "[1, 2].exists(x, x == 1)",
+        "a.b == 1.5",
+        "a.b == 9007199254740992",
+        "a.b == -9007199254740992",
+        "a.b == 1u",
+        ".a.b == 1",
+        "a.`b-c` == 1",
+        "a == -1",
+        "size(a) == 1",
+        "a.b.matches('x')",
+        "a.startsWith('x', 'y')",
+        "a ? b : c",
+        "timestamp('2024-01-01T00:00:00Z') == a",
+        "a == b'x'",
+        "a == null",
+    }) |source| {
+        var program = try Program.compile(std.testing.allocator, source, .{});
+        defer program.deinit();
+        try std.testing.expectEqual(@as(?[]u8, null), try program.fastPlan(std.testing.allocator));
+    }
+    const constants = Environment{ .constants = &.{.{ .name = "k", .value = .{ .int = 1 } }} };
+    var with_constants = try constants.parse(std.testing.allocator, "a.b == 1", .{});
+    defer with_constants.deinit();
+    try std.testing.expectEqual(@as(?[]u8, null), try with_constants.fastPlan(std.testing.allocator));
+    const container = Environment{ .container = "ns" };
+    var with_container = try container.parse(std.testing.allocator, "a.b == 1", .{});
+    defer with_container.deinit();
+    try std.testing.expectEqual(@as(?[]u8, null), try with_container.fastPlan(std.testing.allocator));
+    const custom = Environment{ .functions = &.{.{ .name = "startsWith", .parameters = &.{ .{ .name = "string" }, .{ .name = "string" } }, .result = .{ .name = "bool" }, .member = true }} };
+    var with_custom = try custom.parse(std.testing.allocator, "a.startsWith('x')", .{});
+    defer with_custom.deinit();
+    try std.testing.expectEqual(@as(?[]u8, null), try with_custom.fastPlan(std.testing.allocator));
+    try std.testing.checkAllAllocationFailures(std.testing.allocator, struct {
+        fn run(gpa: std.mem.Allocator) !void {
+            var program = try Program.compile(gpa, "a.b == 'x' && !c.d", .{});
+            defer program.deinit();
+            const bytes = (try program.fastPlan(gpa)) orelse return error.TestUnexpectedResult;
+            gpa.free(bytes);
+        }
+    }.run, .{});
 }

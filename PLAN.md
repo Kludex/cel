@@ -37,6 +37,13 @@ Objective: a high-performance CEL engine in Zig, with Python and TypeScript SDKs
 - [ ] Verify current x86-64 binding packages, Windows, other supported runtime/platform combinations, portable distributions, browser support, examples, and every CI gate. Remote CI has not run.
 - [ ] Audit the original objective against current artifacts. Do not mark it complete while any required semantics, coverage, portability, or comparative-performance evidence remains missing.
 
+## Latest Node fast-path iteration
+
+- [x] `Program.fastPlan` (Zig, `src/fast_plan.zig`) emits the plain-data subset as JSON or null; quoted fields are excluded by the identifier check that the reverted attempt lacked, plus optional selects, absolute names, unsafe integers, and any environment with a container, constants, functions, or descriptors. Public tests pin the authorization plan byte-for-byte and 19 rejections; allocation failures are exercised.
+- [x] The wrapper compiles the plan lazily with `new Function`; `evaluate(bindings, { plainData: true })` runs it and falls back on a bail signal. Tests: every workload decision agrees with the engine in both modes, bail on bigint/double/Map/array/proxy/dotted key/missing root, unused getters unread, hand-built plans outside the vocabulary refused. 108 Node tests at 100% wrapper coverage.
+- [x] Read-only review found lone surrogates compared as equal code units (fixed with `isWellFormed`, pinned), and two direct-read differences that are documented in the README and API doc comment rather than hidden.
+- [x] Paired on the same build: authorization 955 -> 137 ns (6.9-7.1x, IQR <= 3.9%), about 2.2x faster than `cel-js` (304 ns). The mix moves 4% because only authorization is in the subset. Default cold path unchanged (compilation is deferred to first plain-data use).
+
 ## Latest remote CI iteration
 
 - [x] The repository now lives at github.com/Kludex/cel. The first remote run exposed three problems: `Py_IS_TYPE` does not translate on Python 3.10 headers (replaced with a stable `ob_type` comparison), the audit jobs treated the three retained network disagreements as failures (they now compare against the committed baseline reports with `conformance/compare_reports.py`, pinned by a CLI test), and Zig 0.16.0 fuzz mode cannot rebuild tests on x86_64 Linux (reproduced with a one-test project; the fuzz job runs on the arm64 hosted runner).

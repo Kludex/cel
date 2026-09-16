@@ -313,6 +313,7 @@ export type CelOutput =
 
 type Native = {
   normalizeNetwork(value: string, isCIDR: boolean): string;
+  fastPlan(handle: unknown): string | null;
   compile(source: string, errorType: typeof CompileError): unknown;
   compileIn(
     environment: unknown,
@@ -650,6 +651,157 @@ function snapshotMap(input: object, entryBudget: number): [unknown, unknown][] |
   return entries;
 }
 
+/// Thrown inside a compiled plain-data function when a value falls outside the compiled shape.
+const bailSignal: unique symbol = Symbol("cel.plainDataBail");
+type PlanNode = readonly [string, ...unknown[]];
+type PlainType = "bool" | "string" | "int" | "object";
+type FastFunction = (bindings: object) => boolean;
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (
+    value === null ||
+    typeof value !== "object" ||
+    isProxy(value) ||
+    arrayIsArray(value) ||
+    isMap(value)
+  ) {
+    return false;
+  }
+  const prototype = getPrototypeOf(value);
+  return prototype === objectPrototype || prototype === null;
+}
+
+function planLiteral(node: PlanNode): PlainType | null {
+  return node[0] === "bool" || node[0] === "string" || node[0] === "int" ? node[0] : null;
+}
+
+/// Compile a `Program.fastPlan` JSON tree into JavaScript source that reads plain data directly.
+/// Every read is guarded; a guard failure throws `bailSignal` so the caller can fall back to the engine.
+class PlainCompiler {
+  private counter = 0;
+  readonly roots = new Set<string>();
+
+  emit(node: PlanNode, expected: PlainType): string | null {
+    const [kind] = node;
+    if (kind === "bool" || kind === "string" || kind === "int") {
+      if (kind !== expected) return null;
+      return JSON.stringify(node[1]);
+    }
+    if (kind === "ident") {
+      const name = node[1] as string;
+      this.roots.add(name);
+      return this.guard(`b[${JSON.stringify(name)}]`, expected);
+    }
+    if (kind === "select") {
+      const target = this.emit(node[1] as PlanNode, "object");
+      if (target === null) return null;
+      return this.guard(`(${target})[${JSON.stringify(node[2])}]`, expected);
+    }
+    if (kind === "&&" || kind === "||") {
+      if (expected !== "bool") return null;
+      const left = this.emit(node[1] as PlanNode, "bool");
+      const right = this.emit(node[2] as PlanNode, "bool");
+      return left === null || right === null ? null : `(${left} ${kind} ${right})`;
+    }
+    if (kind === "==" || kind === "!=") {
+      if (expected !== "bool") return null;
+      const leftNode = node[1] as PlanNode;
+      const rightNode = node[2] as PlanNode;
+      const type = planLiteral(leftNode) ?? planLiteral(rightNode) ?? "string";
+      const left = this.emit(leftNode, type);
+      const right = this.emit(rightNode, type);
+      return left === null || right === null
+        ? null
+        : `(${left} ${kind === "==" ? "===" : "!=="} ${right})`;
+    }
+    if (kind === "!") {
+      if (expected !== "bool") return null;
+      const operand = this.emit(node[1] as PlanNode, "bool");
+      return operand === null ? null : `(!${operand})`;
+    }
+    if (kind === "startsWith" || kind === "endsWith" || kind === "contains") {
+      if (expected !== "bool") return null;
+      const receiver = this.emit(node[1] as PlanNode, "string");
+      const argument = this.emit(node[2] as PlanNode, "string");
+      if (receiver === null || argument === null) return null;
+      const method = kind === "contains" ? "includes" : kind;
+      return `stringMethod(${receiver}, ${JSON.stringify(method)}, ${argument})`;
+    }
+    // The engine emits only the kinds above; refusing anything else keeps a plan/compiler mismatch harmless.
+    return null;
+  }
+
+  private guard(read: string, expected: PlainType): string {
+    const name = `v${(this.counter += 1)}`;
+    const check =
+      expected === "object"
+        ? `isPlainObject(${name})`
+        : expected === "int"
+          ? `typeof ${name} === "number" && isSafeInteger(${name})`
+          : expected === "string"
+            ? `typeof ${name} === "string" && wellFormed(${name})`
+            : `typeof ${name} === "boolean"`;
+    return `((${name} = ${read}), ${check} ? ${name} : bail())`;
+  }
+}
+
+const isSafeInteger = Number.isSafeInteger;
+const stringStartsWith = String.prototype.startsWith;
+const stringEndsWith = String.prototype.endsWith;
+const stringIncludes = String.prototype.includes;
+
+function stringMethod(
+  receiver: string,
+  method: "startsWith" | "endsWith" | "includes",
+  argument: string,
+): boolean {
+  const implementation =
+    method === "startsWith"
+      ? stringStartsWith
+      : method === "endsWith"
+        ? stringEndsWith
+        : stringIncludes;
+  return reflectApply(implementation, receiver, [argument]) as boolean;
+}
+
+function bail(): never {
+  throw bailSignal;
+}
+
+/// The native converter rejects lone surrogates; the fast path must not compare them as equal code units.
+function wellFormed(text: string): boolean {
+  return reflectApply(stringIsWellFormed, text, []) as boolean;
+}
+
+/// Compile a plan JSON string; exported for tests that feed hand-built plans. Returns undefined when refused.
+export function compilePlainDataPlan(
+  plan: string | null,
+): ((bindings: object) => boolean) | undefined {
+  return compileFastPath(plan);
+}
+
+function compileFastPath(plan: string | null): FastFunction | undefined {
+  if (plan === null) return undefined;
+  const compiler = new PlainCompiler();
+  const body = compiler.emit(JSON.parse(plan) as PlanNode, "bool");
+  if (body === null) return undefined;
+  let declarations = "";
+  for (let index = 1; index <= compiler["counter"]; index += 1)
+    declarations += `${index === 1 ? "let " : ", "}v${index}`;
+  const source =
+    `${declarations ? `${declarations};` : ""}
+` + `return ${body};`;
+  const factory = new Function(
+    "isPlainObject",
+    "isSafeInteger",
+    "stringMethod",
+    "wellFormed",
+    "bail",
+    `return function fastPath(b) {${source}};`,
+  ) as (...helpers: unknown[]) => FastFunction;
+  return factory(isPlainObject, isSafeInteger, stringMethod, wellFormed, bail);
+}
+
 const environmentHandles = new WeakMap<Environment, unknown>();
 const environmentCallbacks = new WeakMap<
   Environment,
@@ -730,9 +882,19 @@ export class Environment {
 
 export type ProgramOptions = { environment?: Environment; check?: boolean };
 
+/// `plainData` runs the compiled plain-data fast path when the program has one. Bindings must be plain
+/// objects of plain objects, strings, booleans, and safe integers; anything else falls back to the engine.
+/// The fast path reads properties directly instead of converting the whole activation first, so three
+/// behaviors differ from the default path: unused properties are never read (their getters do not run and
+/// invalid unused values are not errors), a property used more than once is read each time rather than
+/// snapshotted, and non-enumerable own properties are visible. Data without accessors sees no difference.
+export type EvaluateOptions = { plainData?: boolean };
+
 export class Program {
   readonly #handle: unknown;
   readonly #environment: Environment | undefined;
+  /// Compiled on first use so programs that never opt into plain-data mode pay nothing for it.
+  #fast: FastFunction | null | undefined;
 
   constructor(source: string, options: ProgramOptions = {}) {
     if (options.check !== undefined && typeof options.check !== "boolean")
@@ -752,11 +914,42 @@ export class Program {
           );
   }
 
+  #fastPath(): FastFunction | null {
+    if (this.#fast === undefined)
+      this.#fast = compileFastPath(native.fastPlan(this.#handle)) ?? null;
+    return this.#fast;
+  }
+
   get resultType(): CELType | null {
     return native.resultType(this.#handle, CELType, CompileError);
   }
 
-  evaluate(bindings: Readonly<Record<string, CelInput>>): CelOutput {
+  /// Whether `evaluate(bindings, { plainData: true })` can bypass the engine for this program.
+  get hasFastPath(): boolean {
+    return this.#fastPath() !== null;
+  }
+
+  evaluate(bindings: Readonly<Record<string, CelInput>>, options: EvaluateOptions = {}): CelOutput {
+    if (options.plainData !== undefined && typeof options.plainData !== "boolean") {
+      throw new TypeErrorConstructor("plainData must be a boolean");
+    }
+    const fast = options.plainData ? this.#fastPath() : null;
+    if (fast !== null && isPlainObject(bindings)) {
+      let dotted = false;
+      for (const key of objectKeys(bindings)) {
+        if (key.includes(".")) {
+          dotted = true;
+          break;
+        }
+      }
+      if (!dotted) {
+        try {
+          return fast(bindings);
+        } catch (error) {
+          if (error !== bailSignal) throw error;
+        }
+      }
+    }
     if (isProxy(bindings))
       throw new TypeErrorConstructor("Proxies are not supported as CEL bindings");
     if (bindings === null || typeof bindings !== "object" || arrayIsArray(bindings)) {

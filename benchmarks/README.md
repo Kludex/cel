@@ -90,6 +90,10 @@ uv run --no-project --python 3.14 --with python-cel==0.1.1 \
 
 `python-cel==0.1.1` provides only a Linux x86-64 wheel on PyPI, without a source distribution. An [emulated Linux correctness probe](results/2026-09-15-linux-python-native/) passes 22 decisions across five complete workloads. Temporal selectors, optional syntax, and math functions prevent the other 17 decisions from passing. The benchmark adapter now uses its documented `Program.execute(Context)` API. Neither emulated execution nor the pure-Python baseline establishes performance leadership over native Python SDKs.
 
+## Plain-data fast path checkpoint
+
+[Plain-data measurements](results/2026-09-16-plain-fast-path/) compare the default engine path with `evaluate(bindings, { plainData: true })` on the same build. Authorization drops from about 955 ns to 137 ns per warm decision (7x) and is about 2.2x faster than `cel-js` on that workload, the first workload where the Node binding leads that competitor. Only authorization is inside the compiled subset, so the 64-decision mix moves 4%. `--engine candidate-plain` runs the full harness in this mode.
+
 ## Numeric comparison checkpoint
 
 [Numeric measurements](results/2026-09-16-numeric/) isolate the replacement of exact `f128` mixed-numeric ordering with the clamp-then-double algorithm shared by CEL-Go and CEL-C++. Because every numeric equality passed through the `f128` path, the change is 1.13-1.15x on both the 64-decision mix and authorization in paired runs. Cumulative since the evaluator-path checkpoint is 1.24x on the mix. `cel-js` remains about 3.2x faster on warm authorization.
