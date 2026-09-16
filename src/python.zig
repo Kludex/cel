@@ -362,7 +362,7 @@ const Converter = struct {
     fn fromType(self: *Converter, input: [*c]c.PyObject, depth: usize) ConversionError!cel.Type {
         if (depth >= 128 or self.remaining == 0) return failure(c.PyExc_ValueError, "declaration limit exceeded");
         self.remaining -= 1;
-        if (c.Py_IS_TYPE(input, @ptrCast(self.cel_type)) == 0) return failure(c.PyExc_TypeError, "expected CELType");
+        if (!isType(input, self.cel_type)) return failure(c.PyExc_TypeError, "expected CELType");
         const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
         defer c.Py_DecRef(fields);
         const name_object = c.PyDict_GetItemString(fields, "name") orelse return failure(c.PyExc_TypeError, "missing type name");
@@ -450,7 +450,7 @@ const Converter = struct {
             const string_type = @extern(*c.PyTypeObject, .{ .name = "PyUnicode_Type" });
             const integer_type = @extern(*c.PyTypeObject, .{ .name = "PyLong_Type" });
             while (c.PyDict_Next(input, &pos, &key, &val) != 0) {
-                if (c.Py_IS_TYPE(key, string_type) == 0 and c.Py_IS_TYPE(key, integer_type) == 0 and
+                if (!isType(key, string_type) and !isType(key, integer_type) and
                     key != true_object and key != false_object) needs_validation = true;
                 const k = try self.fromPython(key, depth + 1);
                 switch (k) {
@@ -463,7 +463,7 @@ const Converter = struct {
             if (needs_validation) try self.validateMap(out);
             return .{ .map = out };
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.map_type)) != 0) {
+        if (isType(input, self.map_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const entries = c.PyDict_GetItemString(fields, "entries") orelse
@@ -481,7 +481,7 @@ const Converter = struct {
                     return failure(c.PyExc_TypeError, "CELMap entries must be key-value tuples");
                 const key = c.PyTuple_GetItem(pair, 0);
                 if (!hasTypeFlag(key, c.Py_TPFLAGS_LONG_SUBCLASS) and !hasTypeFlag(key, c.Py_TPFLAGS_UNICODE_SUBCLASS) and
-                    c.Py_IS_TYPE(key, @ptrCast(self.uint_type)) == 0)
+                    !isType(key, self.uint_type))
                     return failure(c.PyExc_TypeError, "CEL map keys must be bool, int, UInt, or str");
                 entry.* = .{
                     .key = try self.fromPython(key, depth + 1),
@@ -491,8 +491,8 @@ const Converter = struct {
             try self.validateMap(out);
             return .{ .map = out };
         }
-        const is_ip = c.Py_IS_TYPE(input, @ptrCast(self.ip_type)) != 0;
-        if (is_ip or c.Py_IS_TYPE(input, @ptrCast(self.cidr_type)) != 0) {
+        const is_ip = isType(input, self.ip_type);
+        if (is_ip or isType(input, self.cidr_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const object = c.PyDict_GetItemString(fields, "value") orelse return failure(c.PyExc_TypeError, "missing network value");
@@ -503,7 +503,7 @@ const Converter = struct {
             const text = try self.copyBytes(bytes[0..@intCast(length)]);
             return if (is_ip) Value.fromIP(self.arena, cel.IP.parse(text) catch return failure(c.PyExc_ValueError, "invalid IP address")) else Value.fromCIDR(self.arena, cel.CIDR.parse(text) catch return failure(c.PyExc_ValueError, "invalid CIDR prefix"));
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.optional_type)) != 0) {
+        if (isType(input, self.optional_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const has_value = c.PyDict_GetItemString(fields, "has_value") orelse
@@ -521,7 +521,7 @@ const Converter = struct {
             defer c.Py_DecRef(value);
             return Value.fromOptional(self.arena, try self.fromPython(value, depth + 1));
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.uint_type)) != 0) {
+        if (isType(input, self.uint_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const object = c.PyDict_GetItemString(fields, "value") orelse
@@ -532,7 +532,7 @@ const Converter = struct {
             if (c.PyErr_Occurred() != null) return error.PythonException;
             return .{ .uint = n };
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.cel_type)) != 0) {
+        if (isType(input, self.cel_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const object = c.PyDict_GetItemString(fields, "name") orelse
@@ -552,7 +552,7 @@ const Converter = struct {
             }
             return .{ .type_value = try self.copyBytes(name[0..@intCast(len)]) };
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.enum_type)) != 0) {
+        if (isType(input, self.enum_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const name_object = c.PyDict_GetItemString(fields, "type_name") orelse
@@ -585,7 +585,7 @@ const Converter = struct {
                 .number = @intCast(number),
             });
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.message_type)) != 0) {
+        if (isType(input, self.message_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const name_object = c.PyDict_GetItemString(fields, "type_name") orelse
@@ -600,7 +600,7 @@ const Converter = struct {
             const data_length: usize = @intCast(c.PyBytes_Size(data_object));
             return Value.fromMessage(self.arena, .{ .type_name = try self.copyBytes(name[0..@intCast(length)]), .data = try self.copyBytes(c.PyBytes_AsString(data_object)[0..data_length]) });
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.duration_type)) != 0) {
+        if (isType(input, self.duration_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const object = c.PyDict_GetItemString(fields, "nanoseconds") orelse return failure(c.PyExc_TypeError, "missing duration nanoseconds");
@@ -610,7 +610,7 @@ const Converter = struct {
             if (c.PyErr_Occurred() != null) return error.PythonException;
             return .{ .duration = .{ .nanoseconds = nanoseconds } };
         }
-        if (c.Py_IS_TYPE(input, @ptrCast(self.timestamp_type)) != 0) {
+        if (isType(input, self.timestamp_type)) {
             const fields = c.PyObject_GenericGetDict(input, null) orelse return error.PythonException;
             defer c.Py_DecRef(fields);
             const seconds_object = c.PyDict_GetItemString(fields, "seconds") orelse return failure(c.PyExc_TypeError, "missing timestamp seconds");
@@ -766,6 +766,11 @@ const Converter = struct {
         };
     }
 };
+
+/// Exact type check through the stable `ob_type` field; the `Py_IS_TYPE` macro does not translate on Python 3.10 headers.
+fn isType(object: [*c]c.PyObject, type_object: anytype) bool {
+    return @as(*anyopaque, @ptrCast(object.*.ob_type)) == @as(*anyopaque, @ptrCast(type_object));
+}
 
 fn hasTypeFlag(object: [*c]c.PyObject, flag: c_ulong) bool {
     // ob_type is stable ABI; translated Py_TYPE calls may bind the Python 3.14 symbol.

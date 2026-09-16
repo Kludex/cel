@@ -36,7 +36,7 @@ Open work toward the original objective: the most performant CEL SDK, shared Zig
 - [ ] macOS wheels are tagged `macosx_26_0_arm64`; older macOS and Intel are untested.
 - [ ] npm distribution is a single platform-specific archive with a checked-in `cel.node`; platform-aware packaging is missing.
 - [ ] Packages are unpublished; versions are `0.1.0a21` / `0.1.0-alpha.21`.
-- [ ] `.github/workflows/ci.yml` exists but has never run remotely. It needs the exact-glibc-floor runtime job and the Linux artifact matrix that has only been run locally in Docker.
+- [ ] Remote CI ran for the first time on the initial push; the first run exposed a Python 3.10 header incompatibility (`Py_IS_TYPE` macro), audit jobs that treated the three retained network disagreements as failures, and an intermittent Zig 0.16.0 fuzz coverage-file error on hosted runners. All three are addressed; the second run is the evidence to check. The exact-glibc-floor runtime job and the Linux artifact matrix that has only run locally in Docker are still missing from CI.
 - [ ] Host must supply complete tzdata including legacy aliases; no tzdata is bundled.
 
 ## Housekeeping

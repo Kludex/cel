@@ -95,3 +95,29 @@ def test_audit_preserves_types_phases_and_map_key_distinctions(tmp_path: Path, e
     assert process.returncode != 0
     assert "checksum mismatch" in process.stderr
     assert not report_path.exists()
+
+
+def test_report_comparison_accepts_baselines_and_rejects_regressions(tmp_path: Path) -> None:
+    baseline = ROOT / "report.json"
+    matching = subprocess.run(
+        [sys.executable, str(ROOT / "compare_reports.py"), str(ROOT / "report-node.json"), str(baseline)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert matching.returncode == 0, matching.stdout + matching.stderr
+    report = json.loads(baseline.read_text())
+    report["results"][0]["status"] = "failed"
+    report["summary"]["total"]["passed"] -= 1
+    regressed = tmp_path / "regressed.json"
+    regressed.write_text(json.dumps(report))
+    failing = subprocess.run(
+        [sys.executable, str(ROOT / "compare_reports.py"), str(regressed), str(baseline)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert failing.returncode == 1
+    assert "summary:" in failing.stdout and report["results"][0]["id"] in failing.stdout
+    usage = subprocess.run([sys.executable, str(ROOT / "compare_reports.py")], capture_output=True, timeout=60)
+    assert usage.returncode == 2
