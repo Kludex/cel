@@ -22,9 +22,11 @@ node benchmarks/typescript.mjs --engine candidate-plain --workload request_autho
 | Data validation | 2 | 1,069 ns (1.6%) | 164 ns (2.0%) | 6.50x |
 | Cart validation | 1 | 1,489 ns (1.7%) | 297 ns (3.4%) | 4.98x |
 | Cart validation | 2 | 1,489 ns (1.9%) | 297 ns (2.7%) | 4.98x |
-| 64-decision mix | 1 | 1,386 ns (1.5%) | 1,131 ns (1.3%) | 1.22x |
+| Customer format (RE2) | 1 | 854 ns (2.6%) | 568 ns (2.2%) | 1.51x |
+| Customer format (RE2) | 2 | 846 ns (2.4%) | 564 ns (2.3%) | 1.50x |
+| 64-decision mix | 1 | 1,384 ns (1.5%) | 1,111 ns (1.4%) | 1.25x |
 
-Four of twelve workloads are inside the compiled subset after adding ordering, arithmetic, `size()`, dynamic indexing, `in` against a list literal, and single-variable `all`/`exists`. The remaining eight use regular expressions, temporal, optional, math, list, string, encoder, or network functions. The authorization runs include the lone-surrogate guard added after review.
+Five of twelve workloads are inside the compiled subset after adding ordering, arithmetic, `size()`, dynamic indexing, `in` against a list literal, single-variable `all`/`exists`, and `matches` against a literal pattern. `matches` calls back into the program's precompiled RE2 pattern through one native call (`Program.matchesLiteral`), so semantics and work accounting are the engine's; that call costs about 100 ns, which is why the regex workload gains 1.5x rather than 5-7x. The remaining seven use temporal, optional, math, list, string, encoder, or network functions. The authorization runs include the lone-surrogate guard added after review.
 
 ## Against `@marcbachmann/cel-js@8.0.0`
 
@@ -38,9 +40,11 @@ Four of twelve workloads are inside the compiled subset after adding ordering, a
 | Data validation | This SDK, `plainData: true` (paired) | - | 159 / 164 ns |
 | Data validation | `cel-js` | 6,179 ns (1.5%) | 590 ns (1.7%) |
 | Cart validation | This SDK, `plainData: true` (paired) | - | 297 ns |
+| Customer format (RE2) | This SDK, `plainData: true` (paired) | - | 564 / 568 ns |
+| Customer format (RE2) | `cel-js` | 3,875 ns (2.0%) | 539 ns (1.9%) |
 | Cart validation | `cel-js` | 9,200 ns (1.7%) | 1,296 ns (1.3%) |
 
-Warm plain-data decisions lead `cel-js` by about 2.2x (authorization), 2.5x (routing), 3.7x (data validation), and 4.4x (cart validation). Cold plain-data time is higher because the benchmark compiles a fresh program per iteration and the fast path adds a `new Function` compilation on first plain-data use; programs that never opt in pay nothing.
+Warm plain-data decisions lead `cel-js` by about 2.2x (authorization), 2.5x (routing), 3.7x (data validation), and 4.4x (cart validation). On the regex workload `cel-js` (JavaScript `RegExp`) is still about 5% faster than this SDK's RE2 round trip (539 versus 566 ns); that gap is the native-call floor, not the matcher. Cold plain-data time is higher because the benchmark compiles a fresh program per iteration and the fast path adds a `new Function` compilation on first plain-data use; programs that never opt in pay nothing.
 
 ## Honesty
 
@@ -56,5 +60,6 @@ This is one workload, one competitor, and an opt-in mode with documented behavio
 | Routing | 632 / 622 ns (1.3-1.7%) | 415 ns (1.4%) | 1.5x |
 | Data validation | 948 ns (2.1%) | 577 ns (3.2%) | 1.6x |
 | Cart validation | 1,356 ns (2.6%) | 1,271 ns (2.0%) | 1.07x, below threshold |
+| Customer format (RE2) | 831 ns (1.3%) | 779 ns (1.3%) | 1.07x, below threshold |
 
 Cold plain-data time is 165-335 us because `compile()` of the generated source runs on first plain-data use; programs that never opt in pay nothing. The interpreter bounds this mode: an unguarded hand-written Python expression for the authorization policy measures about 170 ns, and the cart policy's comprehension over dictionaries is interpreter-bound, so a guarded generated function cannot approach the Node fast path.

@@ -37,6 +37,11 @@ Objective: a high-performance CEL engine in Zig, with Python and TypeScript SDKs
 - [ ] Verify current x86-64 binding packages, Windows, other supported runtime/platform combinations, portable distributions, browser support, examples, and every CI gate. Remote CI has not run.
 - [ ] Audit the original objective against current artifacts. Do not mark it complete while any required semantics, coverage, portability, or comparative-performance evidence remains missing.
 
+## Latest regex fast-path iteration
+
+- [x] `Program.matchesLiteral(pattern, text)` matches against one of the program's precompiled literal RE2 patterns with the evaluator's work budget; `fast_plan.zig` emits `matches` only for literal patterns. Node and Python compiled functions call it through one native function (`matchesLiteral` / `matches_literal`), so RE2 semantics (`\d` ASCII-only, `(?i)`), invalid-pattern errors, and cost limits are the engine's.
+- [x] Customer-format validation compiles: Node 850 -> 566 ns (1.5x), within 5% of `cel-js`; Python 1.07x. Five of twelve workloads compile; the Node mix is 1.25x. 140 Zig, 142 Python, 113 Node tests, 100% wrapper coverage.
+
 ## Latest fast-path widening iteration
 
 - [x] `fast_plan.zig` now emits ordering, arithmetic, unary minus, `size()`, dynamic indexing, `in` against a string-literal list, and single-variable `all`/`exists`; the Zig test pins accept and reject lists. Both wrappers compile the new kinds with typed guards: integer-only ordering (string order differs in UTF-16), overflow- and zero-checked arithmetic helpers, own-key-only dynamic lookup, code-point `size()`, comprehension variables as scoped locals.

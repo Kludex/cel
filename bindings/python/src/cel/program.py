@@ -51,7 +51,12 @@ class Program:
 
     def _fast_path(self) -> FastFunction | None:
         if isinstance(self._fast, _Unset):
-            self._fast = compile_plain(_native.fast_plan(self._handle))
+            handle = self._handle
+
+            def matcher(text: str, pattern: str) -> bool:
+                return _native.matches_literal(handle, pattern, text, EvaluationError)
+
+            self._fast = compile_plain(_native.fast_plan(handle), matcher)
         return self._fast
 
     def evaluate(self, bindings: dict[str, Value], *, plain_data: bool = False) -> Value:

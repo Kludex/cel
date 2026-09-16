@@ -320,6 +320,42 @@ fn fastPlanImpl(env: c.napi_env, info: c.napi_callback_info) NapiError!c.napi_va
     return result;
 }
 
+fn matchesLiteralCallback(env: c.napi_env, info: c.napi_callback_info) callconv(.c) c.napi_value {
+    return matchesLiteralImpl(env, info) catch |err| finishFailure(env, "CEL_MATCH_", err);
+}
+
+/// Match text against one of a program's literal patterns with the evaluator's RE2 and work budget.
+/// Returns a boolean, or throws the evaluation error constructor passed as the fourth argument.
+fn matchesLiteralImpl(env: c.napi_env, info: c.napi_callback_info) NapiError!c.napi_value {
+    var argc: usize = 5;
+    var argv: [5]c.napi_value = @splat(null);
+    try check(env, c.napi_get_cb_info(env, info, &argc, &argv, null, null));
+    if (argc != 4) return failType(env, "matchesLiteral requires a handle, pattern, text, and error constructor");
+    var tagged = false;
+    try check(env, c.napi_check_object_type_tag(env, argv[0], &program_tag, &tagged));
+    if (!tagged) return failType(env, "invalid Program handle");
+    var pointer: ?*anyopaque = null;
+    try check(env, c.napi_get_value_external(env, argv[0], &pointer));
+    const program: *const ProgramHandle = @ptrCast(@alignCast(pointer orelse return error.NapiFailure));
+    var arena = std.heap.ArenaAllocator.init(gpa);
+    defer arena.deinit();
+    const pattern = readJavaScriptString(env, arena.allocator(), argv[1], max_input_bytes) catch |err| switch (err) {
+        error.StringLimitExceeded => return failRange(env, "pattern exceeds byte limit"),
+        else => |other| return other,
+    };
+    const text = readJavaScriptString(env, arena.allocator(), argv[2], max_input_bytes) catch |err| switch (err) {
+        error.StringLimitExceeded => return failRange(env, "input exceeds byte limit"),
+        else => |other| return other,
+    };
+    const matched = program.program.matchesLiteral(pattern, text) catch |err| {
+        try throwTypedError(env, argv[3], err);
+        return error.JavaScriptException;
+    };
+    var result: c.napi_value = null;
+    try check(env, c.napi_get_boolean(env, matched, &result));
+    return result;
+}
+
 fn typeToJavaScript(env: c.napi_env, constructor: c.napi_value, t: cel.Type) NapiError!c.napi_value {
     var name: c.napi_value = null;
     try check(env, c.napi_create_string_utf8(env, t.name.ptr, t.name.len, &name));
@@ -1281,6 +1317,9 @@ fn normalizeNetwork(env: c.napi_env, info: c.napi_callback_info) NapiError!c.nap
 }
 
 fn register(env: c.napi_env, exports: c.napi_value) NapiError!c.napi_value {
+    var match_function: c.napi_value = null;
+    try check(env, c.napi_create_function(env, "matchesLiteral", c.NAPI_AUTO_LENGTH, matchesLiteralCallback, null, &match_function));
+    try check(env, c.napi_set_named_property(env, exports, "matchesLiteral", match_function));
     var plan_function: c.napi_value = null;
     try check(env, c.napi_create_function(env, "fastPlan", c.NAPI_AUTO_LENGTH, fastPlanCallback, null, &plan_function));
     try check(env, c.napi_set_named_property(env, exports, "fastPlan", plan_function));

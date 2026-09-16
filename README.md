@@ -543,7 +543,7 @@ assert policy.evaluate(request, plain_data=True) is True
 PY
 ```
 
-`plain_data=True` runs a Python function compiled from the program when it uses only string, boolean, and integer literals, unquoted field selection, string-keyed indexing, `==`, `!=`, `&&`, `||`, `!`, `?:`, and the `startsWith`, `endsWith`, and `contains` predicates. Bindings must be dictionaries of dictionaries, `str`, `bool`, and int64 `int` values; anything else sends the call to the engine so the result is unchanged. Unused keys are never read in this mode. It is about 1.5x faster than the default path on the authorization and routing benchmarks; the TypeScript binding has the same option as `{ plainData: true }`.
+`plain_data=True` runs a Python function compiled from the program when it uses only string, boolean, and integer literals, unquoted field selection, string-keyed indexing, `==`, `!=`, `&&`, `||`, `!`, `?:`, `matches` against a literal pattern, and the `startsWith`, `endsWith`, and `contains` predicates. Bindings must be dictionaries of dictionaries, `str`, `bool`, and int64 `int` values; anything else sends the call to the engine so the result is unchanged. Unused keys are never read in this mode. It is about 1.5x faster than the default path on the authorization and routing benchmarks; the TypeScript binding has the same option as `{ plainData: true }`.
 
 ## Regular expressions
 

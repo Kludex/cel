@@ -158,6 +158,15 @@ pub const Program = struct {
         return (Environment{}).parse(gpa, source, limits);
     }
 
+    /// Match `text` against one of this program's literal regular expressions with the same RE2 semantics and
+    /// work accounting the evaluator uses. Hosts running a plain-data fast path call this instead of
+    /// reimplementing RE2. The pattern must be a literal from this program; other patterns are `InvalidArgument`.
+    pub fn matchesLiteral(self: *const Program, pattern: []const u8, text: []const u8) EvalError!bool {
+        const compiled = self.regexes.entries.get(pattern) orelse return error.InvalidArgument;
+        var remaining = self.limits.max_steps;
+        return compiled.matches(text, &remaining);
+    }
+
     /// Serialize the plain-data subset of this program as JSON for host-side compilation, or null when
     /// any node falls outside that subset. The caller owns the returned bytes.
     pub fn fastPlan(self: *const Program, gpa: std.mem.Allocator) error{OutOfMemory}!?[]u8 {
@@ -3232,6 +3241,7 @@ test "fast plans describe only the plain-data subset" {
         "a.b < 3 && a.c >= 4 && a.d * 2 - 1 <= 9 && a.e / 2 % 3 > 0 && -a.f == 1",
         "a.size() == 1 && xs[0] == 'a' && m[k] == 1",
         "xs.all(x, x > 0) && xs.exists(x, x in ['a', 'b'])",
+        "a.matches('^x$') && b.matches(r'\\d+')",
     }) |source| {
         var program = try Program.compile(std.testing.allocator, source, .{});
         defer program.deinit();
@@ -3247,7 +3257,8 @@ test "fast plans describe only the plain-data subset" {
         "a.b == 1u",
         ".a.b == 1",
         "a.`b-c` == 1",
-        "a.b.matches('x')",
+        "a.b.matches(p)",
+        "matches(a.b, 'x')",
         "a.startsWith('x', 'y')",
         "[1, 2].exists(x, x == 1)",
         "xs.exists_one(x, x > 0)",
@@ -3286,4 +3297,19 @@ test "fast plans describe only the plain-data subset" {
             gpa.free(bytes);
         }
     }.run, .{});
+}
+
+test "programs match their literal regular expressions for hosts with the evaluator's semantics" {
+    var program = try Program.compile(std.testing.allocator, "a.matches('^v[0-9]+$') && b.matches('x')", .{});
+    defer program.deinit();
+    try std.testing.expect(try program.matchesLiteral("^v[0-9]+$", "v12"));
+    try std.testing.expect(!try program.matchesLiteral("^v[0-9]+$", "v12a"));
+    try std.testing.expect(try program.matchesLiteral("x", "axb"));
+    try std.testing.expectError(error.InvalidArgument, program.matchesLiteral("^v", "v"));
+    var small = try Program.compile(std.testing.allocator, "a.matches('(a+)+$')", .{ .max_steps = 4 });
+    defer small.deinit();
+    try std.testing.expectError(error.CostLimitExceeded, small.matchesLiteral("(a+)+$", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+    var invalid = try Program.compile(std.testing.allocator, "a.matches('(')", .{});
+    defer invalid.deinit();
+    try std.testing.expectError(error.InvalidArgument, invalid.matchesLiteral("(", "x"));
 }

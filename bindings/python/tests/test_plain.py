@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 from cel import CELType, Environment, EvaluationError, Program, Value
-from cel.plain import compile_plain
+from cel.plain import BAIL, compile_plain
 
 WORKLOADS = json.loads((Path(__file__).resolve().parents[3] / "benchmarks/workloads.json").read_text())
 
@@ -18,8 +18,8 @@ def test_plain_data_mode_agrees_with_the_engine_on_every_workload_decision() -> 
         for case in workload["cases"]:
             assert program.evaluate(case["bindings"], plain_data=True) == case["expected"], case["name"]
             assert program.evaluate(case["bindings"]) == case["expected"]
-    assert fast == 4
-    for index in (0, 1, 2, 3):
+    assert fast == 5
+    for index in (0, 1, 2, 3, 4):
         assert Program(WORKLOADS[index]["expression"]).has_fast_path, WORKLOADS[index]["name"]
 
 
@@ -238,3 +238,29 @@ def test_reads_inside_a_skipped_loop_or_branch_are_not_reused_afterwards() -> No
     assert short.evaluate({"a": False, "m": {"child": {"s": "yes"}}}, plain_data=True) is True
     with pytest.raises(EvaluationError, match="NoSuchKey"):
         Program("m[k] in []").evaluate({"m": {}, "k": "absent"}, plain_data=True)
+
+
+def test_plain_data_mode_matches_literal_patterns_through_the_engine() -> None:
+    program = Program(
+        "payload.id.matches('^[A-Z]{3}-[0-9]{6}$') && payload.tags.all(t, t.matches('^[a-z][a-z0-9_-]{0,15}$'))"
+    )
+    assert program.has_fast_path
+    assert program.evaluate({"payload": {"id": "ABC-123456", "tags": ["ok", "also_ok"]}}, plain_data=True) is True
+    assert program.evaluate({"payload": {"id": "abc-123456", "tags": []}}, plain_data=True) is False
+    ascii_digits = Program(r"s.matches(r'^\d+$')")
+    assert ascii_digits.evaluate({"s": "123"}, plain_data=True) is True
+    assert ascii_digits.evaluate({"s": "\u0663\u0664"}, plain_data=True) is False
+    with pytest.raises(EvaluationError, match="InvalidArgument"):
+        Program("s.matches('(')").evaluate({"s": "x"}, plain_data=True)
+    assert not Program("s.matches(p)").has_fast_path
+    assert Program("s.matches(p)").evaluate({"s": "ab", "p": "a"}, plain_data=True) is True
+    validation = next(w for w in WORKLOADS if w["name"] == "customer_format_validation")
+    fmt = Program(validation["expression"])
+    assert fmt.has_fast_path
+    for case in validation["cases"]:
+        assert fmt.evaluate(case["bindings"], plain_data=True) == case["expected"], case["name"]
+    # Without a matcher a hand-built plan bails on every `matches`.
+    compiled = compile_plain(json.dumps(["matches", ["ident", "s"], "x"]))
+    assert compiled is not None and compiled({"s": "x"}) is BAIL
+    assert compile_plain(json.dumps(["==", ["string", "x"], ["matches", ["ident", "a"], "p"]])) is None
+    assert compile_plain(json.dumps(["matches", ["nonsense"], "p"])) is None

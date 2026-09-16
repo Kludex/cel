@@ -1,7 +1,8 @@
 //! Emit the plain-data subset of a compiled program as JSON so a host wrapper can compile it to native code.
 //! The subset covers bool/int/string literals, identifiers, unquoted field selection, indexing, comparison and
 //! arithmetic operators, `!`/unary minus, `?:`, `in` against a list literal, `size()`, the `startsWith`/`endsWith`/
-//! `contains` string predicates, and single-variable `all`/`exists` over a list. Anything else yields no plan.
+//! `contains` string predicates, `matches` against a literal pattern, and single-variable `all`/`exists` over a
+//! list. Anything else yields no plan.
 
 const std = @import("std");
 const syntax = @import("syntax.zig");
@@ -141,6 +142,16 @@ fn write(json: *std.json.Stringify, node: *const Node, depth: usize) (std.json.S
                 return;
             }
             if (c.args.len != 1) return error.Unsupported;
+            if (std.mem.eql(u8, c.name, "matches")) {
+                // Only literal patterns are precompiled by the program; the host asks the engine to match them.
+                if (c.args[0].* != .literal or c.args[0].literal != .string) return error.Unsupported;
+                try json.beginArray();
+                try json.write("matches");
+                try write(json, target, depth + 1);
+                try json.write(c.args[0].literal.string);
+                try json.endArray();
+                return;
+            }
             const known = std.StaticStringMap(void).initComptime(.{ .{"startsWith"}, .{"endsWith"}, .{"contains"} });
             if (!known.has(c.name)) return error.Unsupported;
             try json.beginArray();

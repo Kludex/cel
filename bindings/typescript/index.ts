@@ -314,6 +314,12 @@ export type CelOutput =
 type Native = {
   normalizeNetwork(value: string, isCIDR: boolean): string;
   fastPlan(handle: unknown): string | null;
+  matchesLiteral(
+    handle: unknown,
+    pattern: string,
+    text: string,
+    errorType: typeof EvaluateError,
+  ): boolean;
   compile(source: string, errorType: typeof CompileError): unknown;
   compileIn(
     environment: unknown,
@@ -816,6 +822,12 @@ class PlainCompiler {
       const method = kind === "contains" ? "includes" : kind;
       return `stringMethod(${receiver}, ${JSON.stringify(method)}, ${argument})`;
     }
+    if (kind === "matches") {
+      // The pattern is one of the program's precompiled literals; the engine's RE2 does the matching.
+      if (expected !== "bool") return null;
+      const receiver = this.emit(node[1] as PlanNode, "string");
+      return receiver === null ? null : `matches(${receiver}, ${JSON.stringify(node[2])})`;
+    }
     // The engine emits only the kinds above; refusing anything else keeps a plan/compiler mismatch harmless.
     return null;
   }
@@ -852,7 +864,9 @@ function inferPlainType(
   }
   if (["==", "!=", "<", "<=", ">", ">=", "&&", "||", "!", "in", "all", "exists"].includes(kind))
     return "bool";
-  if (kind === "startsWith" || kind === "endsWith" || kind === "contains") return "bool";
+  if (kind === "startsWith" || kind === "endsWith" || kind === "contains" || kind === "matches") {
+    return "bool";
+  }
   return null;
 }
 
@@ -951,7 +965,7 @@ function wellFormed(text: string): boolean {
 export function compilePlainDataPlan(
   plan: string | null,
 ): ((bindings: object) => boolean | string) | undefined {
-  return compileFastPath(plan);
+  return compileFastPath(plan, undefined);
 }
 
 /// The result type of a plan is the type of its root; conditionals take the type of their branches.
@@ -960,8 +974,10 @@ function planResultType(node: PlanNode): PlainType | null {
   return type === "bool" || type === "string" ? type : null;
 }
 
-function compileFastPath(plan: string | null): FastFunction | undefined {
+function compileFastPath(plan: string | null, handle: unknown): FastFunction | undefined {
   if (plan === null) return undefined;
+  const matches = (text: string, pattern: string): boolean =>
+    native.matchesLiteral(handle, pattern, text, EvaluateError);
   const root = JSON.parse(plan) as PlanNode;
   // CEL results of other types stay on the engine path; a bare read has no static type and is left there too.
   const resultType = planResultType(root);
@@ -993,6 +1009,7 @@ function compileFastPath(plan: string | null): FastFunction | undefined {
     divInt,
     remInt,
     negInt,
+    matches,
     bail,
   };
   const factory = new Function(
@@ -1116,7 +1133,7 @@ export class Program {
 
   #fastPath(): FastFunction | null {
     if (this.#fast === undefined)
-      this.#fast = compileFastPath(native.fastPlan(this.#handle)) ?? null;
+      this.#fast = compileFastPath(native.fastPlan(this.#handle), this.#handle) ?? null;
     return this.#fast;
   }
 

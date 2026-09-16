@@ -28,9 +28,10 @@ test("plain-data mode agrees with the native engine on every workload decision",
       assert.equal(program.evaluate(item.bindings), item.expected);
     }
   }
-  // Authorization, routing, data validation, and cart validation are inside the subset; the others use
-  // regular expressions, temporal, optional, math, list, string, encoder, or network functions.
-  assert.equal(fast, 4);
+  // Authorization, routing, data validation, cart validation, and customer-format validation are inside
+  // the subset; the others use temporal, optional, math, list, string, encoder, or network functions.
+  assert.equal(fast, 5);
+  assert.equal(new Program(workloads[4]!.expression).hasFastPath, true, workloads[4]!.name);
   assert.equal(new Program(workloads[1]!.expression).hasFastPath, true, workloads[1]!.name);
   assert.equal(new Program(workloads[2]!.expression).hasFastPath, true, workloads[2]!.name);
   assert.equal(new Program(workloads[3]!.expression).hasFastPath, true, workloads[3]!.name);
@@ -489,6 +490,8 @@ test("hand-built plans place every new node kind in an impossible position and a
     ["==", ["int", 1], ["size", ["int", 1]]],
     ["==", ["int", 1], ["size", unknown]],
     ["==", ["int", 1], ["size", ["size", ["ident", "a"]]]],
+    ["==", ["string", "x"], ["matches", ["ident", "a"], "p"]],
+    ["matches", ["nonsense"], "p"],
   ];
   for (const plan of refused) {
     assert.equal(compilePlainDataPlan(JSON.stringify(plan)), undefined, JSON.stringify(plan));
@@ -568,4 +571,49 @@ test("review findings: empty membership still reads its operand and arrays canno
     skipped.evaluate({ xs: [], ys: [0], m: { child: { s: "yes" } } }, { plainData: true }),
     true,
   );
+});
+
+test("plain-data mode matches literal regular expressions through the engine's RE2", () => {
+  const program = new Program(
+    "payload.id.matches('^[A-Z]{3}-[0-9]{6}$') && payload.tags.all(t, t.matches('^[a-z][a-z0-9_-]{0,15}$'))",
+  );
+  assert.equal(program.hasFastPath, true);
+  assert.equal(
+    program.evaluate(
+      { payload: { id: "ABC-123456", tags: ["ok", "also_ok"] } },
+      { plainData: true },
+    ),
+    true,
+  );
+  assert.equal(
+    program.evaluate({ payload: { id: "abc-123456", tags: [] } }, { plainData: true }),
+    false,
+  );
+  assert.equal(
+    program.evaluate({ payload: { id: "ABC-123456", tags: ["Bad"] } }, { plainData: true }),
+    false,
+  );
+  // RE2 semantics, not JavaScript: `\d` is ASCII only and `(?i)` is a supported flag.
+  const ascii = new Program("s.matches(r'^\\d+$')");
+  assert.equal(ascii.evaluate({ s: "123" }, { plainData: true }), true);
+  assert.equal(ascii.evaluate({ s: "\u0663\u0664" }, { plainData: true }), false);
+  assert.equal(
+    new Program("s.matches('(?i)^abc$')").evaluate({ s: "aBc" }, { plainData: true }),
+    true,
+  );
+  // Invalid patterns and budget exhaustion stay evaluation errors, and dynamic patterns stay on the engine.
+  assert.throws(
+    () => new Program("s.matches('(')").evaluate({ s: "x" }, { plainData: true }),
+    /InvalidArgument/,
+  );
+  assert.equal(new Program("s.matches(p)").hasFastPath, false);
+  assert.equal(
+    new Program("s.matches(p)").evaluate({ s: "ab", p: "a" }, { plainData: true }),
+    true,
+  );
+  const validation = workloads.find((w) => w.name === "customer_format_validation")!;
+  const format = new Program(validation.expression);
+  assert.equal(format.hasFastPath, true);
+  for (const item of validation.cases)
+    assert.equal(format.evaluate(item.bindings, { plainData: true }), item.expected, item.name);
 });

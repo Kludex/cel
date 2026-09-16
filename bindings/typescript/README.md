@@ -431,7 +431,7 @@ if (policy.evaluate(request, { plainData: true }) !== true) throw new Error("Une
 JS
 ```
 
-`evaluate(bindings, { plainData: true })` runs a JavaScript function compiled from the program when the program uses only string, boolean, and safe-integer literals, unquoted field selection, indexing, `==`, `!=`, integer ordering, integer arithmetic, `!`, unary minus, `?:` with boolean or string branches, `in` against a list literal, `size()`, single-variable `all` and `exists` over lists, and the `startsWith`, `endsWith`, and `contains` string predicates. `hasFastPath` reports whether the program qualified. The default `evaluate(bindings)` path is unchanged.
+`evaluate(bindings, { plainData: true })` runs a JavaScript function compiled from the program when the program uses only string, boolean, and safe-integer literals, unquoted field selection, indexing, `==`, `!=`, integer ordering, integer arithmetic, `!`, unary minus, `?:` with boolean or string branches, `in` against a list literal, `size()`, single-variable `all` and `exists` over lists, `matches` against a literal pattern (evaluated by the engine's RE2), and the `startsWith`, `endsWith`, and `contains` string predicates. `hasFastPath` reports whether the program qualified. The default `evaluate(bindings)` path is unchanged.
 
 The fast path reads properties directly from your objects. Any surprise sends the call to the native engine so the result is the same: a non-plain object, `Map`, array, or proxy where an object is expected; a non-string, non-boolean, non-safe-integer, or lone-surrogate string where a scalar is expected; a missing property; a dotted binding key; or a program compiled with an `Environment` that has a container, constants, functions, or descriptors.
 

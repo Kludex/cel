@@ -19,7 +19,7 @@ INT64_MAX = 2**63 - 1
 _ORDERING = ("<", "<=", ">", ">=")
 _ARITHMETIC = {"+": "_add", "-": "_sub", "*": "_mul", "/": "_div", "%": "_rem"}
 _PREDICATES = ("startsWith", "endsWith", "contains")
-_BOOLEAN_KINDS = ("==", "!=", "&&", "||", "!", "in", "all", "exists", *_ORDERING, *_PREDICATES)
+_BOOLEAN_KINDS = ("==", "!=", "&&", "||", "!", "in", "all", "exists", "matches", *_ORDERING, *_PREDICATES)
 
 
 class _Bail(Exception):
@@ -308,6 +308,12 @@ class _Compiler:
                 return None
             self.lines.append(f"{indent}    {result} = {no}")
             return result
+        if kind == "matches":
+            # The pattern is one of the program's precompiled literals; the engine's RE2 does the matching.
+            if expected != "bool":
+                return None
+            receiver = self.emit(node[1], "string", indent)
+            return None if receiver is None else f"_matches({receiver}, {node[2]!r})"
         if kind in _PREDICATES:
             if expected != "bool":
                 return None
@@ -321,6 +327,10 @@ class _Compiler:
                 return f"({argument} in {receiver})"
             return f"{receiver}.{kind.lower()}({argument})"
         return None
+
+
+def _no_matcher(_text: str, _pattern: str) -> bool:
+    return cast(bool, _bail())
 
 
 def _qualified_name(node: Plan) -> str | None:
@@ -338,11 +348,12 @@ def _literal_type(node: Plan) -> PlainType | None:
     return cast(PlainType, kind) if kind in ("bool", "string", "int") else None
 
 
-def compile_plain(plan: str | None) -> FastFunction | None:
+def compile_plain(plan: str | None, matcher: Callable[[str, str], bool] | None = None) -> FastFunction | None:
     """Compile a `Program` plain-data plan into a Python function, or return None when it is refused.
 
     The function returns the CEL result for plain dictionaries of dictionaries, lists, strings, booleans,
-    and int64 integers, and `BAIL` when any value falls outside that shape.
+    and int64 integers, and `BAIL` when any value falls outside that shape. `matcher(text, pattern)` performs
+    `matches` against one of the program's literal patterns; without one, every `matches` call bails.
     """
     if plan is None:
         return None
@@ -381,6 +392,7 @@ def compile_plain(plan: str | None) -> FastFunction | None:
         "BAIL": BAIL,
         "_Bail": _Bail,
         "_dotted": frozenset(compiler.dotted),
+        "_matches": matcher if matcher is not None else _no_matcher,
     }
     exec(compile(source, "<cel-plain-data>", "exec"), namespace)
     fast: FastFunction = namespace["fast"]

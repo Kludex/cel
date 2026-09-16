@@ -852,7 +852,35 @@ fn fastPlan(_: ?*c.PyObject, handle: ?*c.PyObject) callconv(.c) ?*c.PyObject {
     return c.PyUnicode_DecodeUTF8(bytes.ptr, @intCast(bytes.len), "strict");
 }
 
+/// Match text against one of a program's literal patterns with the evaluator's RE2 and work budget.
+fn matchesLiteral(_: ?*c.PyObject, args: ?*c.PyObject) callconv(.c) ?*c.PyObject {
+    if (c.PyTuple_Size(args) != 4) {
+        c.PyErr_SetString(c.PyExc_TypeError, "matches_literal requires a handle, pattern, text, and error type");
+        return null;
+    }
+    const ptr = c.PyCapsule_GetPointer(c.PyTuple_GetItem(args, 0), capsule_name) orelse return null;
+    const program: *const cel.Program = @ptrCast(@alignCast(ptr));
+    var pattern_len: c.Py_ssize_t = 0;
+    const pattern = c.PyUnicode_AsUTF8AndSize(c.PyTuple_GetItem(args, 1), &pattern_len);
+    if (pattern == null) return null;
+    var text_len: c.Py_ssize_t = 0;
+    const text = c.PyUnicode_AsUTF8AndSize(c.PyTuple_GetItem(args, 2), &text_len);
+    if (text == null) return null;
+    const matched = program.matchesLiteral(pattern[0..@intCast(pattern_len)], text[0..@intCast(text_len)]) catch |err| {
+        if (err == error.OutOfMemory) return c.PyErr_NoMemory();
+        c.PyErr_SetString(c.PyTuple_GetItem(args, 3), @errorName(err));
+        return null;
+    };
+    const result: *c.PyObject = if (matched)
+        @extern(*c.PyObject, .{ .name = "_Py_TrueStruct" })
+    else
+        @extern(*c.PyObject, .{ .name = "_Py_FalseStruct" });
+    c.Py_IncRef(result);
+    return result;
+}
+
 var methods = [_]c.PyMethodDef{
+    .{ .ml_name = "matches_literal", .ml_meth = matchesLiteral, .ml_flags = c.METH_VARARGS, .ml_doc = "Match a program's literal pattern." },
     .{ .ml_name = "fast_plan", .ml_meth = fastPlan, .ml_flags = c.METH_O, .ml_doc = "Describe the plain-data subset of a program." },
     .{ .ml_name = "normalize_network", .ml_meth = normalizeNetwork, .ml_flags = c.METH_VARARGS, .ml_doc = "Normalize a network value." },
     .{ .ml_name = "environment", .ml_meth = environment, .ml_flags = c.METH_VARARGS, .ml_doc = "Create an environment." },
